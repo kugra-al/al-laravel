@@ -186,6 +186,7 @@ return [
          * Package Service Providers...
          */
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
 
         /*
          * Application Service Providers...
