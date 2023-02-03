@@ -12,6 +12,10 @@ Laravel interface for AL database
 - run cli cmd `php artisan serve &` to run web dev server
 - run cli cmd `npm run dev` to run npm dev server
 
+If something doesn't work:
+- composer update
+- npm install
+
 ### Requirements
 - tested on: 
    - php -v 8.2.1
