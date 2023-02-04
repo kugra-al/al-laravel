@@ -4,6 +4,13 @@
 Laravel interface for AL database
 
 ### Setup
+
+- perms 
+   - cd to dir
+   - sudo find . -type f -exec chmod 664 {} \;
+   - sudo find . -type d -exec chmod 775 {} \;
+   - sudo chgrp -R www-data storage bootstrap/cache
+   - sudo chmod -R ug+rwx storage bootstrap/cache
 - create mysql user and database
 - copy .env.example to .env
    - edit `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
@@ -25,3 +32,5 @@ If something doesn't work:
 - tested on: 
    - php -v 8.2.1
    - node -v 18.14.0
+   - apache -v 2.4.41 (Ubuntu)
+   - mysql -v 8.0.32-0ubuntu0.20.04.2
