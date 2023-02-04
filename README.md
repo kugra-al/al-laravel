@@ -14,6 +14,9 @@ Laravel interface for AL database
 - navigate to web frontend (address should be shown after `php artisan serve`) and register a new account
 - run cli cmd `php artisan db:seed --class=PermissionSeeder` to create AL permissions and roles and apply admin and super-admin roles to user #1
 
+### Queues
+- run cli cmd `php artisan queue:work` to run the queue worker
+
 If something doesn't work:
 - composer update
 - npm install
