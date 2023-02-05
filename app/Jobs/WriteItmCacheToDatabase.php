@@ -44,10 +44,12 @@ class WriteItmCacheToDatabase implements ShouldQueue
         // Clear up cached keys - we don't need them anymore
         Cache::forget($cacheKey);
 
-        // Add any cache items to table
+        // Add any cached items to table
         $cacheKey = Item::getValueCacheName();
         $values = Cache::get($cacheKey);
 
+        // Insert is nasty. Should use eloquent. We need to check somewhere as well we don't update items with no changes
+        // https://laracasts.com/discuss/channels/eloquent/mark-all-fields-fillable-in-model
         Item::insert(array_values($values));
         Cache::forget($cacheKey);
     }
