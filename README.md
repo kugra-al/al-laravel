@@ -1,7 +1,13 @@
 ## AL-Laravel 
 
 ### Summary
-Laravel interface for AL database
+Laravel interface for AL database. Aim is to create a web-based interface to view/manage AL database entries. 
+
+First milestone will be to read all .itm files from Amirani-AL/Accursedlands-obj/, and save them to DB with migrations used to handle DB fields, and DB changes made everytime git updates
+
+### Status
+- https://github.com/kugra-al/al-laravel/projects?query=is%3Aopen
+- Not usable yet. Still setting up base app to read/process files from git
 
 ### Setup
 
@@ -16,7 +22,7 @@ Laravel interface for AL database
    - edit `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
    - add field `GITHUB_TOKEN` with token as value
 - run cli cmd `php artisan migrate` to setup database tables
-- run cli cmd `php artisan serve` to run web dev server (`php artisan serve &` to run in background)
+- run cli cmd `php artisan serve` to run web dev server (`php artisan serve &` to run in background) - (for testing only, should be installed on apache/nginx eventually)
 - run cli cmd `npm run dev` to run npm dev server (`npm run dev &` to run in background)
 - navigate to web frontend (address should be shown after `php artisan serve`) and register a new account
 - run cli cmd `php artisan db:seed --class=PermissionSeeder` to create AL permissions and roles and apply admin and super-admin roles to user #1
