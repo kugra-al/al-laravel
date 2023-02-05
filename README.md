@@ -3,7 +3,11 @@
 ### Summary
 Laravel interface for AL database. Aim is to create a web-based interface to view/manage AL database entries. 
 
-First milestone will be to read all .itm files from Amirani-AL/Accursedlands-obj/, and save them to DB with migrations used to handle DB fields, and DB changes made everytime git updates
+First milestone will be to read all .itm files from Amirani-AL/Accursedlands-obj/ and :
+- .itm files must be read from Amirani-AL/Accursedlands-obj/
+- migration files must be made for all new keys so we can keep track of them
+- all .itm file data must be saved to database, and updated whenever any of them change 
+- output should be in a [DataTable](https://datatables.net/examples/basic_init/multi_col_sort.html) format, with sortable headers, search, optional headers (don't need to show all 100+ headers), .csv output
 
 ### Status
 - https://github.com/kugra-al/al-laravel/projects?query=is%3Aopen

@@ -30,6 +30,7 @@ class ReadItmFiles implements ShouldQueue
             foreach($files as $file) {
                 if ($file->isFile() && $file->getExtension() == "itm") {
                     $pathname = $file->getPathname();
+                    // Skip /bak/, /old/ dirs. str_replace is faster - https://stackoverflow.com/a/42311760
                     if (str_replace(["/bak/","/old/"],'',$pathname) == $pathname) {
                         $searchFiles[] = $file;
                     }
