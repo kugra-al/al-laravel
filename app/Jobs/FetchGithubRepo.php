@@ -11,22 +11,19 @@ use Illuminate\Queue\SerializesModels;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class FetchGithubFiles implements ShouldQueue
+class FetchGithubRepo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $repo, $directory, $extensions, $skipdirs;
+    public $repo;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($repo, $directory, $extensions, $skipdirs)
+    public function __construct($repo)
     {
         $this->repo = $repo;
-        $this->directory = $directory;
-        $this->extensions = $extensions;
-        $this->skipdirs = $skipdirs;
         // Each arg needs to be in seperate element or this don't work - https://stackoverflow.com/a/65290996
         $process = new Process(['git', 'clone', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$repo.'.git']);
         $process->setWorkingDirectory(storage_path()."/private/git/");
