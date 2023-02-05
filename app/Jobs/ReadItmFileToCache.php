@@ -43,6 +43,7 @@ class ReadItmFileToCache implements ShouldQueue
 
             foreach ($lines as $line) {
                 $line = trim($line);
+                $line = str_replace("\t","",$line);
                 if (empty($line) || $line[0] === '#' || substr($line, 0, 2) === '//') {
                     continue;
                 }
@@ -91,7 +92,7 @@ class ReadItmFileToCache implements ShouldQueue
             $cachedValues[$dir.$filename] = $parsed;
             Cache::forever($cacheKey, $cachedValues);
 
-            dump(Cache::get(Item::getValueCacheName()));
+            //dump(Cache::get(Item::getValueCacheName()));
 
         }
     }

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\File;
+use App\Jobs\ReadItmFileToCache;
 
 class ReadItmFiles implements ShouldQueue
 {
@@ -32,12 +33,13 @@ class ReadItmFiles implements ShouldQueue
                     $pathname = $file->getPathname();
                     // Skip /bak/, /old/ dirs. str_replace is faster - https://stackoverflow.com/a/42311760
                     if (str_replace(["/bak/","/old/"],'',$pathname) == $pathname) {
-                        $searchFiles[] = $file;
+                        ReadItmFileToCache::dispatch(str_replace(storage_path()."/private/git/Accursedlands-obj/","",$file->getPathname()))->delay(now()->addSeconds(1));
+//                        $searchFiles[] = $file;
                     }
                 }
 
             }
-            dd($searchFiles);
+  //          dd($searchFiles);
         }
 
     }
