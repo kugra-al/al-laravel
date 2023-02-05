@@ -3,7 +3,7 @@
 ### Summary
 Laravel interface for AL database. Aim is to create a web-based interface to view/manage AL database entries. 
 
-First milestone will be to read all .itm files from Amirani-AL/Accursedlands-obj/ and :
+First milestone will be to read all .itm files from Amirani-AL/Accursedlands-obj/ - https://github.com/users/kugra-al/projects/1:
 - .itm files must be read from Amirani-AL/Accursedlands-obj/
 - migration files must be made for all new keys so we can keep track of them
 - all .itm file data must be saved to database, and updated whenever any of them change 
