@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Jobs\FetchGithubRepo;
 use App\Jobs\ReadItmFileToCache;
+use App\Jobs\ReadItmFiles;
 
 class JobController extends Controller
 {
@@ -14,7 +15,7 @@ class JobController extends Controller
     {
         // Don't do this, we know what the jobs will be
         $jobs_path = public_path()."/../app/Jobs/";
-        $jobs = ['fetch-item-files','read-itm-file'];
+        $jobs = ['fetch-item-files','read-itm-file','read-all-itm-files'];
         return view('admin.jobs',["jobs"=>$jobs]);
     }
 
@@ -28,9 +29,13 @@ class JobController extends Controller
                 $status = ["success"=>"running job: $job"];
                 break;
             case 'read-itm-file':
-                $file = "items/gems/ruby.itm";
+                $file = "items/fetishes/bear_fang_necklace.itm";
                 ReadItmFileToCache::dispatch($file);
                 break;
+            case 'read-all-itm-files':
+                ReadItmFiles::dispatch();
+                break;
+
             default :
                 $status = ["errors"=>"unknown job: $job"];
         }

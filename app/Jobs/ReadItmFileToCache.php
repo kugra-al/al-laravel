@@ -27,6 +27,12 @@ class ReadItmFileToCache implements ShouldQueue
         if (!File::exists($this->file)) {
             throw new FileNotFoundException($this->file);
         } else {
+            // Generated from chatgpt using prompt:
+            // i want you to create a php function that will read data from a file and return that data in an array of keys/values.
+            // Lines that start with # or // should not be added. Blank lines should not be added. If a line starts with + or ~, the
+            // value of that field should be added to the previous key. If you understand, say "ok" and wait for an example file
+
+            // Doesn't handle files with mutiple keys (ex. items/fetishes/bear_fang_necklace.itm has mutiple looks)
             $data = File::get($this->file);
             $lines = explode("\n",$data);
             $parsed = [];
