@@ -59,6 +59,7 @@ class ReadItmFileToCache implements ShouldQueue
                 } elseif ($field[0] === '~') {
                     $parsed[$key] .= ' ' . $value;
                 } else {
+                    // Preface all keys with 'itm_' because we need 'id' field for database
                     $key = "itm_$field";
                     $parsed[$key] = $value;
                 }
