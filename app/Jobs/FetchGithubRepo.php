@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -24,9 +25,16 @@ class FetchGithubRepo implements ShouldQueue
     public function __construct($repo)
     {
         $this->repo = $repo;
-        // Each arg needs to be in seperate element or this don't work - https://stackoverflow.com/a/65290996
-        $process = new Process(['git', 'clone', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$repo.'.git']);
-        $process->setWorkingDirectory(storage_path()."/private/git/");
+        $gitdir = storage_path()."/private/git/";
+       // dd($gitdir.explode("/",$repo)[1]);
+        if (File::exists($gitdir.explode("/",$repo)[1])) {
+            $gitdir = $gitdir.explode("/",$repo)[1];
+            $process = new Process(['git', 'pull', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$repo.'.git']);
+        } else {
+            // Each arg needs to be in seperate element or this don't work - https://stackoverflow.com/a/65290996
+            $process = new Process(['git', 'clone', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$repo.'.git']);
+        }
+        $process->setWorkingDirectory($gitdir);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
