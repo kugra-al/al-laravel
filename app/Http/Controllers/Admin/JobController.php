@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Jobs\FetchGithubRepo;
+use App\Jobs\ReadItmFileToCache;
 
 class JobController extends Controller
 {
@@ -13,7 +14,7 @@ class JobController extends Controller
     {
         // Don't do this, we know what the jobs will be
         $jobs_path = public_path()."/../app/Jobs/";
-        $jobs = ['fetch-item-files'];
+        $jobs = ['fetch-item-files','read-itm-file'];
         return view('admin.jobs',["jobs"=>$jobs]);
     }
 
@@ -25,6 +26,10 @@ class JobController extends Controller
                 $repo = "Amirani-al/Accursedlands-obj";
                 FetchGithubRepo::dispatch($repo);
                 $status = ["success"=>"running job: $job"];
+                break;
+            case 'read-itm-file':
+                $file = "items/gems/ruby.itm";
+                ReadItmFileToCache::dispatch($file);
                 break;
             default :
                 $status = ["errors"=>"unknown job: $job"];

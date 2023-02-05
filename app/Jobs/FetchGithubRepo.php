@@ -24,14 +24,13 @@ class FetchGithubRepo implements ShouldQueue
      */
     public function __construct($repo)
     {
+        // This little maneuver saves us 100s of lines vs using the api.
         $this->repo = $repo;
         $gitdir = storage_path()."/private/git/";
-       // dd($gitdir.explode("/",$repo)[1]);
         if (File::exists($gitdir.explode("/",$repo)[1])) {
             $gitdir = $gitdir.explode("/",$repo)[1];
             $process = new Process(['git', 'pull', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$repo.'.git']);
         } else {
-            // Each arg needs to be in seperate element or this don't work - https://stackoverflow.com/a/65290996
             $process = new Process(['git', 'clone', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$repo.'.git']);
         }
         $process->setWorkingDirectory($gitdir);
@@ -41,8 +40,6 @@ class FetchGithubRepo implements ShouldQueue
         }
 
         dd( $process->getOutput() );
-        dd($process);
-        dd($this);
     }
 
     /**
