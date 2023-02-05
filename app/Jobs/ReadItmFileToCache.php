@@ -28,8 +28,33 @@ class ReadItmFileToCache implements ShouldQueue
             throw new FileNotFoundException($this->file);
         } else {
             $data = File::get($this->file);
-            dd($data);
-            dd($this->file);
+            $lines = explode("\n",$data);
+            $parsed = [];
+            $key = '';
+
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if (empty($line) || $line[0] === '#' || substr($line, 0, 2) === '//') {
+                    continue;
+                }
+
+                $parts = explode(' ', $line);
+                if (count($parts) < 2) {
+                    continue;
+                }
+
+                $field = $parts[0];
+                $value = trim(implode(' ', array_slice($parts, 1)));
+                if ($field[0] === '+') {
+                    $parsed[$key] .= $value;
+                } elseif ($field[0] === '~') {
+                    $parsed[$key] .= ' ' . $value;
+                } else {
+                    $key = $field;
+                    $parsed[$key] = $value;
+                }
+            }
+            dd($parsed);
         }
     }
 
