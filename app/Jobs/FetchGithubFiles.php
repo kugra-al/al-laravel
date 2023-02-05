@@ -27,8 +27,8 @@ class FetchGithubFiles implements ShouldQueue
         $this->directory = $directory;
         $this->extensions = $extensions;
         $this->skipdirs = $skipdirs;
-
-        $process = new Process(['git clone ', '--with-token '.env('GITHUB_TOKEN'), $repo]);
+        // Each arg needs to be in seperate element or this don't work - https://stackoverflow.com/a/65290996
+        $process = new Process(['git', 'clone', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$repo.'.git']);
         $process->setWorkingDirectory(storage_path()."/private/git/");
         $process->run();
         if (!$process->isSuccessful()) {
