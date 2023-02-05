@@ -10,6 +10,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Item;
 
 class ReadItmFileToCache implements ShouldQueue
 {
@@ -56,12 +58,38 @@ class ReadItmFileToCache implements ShouldQueue
                 } elseif ($field[0] === '~') {
                     $parsed[$key] .= ' ' . $value;
                 } else {
-                    $key = $field;
+                    $key = "$field";
                     $parsed[$key] = $value;
                 }
             }
+            // Cache any unknown keys
+            $keys = array_keys($parsed);
+            $cacheKey = 'item_d-itm-keys';
+            $cachedKeys = Cache::get($cacheKey);
+            if (!$cachedKeys)
+                $cachedKeys = [];
+            foreach($keys as $key) {
+                if (in_array($key,$cachedKeys) === false)
+                    $cachedKeys[] = $key;
+            }
+            Cache::forever($cacheKey, $cachedKeys);
+            // Cache values
+            $cacheKey = 'item_d-itm-values';
+            $cachedValues = Cache::get($cacheKey);
+            if (!$cachedValues)
+                $cachedValues = [];
+            $cachedValues[] = $parsed;
+            Cache::forever($cacheKey, $cachedValues);
 
-            dd($parsed);
+//            if (in_array($
+//             $keys = \Schema::getColumnListing('items');
+//             $newKeys = [];
+//             foreach(array_keys($parsed) as $key) {
+//                 if (in_array($key,$keys) === false) {
+//                     $newKeys[] = $key;
+//                 }
+//             }
+//             dd($newKeys);
         }
     }
 
