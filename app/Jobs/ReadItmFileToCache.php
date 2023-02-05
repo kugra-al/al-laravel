@@ -37,6 +37,7 @@ class ReadItmFileToCache implements ShouldQueue
             // Doesn't handle files with mutiple keys (ex. items/fetishes/bear_fang_necklace.itm has mutiple looks)
             $data = File::get($this->file);
             $lines = explode("\n",$data);
+
             $parsed = [];
             $key = '';
 
@@ -58,13 +59,21 @@ class ReadItmFileToCache implements ShouldQueue
                 } elseif ($field[0] === '~') {
                     $parsed[$key] .= ' ' . $value;
                 } else {
-                    $key = "$field";
+                    $key = "itm_$field";
                     $parsed[$key] = $value;
                 }
             }
+            $tmp = explode("/",$file);
+            $filename = $tmp[sizeof($tmp)-1];
+            $dir = "/obj/".str_replace($filename,"",$file);
+            $parsed["filename"] = $filename;
+            $parsed["path"] = $dir;
+            $now = \Carbon\Carbon::now('utc')->toDateTimeString();
+            $parsed["created_at"] = $now;
+            $parsed["updated_at"] = $now;
             // Cache any unknown keys
             $keys = array_keys($parsed);
-            $cacheKey = 'item_d-itm-keys';
+            $cacheKey = Item::getKeyCacheName();
             $cachedKeys = Cache::get($cacheKey);
             if (!$cachedKeys)
                 $cachedKeys = [];
@@ -74,22 +83,15 @@ class ReadItmFileToCache implements ShouldQueue
             }
             Cache::forever($cacheKey, $cachedKeys);
             // Cache values
-            $cacheKey = 'item_d-itm-values';
+            $cacheKey = Item::getValueCacheName();
             $cachedValues = Cache::get($cacheKey);
             if (!$cachedValues)
                 $cachedValues = [];
-            $cachedValues[] = $parsed;
+            $cachedValues[$dir.$filename] = $parsed;
             Cache::forever($cacheKey, $cachedValues);
 
-//            if (in_array($
-//             $keys = \Schema::getColumnListing('items');
-//             $newKeys = [];
-//             foreach(array_keys($parsed) as $key) {
-//                 if (in_array($key,$keys) === false) {
-//                     $newKeys[] = $key;
-//                 }
-//             }
-//             dd($newKeys);
+            dump(Cache::get(Item::getValueCacheName()));
+
         }
     }
 

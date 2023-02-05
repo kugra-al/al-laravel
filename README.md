@@ -29,7 +29,7 @@ First milestone will be to read all .itm files from Amirani-AL/Accursedlands-obj
 - run cli cmd `php artisan serve` to run web dev server (`php artisan serve &` to run in background) - (for testing only, should be installed on apache/nginx eventually)
 - run cli cmd `npm run dev` to run npm dev server (`npm run dev &` to run in background)
 - navigate to web frontend (address should be shown after `php artisan serve`) and register a new account
-- run cli cmd `php artisan db:seed --class=PermissionSeeder` to create AL permissions and roles and apply admin and super-admin roles to user #1
+- run cli cmd `php artisan db:seed --class=PermissionSeeder` to create AL permissions and roles and apply admin and super-admin roles to user #1 (not working)
 
 ### Queues
 - run cli cmd `php artisan queue:work` to run the queue worker

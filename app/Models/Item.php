@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory;
+
+    public static function getKeyCacheName() {
+        return 'item_d-itm-keys';
+    }
+
+    public static function getValueCacheName() {
+        return 'item_d-itm-values';
+    }
 }

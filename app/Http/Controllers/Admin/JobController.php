@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use App\Jobs\FetchGithubRepo;
 use App\Jobs\ReadItmFileToCache;
 use App\Jobs\ReadItmFiles;
+use App\Jobs\WriteItmCacheToDatabase;
 
 class JobController extends Controller
 {
@@ -15,7 +16,7 @@ class JobController extends Controller
     {
         // Don't do this, we know what the jobs will be
         $jobs_path = public_path()."/../app/Jobs/";
-        $jobs = ['fetch-item-files','read-itm-file','read-all-itm-files'];
+        $jobs = ['fetch-item-files','read-itm-file','read-all-itm-files','write-itms-to-db'];
         return view('admin.jobs',["jobs"=>$jobs]);
     }
 
@@ -34,6 +35,9 @@ class JobController extends Controller
                 break;
             case 'read-all-itm-files':
                 ReadItmFiles::dispatch();
+                break;
+            case 'write-itms-to-db':
+                WriteItmCacheToDatabase::dispatch();
                 break;
 
             default :

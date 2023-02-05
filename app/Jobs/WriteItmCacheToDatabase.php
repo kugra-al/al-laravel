@@ -8,6 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Item;
 
 class WriteItmCacheToDatabase implements ShouldQueue
 {
@@ -20,34 +22,34 @@ class WriteItmCacheToDatabase implements ShouldQueue
      */
     public function __construct()
     {
-//             Cache any unknown keys
-//             $keys = array_keys($parsed);
-//             $cacheKey = 'item_d-itm-keys';
-//             $cachedKeys = Cache::get($cacheKey);
-//             if (!$cachedKeys)
-//                 $cachedKeys = [];
-//             foreach($keys as $key) {
-//                 if (in_array($key,$cachedKeys) === false)
-//                     $cachedKeys[] = $key;
-//             }
-//             Cache::forever($cacheKey, $cachedKeys);
-//             Cache values
-//             $cacheKey = 'item_d-itm-values';
-//             $cachedValues = Cache::get($cacheKey);
-//             if (!$cachedValues)
-//                 $cachedValues = [];
-//             $cachedValues[] = $parsed;
-//             Cache::forever($cacheKey, $cachedValues);
+        // Check cached keys against column keys in db. If any columns are
+        //  not found in db, add to table
+        $cacheKey = Item::getKeyCacheName();
+        $keys = Cache::get($cacheKey);
+        $dbKeys = \Schema::getColumnListing('items');
+        $newKeys = [];
+        foreach($keys as $key) {
+            $key = $key;
+            if (in_array($key,$dbKeys) === false) {
+                $newKeys[] = $key;
+            }
+        }
+        if (sizeof($newKeys)) {
+            \Schema::table('items', function($table) use ($newKeys) {
+                foreach($newKeys as $key) {
+                    $table->text($key)->nullable();
+                }
+            });
+        }
+        // Clear up cached keys - we don't need them anymore
+        Cache::forget($cacheKey);
 
-//            if (in_array($
-//             $keys = \Schema::getColumnListing('items');
-//             $newKeys = [];
-//             foreach(array_keys($parsed) as $key) {
-//                 if (in_array($key,$keys) === false) {
-//                     $newKeys[] = $key;
-//                 }
-//             }
-//             dd($newKeys);
+        // Add any cache items to table
+        $cacheKey = Item::getValueCacheName();
+        $values = Cache::get($cacheKey);
+
+        Item::insert(array_values($values));
+        Cache::forget($cacheKey);
     }
 
     /**
