@@ -60,6 +60,7 @@ class ReadItmFileToCache implements ShouldQueue
                     $parsed[$key] = $value;
                 }
             }
+
             dd($parsed);
         }
     }
