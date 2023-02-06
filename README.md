@@ -11,7 +11,8 @@ First milestone will be to read all .itm files from Amirani-AL/Accursedlands-obj
 
 ### Status
 - https://github.com/kugra-al/al-laravel/projects?query=is%3Aopen
-- Not usable yet. Still setting up base app to read/process files from git
+- Nearly ready for live testing 
+![file view preview](https://media.discordapp.net/attachments/634069769267576832/1072121005922861136/Screenshot_20230206_134448.png)
 
 ### Setup
 
@@ -44,3 +45,4 @@ If something doesn't work:
    - node -v 18.14.0
    - apache -v 2.4.41 (Ubuntu)
    - mysql -v 8.0.32-0ubuntu0.20.04.2
+   - also needs php8.2-mbstring and php8.2-dom if not installed

@@ -63,7 +63,7 @@
                 dataType: 'json',
                 success: function (data) {
                     $('#itmFileModal').show();
-                    $('#itmFileModal').find('.modal-body').html("<pre>"+data+"</pre>");
+                    $('#itmFileModal').find('.modal-body').html("<pre style='background:#111; color: #1af21a'>"+data+"</pre>");
                     console.log(data);
                 },
                 error: function (data) {
