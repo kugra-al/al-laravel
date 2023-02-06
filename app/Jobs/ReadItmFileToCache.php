@@ -43,7 +43,7 @@ class ReadItmFileToCache implements ShouldQueue
 
             foreach ($lines as $line) {
                 $line = trim($line);
-                $line = str_replace("\t","",$line);
+                $line = str_replace("\t"," ",$line);
                 if (empty($line) || $line[0] === '#' || substr($line, 0, 2) === '//') {
                     continue;
                 }

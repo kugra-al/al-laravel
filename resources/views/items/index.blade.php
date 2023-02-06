@@ -67,6 +67,7 @@
                     console.log(data);
                 },
                 error: function (data) {
+                    alert('There was an error (see console for details)');
                     console.log('error');
                     console.log(data);
                 }
