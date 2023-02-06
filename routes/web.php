@@ -23,7 +23,7 @@ Route::get('/', [HomeController::class, 'index']);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/items', [App\Http\Controllers\ItemController::class, 'index'])->name('items');
+Route::get('/items', [App\Http\Controllers\ItemController::class, 'index'])->name('items.index');
 Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
 Route::get('/admin/jobs', [App\Http\Controllers\Admin\JobController::class, 'index'])->name('admin.jobs');
 Route::post('/admin/jobs/run', [App\Http\Controllers\Admin\JobController::class, 'runJob'])->name('admin.jobs.run');

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container" style="max-width:90%">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -14,36 +14,14 @@
                         </div>
                     @endif
 
-                    @if(isset($items))
-                        {{ $items->links() }}
-                        <table class="table task-table">
-                            <thead>
-                                <th>ID</th>
-                                <th>File</th>
-                                <th>Path</th>
-                                <th>Itm ID</th>
-                                <th>Itm Adj</th>
-                                <th>Itm Weight</th>
-                                <th></th>
-                            </thead>
-                            <tbody>
-                                @foreach($items as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->filename }}</td>
-                                        <td>{{ $item->path }}</td>
-                                        <td>{{ $item->itm_id }}</td>
-                                        <td>{{ $item->itm_adj }}</td>
-                                        <td>{{ $item->itm_weight }}</td>
-                                        <td></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @endif
+                    {{ $dataTable->table() }}
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+@endpush

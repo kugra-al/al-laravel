@@ -50,7 +50,7 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('items') }}">{{ __('Items') }}</a>
+                                <a class="nav-link" href="{{ route('items.index') }}">{{ __('Items') }}</a>
                             </li>
                             @can('access admin')
                             <li class="nav-item dropdown">
@@ -90,5 +90,6 @@
             @yield('content')
         </main>
     </div>
+    @stack('scripts')
 </body>
 </html>

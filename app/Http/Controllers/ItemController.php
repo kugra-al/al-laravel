@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
-use Illuminate\Support\Facades\Cache;
+use App\DataTables\ItemsDataTable;
+
 class ItemController extends Controller
 {
-    public function index() {
-        $items = Item::paginate(50);
-        return view('items.index',["items"=>$items]);
+    public function index(ItemsDataTable $dataTable) {
+        return $dataTable->render('items.index');
     }
 }
