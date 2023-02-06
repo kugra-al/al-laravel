@@ -73,6 +73,8 @@ class ItemsDataTable extends DataTable
             Column::make('id'),
             Column::make('filename'),
             Column::make('path'),
+            Column::make('fullpath'),
+            Column::make('short'),
             Column::make('itm_id'),
             Column::make('itm_adj'),
             Column::make('itm_weight'),
