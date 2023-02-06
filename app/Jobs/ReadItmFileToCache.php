@@ -74,12 +74,14 @@ class ReadItmFileToCache implements ShouldQueue
             $parsed["path"] = $dir;
             $parsed["fullpath"] = $dir.$filename;
 
-            if (isset($parsed["itm_id"]) && isset($parsed["itm_adj"]) && strlen($parsed["itm_id"]) && strlen($parsed["itm_adj"])) {
+            if (isset($parsed["itm_id"]) && strlen($parsed["itm_id"])) {
                 $parsedID = explode("#",$parsed["itm_id"])[0];
-                $parsedAdj = explode("#",$parsed["itm_adj"])[0];
-                if ($parsedAdj == "*")
-                    $parsedAdj = "";
-                $parsed["short"] = $parsedAdj." ".$parsedID;
+                $parsed["short"] = $parsedID;
+                if (isset($parsed["itm_adj"]) && strlen($parsed["itm_adj"])) {
+                    $parsedAdj = explode("#",$parsed["itm_adj"])[0];
+                    if ($parsedAdj != "*")
+                        $parsed["short"] = $parsedAdj." ".$parsed["short"];
+                }
             }
 //             $now = \Carbon\Carbon::now('utc')->toDateTimeString();
 //             $parsed["created_at"] = $now;
