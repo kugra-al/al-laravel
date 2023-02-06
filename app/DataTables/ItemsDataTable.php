@@ -55,7 +55,7 @@ class ItemsDataTable extends DataTable
                     ->buttons([
                         Button::make('excel'),
                         Button::make('csv'),
-                        Button::make('pdf'),
+                       // Button::make('pdf'),
                         Button::make('print'),
                         Button::make('reset'),
                         Button::make('reload')
@@ -71,8 +71,8 @@ class ItemsDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('filename'),
-            Column::make('path'),
+       //   Column::make('filename'),
+       //   Column::make('path'),
             Column::make('fullpath'),
             Column::make('short'),
             Column::make('itm_id'),

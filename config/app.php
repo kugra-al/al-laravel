@@ -187,7 +187,8 @@ return [
          */
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-
+        // ? datatables
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -212,6 +213,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        // ? datatables
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 ];
