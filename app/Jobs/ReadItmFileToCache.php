@@ -61,8 +61,10 @@ class ReadItmFileToCache implements ShouldQueue
                     $parsed[$key] .= ' ' . $value;
                 } else {
                     // Preface all keys with 'itm_' because we need 'id' field for database
-                    $key = "itm_$field";
-                    $parsed[$key] = $value;
+                    if (preg_match('^[a-z_\-\d]+$',$field) {
+                        $key = "itm_$field";
+                        $parsed[$key] = $value;
+                    }
                 }
             }
             $tmp = explode("/",$file);
@@ -70,9 +72,9 @@ class ReadItmFileToCache implements ShouldQueue
             $dir = "/obj/".str_replace($filename,"",$file);
             $parsed["filename"] = $filename;
             $parsed["path"] = $dir;
-            $now = \Carbon\Carbon::now('utc')->toDateTimeString();
-            $parsed["created_at"] = $now;
-            $parsed["updated_at"] = $now;
+//             $now = \Carbon\Carbon::now('utc')->toDateTimeString();
+//             $parsed["created_at"] = $now;
+//             $parsed["updated_at"] = $now;
             // Cache any unknown keys
             $keys = array_keys($parsed);
             $cacheKey = Item::getKeyCacheName();
