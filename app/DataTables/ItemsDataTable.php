@@ -55,10 +55,16 @@ class ItemsDataTable extends DataTable
                     ->buttons([
                         Button::make('excel'),
                         Button::make('csv'),
-                       // Button::make('pdf'),
+                       // Button::make('pdf'), // needs https://github.com/barryvdh/laravel-snappy
                         Button::make('print'),
                         Button::make('reset'),
                         Button::make('reload')
+                    ])
+                    ->parameters([
+                        'initComplete' => "function() {
+                            if (typeof postInitFuncs == 'function')
+                                postInitFuncs();
+                        }"
                     ]);
     }
 
@@ -78,7 +84,8 @@ class ItemsDataTable extends DataTable
             Column::make('itm_id'),
             Column::make('itm_adj'),
             Column::make('itm_weight'),
-            Column::make('created_at'),
+            Column::make('itm_long'),
+          //  Column::make('created_at'),
             Column::make('updated_at'),
         ];
     }
