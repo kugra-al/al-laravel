@@ -22,6 +22,17 @@ class ReadItmFiles implements ShouldQueue
      */
     public function __construct()
     {
+
+
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
         $gitdir = storage_path()."/private/git/Accursedlands-obj/items";
         if (!File::exists($gitdir)) {
             throw new FileNotFoundException($gitdir);
@@ -41,16 +52,5 @@ class ReadItmFiles implements ShouldQueue
             }
   //          dd($searchFiles);
         }
-
-    }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        //
     }
 }

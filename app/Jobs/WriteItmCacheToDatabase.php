@@ -22,7 +22,17 @@ class WriteItmCacheToDatabase implements ShouldQueue
      */
     public function __construct()
     {
-        // Check cached keys against column keys in db. If any columns are
+
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+// Check cached keys against column keys in db. If any columns are
         //  not found in db, add to table
         $cacheKey = Item::getKeyCacheName();
         $keys = Cache::get($cacheKey);
@@ -63,15 +73,5 @@ class WriteItmCacheToDatabase implements ShouldQueue
             //Item::insert(array_values($values));
             Cache::forget($cacheKey);
         }
-    }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        //
     }
 }

@@ -26,6 +26,15 @@ class ReadItmFileToCache implements ShouldQueue
     public function __construct($file)
     {
         $this->file = storage_path()."/private/git/Accursedlands-obj/".$file;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
         if (!File::exists($this->file)) {
             throw new FileNotFoundException($this->file);
         } else {
@@ -62,14 +71,15 @@ class ReadItmFileToCache implements ShouldQueue
                 } else {
                     // Preface all keys with 'itm_' because we need 'id' field for database
                     if (preg_match('/^[a-z_\-\d]+$/i',$field)) {
-                        $key = "itm_$field";
+                        $key = "itm_".strtolower($field);
                         $parsed[$key] = $value;
                     }
                 }
             }
-            $tmp = explode("/",$file);
+            $tmp = explode("/",$this->file);
             $filename = $tmp[sizeof($tmp)-1];
-            $dir = "/obj/".str_replace($filename,"",$file);
+            // replace 'storage_path()."/private/git/Accursedlands-obj/"' with ''
+            $dir = "/obj/".str_replace($filename,"",$this->file);
             $parsed["filename"] = $filename;
             $parsed["path"] = $dir;
             $parsed["fullpath"] = $dir.$filename;
@@ -93,6 +103,7 @@ class ReadItmFileToCache implements ShouldQueue
             if (!$cachedKeys)
                 $cachedKeys = [];
             foreach($keys as $key) {
+                $key = strtolower($key);
                 if (in_array($key,$cachedKeys) === false)
                     $cachedKeys[] = $key;
             }
@@ -108,19 +119,5 @@ class ReadItmFileToCache implements ShouldQueue
             //dump(Cache::get(Item::getValueCacheName()));
 
         }
-    }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-//         if (!File::exists($file)) {
-//             throw new ProcessFailedException($file);
-//         } else {
-//             dd($file);
-//         }
     }
 }
