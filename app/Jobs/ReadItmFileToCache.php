@@ -80,6 +80,7 @@ class ReadItmFileToCache implements ShouldQueue
             $filename = $tmp[sizeof($tmp)-1];
             // replace 'storage_path()."/private/git/Accursedlands-obj/"' with ''
             $dir = "/obj/".str_replace($filename,"",$this->file);
+            $dir = str_replace(storage_path()."/private/git/Accursedlands-obj/","",$dir);
             $parsed["filename"] = $filename;
             $parsed["path"] = $dir;
             $parsed["fullpath"] = $dir.$filename;
