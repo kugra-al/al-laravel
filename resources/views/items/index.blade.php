@@ -15,6 +15,7 @@
                     @endif
 
                     @if(isset($items))
+                        {{ $items->links() }}
                         <table class="table task-table">
                             <thead>
                                 <th>ID</th>
