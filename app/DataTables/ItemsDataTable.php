@@ -91,7 +91,8 @@ class ItemsDataTable extends DataTable
                        // Button::make('pdf'), // needs https://github.com/barryvdh/laravel-snappy
                         Button::make('print'),
                         Button::make('reset'),
-                        Button::make('reload')
+                        Button::make('reload'),
+                        Button::make('colvis')
                     ])
                     ->parameters([
                         'initComplete' => "function() {
