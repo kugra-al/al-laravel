@@ -29,14 +29,30 @@ class ItemsDataTable extends DataTable
         if (!$paths) {
             $tmp = DB::table('items')->selectRaw("COUNT(*) as total, SUBSTRING_INDEX(path,'/',4) as partpath")->distinct()->groupBy("partpath")->get();
             foreach($tmp as $value) {
-                $paths[] = [
-                    'value' => $value->partpath,
-                    'label' => $value->partpath,
-                    'total' => $value->total,
-                    'count' => $value->total
-                ];
+                if ($value->partpath)
+                    $paths[] = [
+                        'value' => $value->partpath,
+                        'label' => $value->partpath,
+                        'total' => $value->total,
+                        'count' => $value->total
+                    ];
             }
             Cache::forever('path-nums-searchpane', $paths);
+        }
+
+        $objs = Cache::get('obj-nums-searchpane');
+        if (!$objs) {
+            $tmp = DB::table('items')->selectRaw("COUNT(*) as total, itm_obj")->distinct()->groupBy("itm_obj")->get();
+            foreach($tmp as $value) {
+                if ($value->itm_obj)
+                    $objs[] = [
+                        'value' => $value->itm_obj,
+                        'label' => $value->itm_obj,
+                        'total' => $value->total,
+                        'count' => $value->total
+                    ];
+            }
+            Cache::forever('obj-nums-searchpane', $objs);
         }
         return (new EloquentDataTable($query))
             ->searchPane(
@@ -48,6 +64,16 @@ class ItemsDataTable extends DataTable
                             'fullpath',
                             'like',
                             $values[0]."%");
+                }
+            )
+            ->searchPane(
+                'itm_obj',
+                $objs,
+                function (\Illuminate\Database\Eloquent\Builder $query, array $values) {
+                    return $query
+                        ->whereIn(
+                            'itm_obj',
+                            $values);
                 }
             )
             ->addColumn('action', 'items.action')
@@ -76,7 +102,7 @@ class ItemsDataTable extends DataTable
                     ->setTableId('items-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->searchPanes(SearchPane::make()->layout('columns-3'))
+                    ->searchPanes(SearchPane::make()->layout('columns-2'))
                     ->dom('PBfrtip')
                     //->dom('Bfrtip')
                     ->orderBy(1)
@@ -112,7 +138,7 @@ class ItemsDataTable extends DataTable
             'itm_id'=>[],
             'itm_adj'=>[],
             'itm_weight'=>[],
-            'itm_long'=>[],
+            'itm_obj'=>['searchPanes'=>true],
             'updated_at'=>[],
             'action'=>[]
         ];
