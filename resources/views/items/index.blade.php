@@ -42,6 +42,9 @@
     <style>
         #items-table { display: none; }
         #main-loader {text-align: center; }
+        /* for colvis list.  Sketchy - something else might use this selector */
+        .dt-button-collection { overflow: auto; }
+        .dt-button-collection .dropdown-menu { height: 300px; }
     </style>
 @endsection
 
