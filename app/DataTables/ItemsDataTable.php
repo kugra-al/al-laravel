@@ -12,6 +12,8 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\Html\SearchPane;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ItemsDataTable extends DataTable
 {
@@ -23,29 +25,23 @@ class ItemsDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
+        $paths = Cache::get('path-nums-searchpane');
+        if (!$paths) {
+            $tmp = DB::table('items')->selectRaw("COUNT(*) as total, SUBSTRING_INDEX(path,'/',4) as partpath")->distinct()->groupBy("partpath")->get();
+            foreach($tmp as $value) {
+                $paths[] = [
+                    'value' => $value->partpath,
+                    'label' => $value->partpath,
+                    'total' => $value->total,
+                    'count' => $value->total
+                ];
+            }
+            Cache::forever('path-nums-searchpane', $paths);
+        }
         return (new EloquentDataTable($query))
             ->searchPane(
                 'fullpath',
-                [
-                    [
-                        'value'=>'/obj/items/weapons/',
-                        'label'=>'/obj/items/weapons/',
-                        'total'=>205,
-                        'count'=>10
-                    ],
-                    [
-                        'value'=>'/obj/items/gems/',
-                        'label'=>'/obj/items/gems/',
-                        'total'=>20,
-                        'count'=>10
-                    ],
-                    [
-                        'value'=>'/obj/items/armors/',
-                        'label'=>'/obj/items/armors/',
-                        'total'=>89,
-                        'count'=>10
-                    ]
-                ],
+                $paths,
                 function (\Illuminate\Database\Eloquent\Builder $query, array $values) {
                     return $query
                         ->where(
