@@ -109,20 +109,29 @@ class ItemsDataTable extends DataTable
      */
     public function getColumns(): array
     {
-
-    return [
-            Column::make('id')->searchPanes(false),
-       //   Column::make('filename'),
-       //   Column::make('path'),
-            Column::make('fullpath')->searchPanes(true),
-            Column::make('short')->searchPanes(false),
-            Column::make('itm_id')->searchPanes(false),
-            Column::make('itm_adj')->searchPanes(false),
-            Column::make('itm_weight')->searchPanes(false),
-            Column::make('itm_long')->searchPanes(false),
-          //  Column::make('created_at'),
-            Column::make('updated_at')->searchPanes(false),
+        $alwaysShow = [
+            'id'=>[],
+            'fullpath'=>['searchPanes'=>true],
+            'short'=>[],
+            'itm_id'=>[],
+            'itm_adj'=>[],
+            'itm_weight'=>[],
+            'itm_long'=>[],
+            'updated_at'=>[]
         ];
+        $allCols = \Schema::getColumnListing('items');
+        $out = [];
+        foreach($alwaysShow as $column=>$opts) {
+            $col = Column::make($column);
+            if (isset($opts['searchPanes']) && $opts['searchPanes'] == true)
+                $col->searchPanes(true);
+            $out[] = $col;
+        }
+        foreach($allCols as $c) {
+            if (in_array($c,array_keys($alwaysShow))===false)
+                $out[] = Column::make($c)->hidden();
+        }
+        return $out;
     }
 
     /**
