@@ -25,18 +25,21 @@
             <div class="modal-content" style="width:800px;">
                 <div class="modal-header">
                     <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="$('#itmFileModal').hide()"></button>
                 </div>
                 <div class="modal-body">
                     <p>Modal body text goes here.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick="$('#itmFileModal').hide()">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        table.dataTable > tbody > tr { cursor: pointer; }
+    </style>
 @endsection
 
 @push('scripts')
@@ -64,6 +67,7 @@
                 success: function (data) {
                     $('#itmFileModal').show();
                     $('#itmFileModal').find('.modal-body').html("<pre style='background:#111; color: #1af21a'>"+data+"</pre>");
+                    $('#itmFileModal').find('.modal-title').text('File: '+file);
                     console.log(data);
                 },
                 error: function (data) {
