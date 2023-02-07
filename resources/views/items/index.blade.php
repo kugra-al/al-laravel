@@ -39,6 +39,7 @@
 
     <style>
         table.dataTable > tbody > tr { cursor: pointer; }
+
     </style>
 @endsection
 

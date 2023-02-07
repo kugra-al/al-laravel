@@ -11,6 +11,7 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Yajra\DataTables\Html\SearchPane;
 
 class ItemsDataTable extends DataTable
 {
@@ -49,6 +50,8 @@ class ItemsDataTable extends DataTable
                     ->setTableId('items-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
+                    ->searchPanes(SearchPane::make()->layout('columns-8'))
+                    ->dom('PBfrtip')
                     //->dom('Bfrtip')
                     ->orderBy(1)
                     ->selectStyleSingle()
@@ -75,8 +78,9 @@ class ItemsDataTable extends DataTable
      */
     public function getColumns(): array
     {
-        return [
-            Column::make('id'),
+
+    return [
+            Column::make('id')->makeHidden(),
        //   Column::make('filename'),
        //   Column::make('path'),
             Column::make('fullpath'),
