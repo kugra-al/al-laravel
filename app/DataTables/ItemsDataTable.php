@@ -24,6 +24,36 @@ class ItemsDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->searchPane(
+                'fullpath',
+                [
+                    [
+                        'value'=>'/obj/items/weapons/',
+                        'label'=>'/obj/items/weapons/',
+                        'total'=>205,
+                        'count'=>10
+                    ],
+                    [
+                        'value'=>'/obj/items/gems/',
+                        'label'=>'/obj/items/gems/',
+                        'total'=>20,
+                        'count'=>10
+                    ],
+                    [
+                        'value'=>'/obj/items/armors/',
+                        'label'=>'/obj/items/armors/',
+                        'total'=>89,
+                        'count'=>10
+                    ]
+                ],
+                function (\Illuminate\Database\Eloquent\Builder $query, array $values) {
+                    return $query
+                        ->where(
+                            'fullpath',
+                            'like',
+                            $values[0]."%");
+                }
+            )
             ->addColumn('action', 'items.action')
             ->setRowId('id');
     }
@@ -50,7 +80,7 @@ class ItemsDataTable extends DataTable
                     ->setTableId('items-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->searchPanes(SearchPane::make()->layout('columns-8'))
+                    ->searchPanes(SearchPane::make()->layout('columns-3'))
                     ->dom('PBfrtip')
                     //->dom('Bfrtip')
                     ->orderBy(1)
@@ -80,17 +110,17 @@ class ItemsDataTable extends DataTable
     {
 
     return [
-            Column::make('id')->makeHidden(),
+            Column::make('id')->searchPanes(false),
        //   Column::make('filename'),
        //   Column::make('path'),
-            Column::make('fullpath'),
-            Column::make('short'),
-            Column::make('itm_id'),
-            Column::make('itm_adj'),
-            Column::make('itm_weight'),
-            Column::make('itm_long'),
+            Column::make('fullpath')->searchPanes(true),
+            Column::make('short')->searchPanes(false),
+            Column::make('itm_id')->searchPanes(false),
+            Column::make('itm_adj')->searchPanes(false),
+            Column::make('itm_weight')->searchPanes(false),
+            Column::make('itm_long')->searchPanes(false),
           //  Column::make('created_at'),
-            Column::make('updated_at'),
+            Column::make('updated_at')->searchPanes(false),
         ];
     }
 
