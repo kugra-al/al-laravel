@@ -14,7 +14,7 @@
                         </div>
                     @endif
                     <div id="main-loader">
-                        <img src="/img/loader-line.gif">
+                        <img src="/img/loader-text.gif">
                     </div>
                     {{ $dataTable->table() }}
                 </div>
@@ -56,8 +56,8 @@
                 var data = table.row( this ).data();
                 loadItmFile(data['fullpath']);
             });
-            $('#main-loader').hide();
-            $('#items-table').show();
+            $('#main-loader').slideUp();
+            $('#items-table').fadeIn();
         }
         function loadItmFile (file) {
            $.ajaxSetup({
