@@ -13,7 +13,9 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
+                    <div id="main-loader">
+                        <img src="/img/loader-line.gif">
+                    </div>
                     {{ $dataTable->table() }}
                 </div>
             </div>
@@ -39,7 +41,8 @@
 
     <style>
         table.dataTable > tbody > tr { cursor: pointer; }
-
+        #items-table { display: none; }
+        #main-loader {text-align: center; }
     </style>
 @endsection
 
@@ -53,6 +56,8 @@
                 var data = table.row( this ).data();
                 loadItmFile(data['fullpath']);
             });
+            $('#main-loader').hide();
+            $('#items-table').show();
         }
         function loadItmFile (file) {
            $.ajaxSetup({
