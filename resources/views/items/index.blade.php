@@ -40,7 +40,6 @@
     </div>
 
     <style>
-        table.dataTable > tbody > tr { cursor: pointer; }
         #items-table { display: none; }
         #main-loader {text-align: center; }
     </style>
@@ -52,8 +51,8 @@
         // Loads after initComplete event on DataTable
         function postInitFuncs() {
             var table = window.LaravelDataTables['items-table'];
-            $('#items-table tbody').on('click', 'tr', function() {
-                var data = table.row( this ).data();
+            $('#items-table tbody').on('click', 'tr button.view-itm-file', function() {
+                var data = table.row( $(this).parents('tr').first() ).data();
                 loadItmFile(data['fullpath']);
             });
             $('#main-loader').slideUp();
