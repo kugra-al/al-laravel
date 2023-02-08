@@ -76,6 +76,9 @@ class ItemsDataTable extends DataTable
                             $values);
                 }
             )
+            ->orderColumn('itm_weight', function($query, $order) {
+                $query->orderByRaw('CONVERT(itm_weight, SIGNED) '.$order);
+            })
             ->addColumn('action', 'items.action')
             ->setRowId('id');
     }
