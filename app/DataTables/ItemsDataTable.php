@@ -54,7 +54,9 @@ class ItemsDataTable extends DataTable
             }
             Cache::forever('obj-nums-searchpane', $objs);
         }
-        return (new EloquentDataTable($query))
+        $toIntCols = Item::castToIntCols();
+
+        $tableOut = (new EloquentDataTable($query))
             ->searchPane(
                 'fullpath',
                 $paths,
@@ -76,11 +78,15 @@ class ItemsDataTable extends DataTable
                             $values);
                 }
             )
-            ->orderColumn('itm_weight', function($query, $order) {
-                $query->orderByRaw('CONVERT(itm_weight, SIGNED) '.$order);
-            })
             ->addColumn('action', 'items.action')
             ->setRowId('id');
+
+        foreach($toIntCols as $col) {
+            $tableOut->orderColumn('itm_'.$col, function($query, $order) use($col) {
+                $query->orderByRaw('CONVERT(itm_'.$col.', SIGNED) '.$order);
+            });
+        }
+        return $tableOut;
     }
 
     /**
