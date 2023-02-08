@@ -117,10 +117,10 @@ class ItemsDataTable extends DataTable
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
+                       // Button::make('postExcelVisibleColumns'),
+                        Button::make('postCsvVisibleColumns'),
                        // Button::make('pdf'), // needs https://github.com/barryvdh/laravel-snappy
-                        Button::make('print'),
+                        // Button::make('print'), // prints all columns (bad)
                         Button::make('reset'),
                         Button::make('reload'),
                         Button::make('colvis')
@@ -140,6 +140,15 @@ class ItemsDataTable extends DataTable
      */
     public function getColumns(): array
     {
+        if ($this->request && in_array($this->request->get('action'), ['excel', 'csv'])) {
+            if ($this->request->get('visible_columns')) {
+                $out = [];
+                foreach($this->request->get('visible_columns') as $col) {
+                    $out[] = Column::make($col);
+                }
+                return $out;
+            }
+        }
         $alwaysShow = [
             'id'=>[],
             'fullpath'=>['searchPanes'=>true],

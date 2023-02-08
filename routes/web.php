@@ -28,3 +28,4 @@ Route::post('/items/loadfile', [App\Http\Controllers\ItemController::class, 'loa
 Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
 Route::get('/admin/jobs', [App\Http\Controllers\Admin\JobController::class, 'index'])->name('admin.jobs');
 Route::post('/admin/jobs/run', [App\Http\Controllers\Admin\JobController::class, 'runJob'])->name('admin.jobs.run');
+Route::post('/items/export', [App\Http\Controllers\ItemController::class, 'index'])->name('items.export');
