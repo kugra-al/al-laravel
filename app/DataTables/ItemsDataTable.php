@@ -32,7 +32,7 @@ class ItemsDataTable extends DataTable
                 if ($value->partpath)
                     $paths[] = [
                         'value' => $value->partpath,
-                        'label' => $value->partpath,
+                        'label' => $value->partpath."/..",
                         'total' => $value->total,
                         'count' => $value->total
                     ];
