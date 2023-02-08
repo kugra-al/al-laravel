@@ -45,6 +45,7 @@
         /* for colvis list.  Sketchy - something else might use this selector */
         .dt-button-collection { overflow: auto; }
         .dt-button-collection .dropdown-menu { height: 300px; }
+        .dropdown-item.active, .dropdown-item:active { background-color: #d7d7d7; }
     </style>
 @endsection
 
