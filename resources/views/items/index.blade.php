@@ -24,7 +24,7 @@
 </div>
     <div class="modal" id="itmFileModal" tabindex="-1">
         <div class="modal-dialog">
-            <div class="modal-content" style="width:800px;">
+            <div class="modal-content" style="width:1000px;">
                 <div class="modal-header">
                     <h5 class="modal-title">Modal title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="$('#itmFileModal').hide()"></button>
@@ -47,6 +47,30 @@
         .dt-button-collection .dropdown-menu { height: 300px; }
         .dropdown-item.active, .dropdown-item:active { background-color: #d7d7d7; }
         #items-table_wrapper { overflow-y: auto; }
+        pre.code {
+            white-space: pre-wrap;
+            background: #181818;
+            color: #0b0;
+        }
+        pre.code::before {
+            counter-reset: listing;
+        }
+        pre.code code {
+            counter-increment: listing;
+            display: block;
+        }
+        pre.code code::before {
+            content: counter(listing) ". ";
+            display: inline-block;
+            width: 8em;
+            padding-left: auto;
+            margin-left: auto;
+            text-align: right;
+        }
+        textarea.copy {
+            position: absolute;
+            left: -100%;
+        }
     </style>
 @endsection
 
@@ -77,7 +101,18 @@
                 dataType: 'json',
                 success: function (data) {
                     $('#itmFileModal').show();
-                    $('#itmFileModal').find('.modal-body').html("<pre style='background:#111; color: #1af21a'>"+data+"</pre>");
+                   // $('#itmFileModal').find('.modal-body').html("<pre style='background:#111; color: #1af21a'>"+data+"</pre>");
+                    var pre = document.createElement('pre');
+                    $(pre).prop('id', 'file-code');
+                    $(pre).addClass('code');
+                    data = data.split("\n");
+                    for (x = 0; x < data.length; x++) {
+                        if (data[x].length)
+                            $(pre).append("<code>"+data[x]+"</code>");
+                    }
+                    $('#itmFileModal').find('.modal-body').html("<a target='_blank' style='color: #3700ce' href='"+file.replace('/obj/','https://github.com/Amirani-al/Accursedlands-obj/blob/master/')+"'>View "+file+" on github</a><br/>");
+                    $('#itmFileModal').find('.modal-body').append("<button class='btn btn-info' id='copyButton' onClick='copyFunction();'>Copy Text to clipboard</button>");
+                    $('#itmFileModal').find('.modal-body').append(pre);
                     $('#itmFileModal').find('.modal-title').text('File: '+file);
                     console.log(data);
                 },
@@ -88,6 +123,19 @@
                 }
             });
             console.log(file);
+        }
+
+        function copyFunction() {
+            const copyText = document.getElementById("file-code").textContent;
+            const textArea = document.createElement('textarea');
+            $(textArea).addClass('copy');
+            textArea.textContent = copyText;
+            document.body.append(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            $('#copyButton').text('Copied');
+            $('#copyButton').prop('disabled',true);
+            textArea.element.remove();
         }
     </script>
 @endpush
