@@ -148,7 +148,7 @@ class ItemsDataTable extends DataTable
             'itm_adj'=>[],
             'itm_weight'=>[],
             'itm_obj'=>['searchPanes'=>true],
-            'updated_at'=>[],
+          //  'updated_at'=>[],
             'action'=>[]
         ];
         $allCols = \Schema::getColumnListing('items');

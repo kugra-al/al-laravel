@@ -46,6 +46,7 @@
         .dt-button-collection { overflow: auto; }
         .dt-button-collection .dropdown-menu { height: 300px; }
         .dropdown-item.active, .dropdown-item:active { background-color: #d7d7d7; }
+        #items-table_wrapper { overflow-y: auto; }
     </style>
 @endsection
 
