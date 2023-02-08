@@ -144,7 +144,8 @@ class ItemsDataTable extends DataTable
             if ($this->request->get('visible_columns')) {
                 $out = [];
                 foreach($this->request->get('visible_columns') as $col) {
-                    $out[] = Column::make($col);
+                    if ($col != "action") // Never want to export this
+                        $out[] = Column::make($col);
                 }
                 return $out;
             }
