@@ -9,6 +9,7 @@ use App\Jobs\FetchGithubRepo;
 use App\Jobs\ReadItmFileToCache;
 use App\Jobs\ReadItmFiles;
 use App\Jobs\WriteItmCacheToDatabase;
+use App\Jobs\ResetItemsTable;
 
 class JobController extends Controller
 {
@@ -19,7 +20,8 @@ class JobController extends Controller
         $jobs = [
             'fetch-item-files'=>['desc'=>'Fetch all item files from <a href="https://github.com/Amirani-al/Accursedlands-obj" target="_blank">Amirani-al/Accursedlands-obj</a>','time'=>'<10 seconds'],
             'read-all-itm-files'=>['desc'=>'Read through all locally stored .itm files and write to cache','time'=>'~80 seconds'],
-            'write-itms-to-db'=>['desc'=>'Write all cached .itm files to database','time'=>'<10 seconds']
+            'reset-items-table'=>['desc'=>'Resets all columns and values in items table.  Run before `write-items-to-db` to reset columns and data','time'=>'<10 seconds'],
+            'write-itms-to-db'=>['desc'=>'Write all cached .itm files to database','time'=>'~20 seconds']
         ];
         return view('admin.jobs',["jobs"=>$jobs]);
     }
@@ -31,6 +33,9 @@ class JobController extends Controller
             case "fetch-item-files" :
                 $repo = "Amirani-al/Accursedlands-obj";
                 FetchGithubRepo::dispatch($repo);
+                break;
+            case 'reset-items-table' :
+                ResetItemsTable::dispatch();
                 break;
             case 'read-all-itm-files':
                 ReadItmFiles::dispatch();

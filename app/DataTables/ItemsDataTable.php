@@ -121,7 +121,7 @@ class ItemsDataTable extends DataTable
                     )
                     ->dom('PBfrtip')
                     //->dom('Bfrtip')
-                    ->orderBy(1)
+                    ->orderBy(1,'asc')
                     ->selectStyleSingle()
                     ->buttons([
                        // Button::make('postExcelVisibleColumns'),
