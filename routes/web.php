@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\Admin\JobController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +34,9 @@ Route::group(['middleware' => ['can:access admin']], function() {
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
     Route::get('/admin/jobs', [App\Http\Controllers\Admin\JobController::class, 'index'])->name('admin.jobs');
     Route::post('/admin/jobs/run', [App\Http\Controllers\Admin\JobController::class, 'runJob'])->name('admin.jobs.run');
+    Route::resource('/admin/users', UserController::class)->names([
+        'index' => 'admin.users.index',
+        'create' => 'admin.users.create',
+        'update' => 'admin.users.update'
+    ]);
 });
