@@ -26,11 +26,15 @@ First milestone will be to read all .itm files from Amirani-AL/Accursedlands-obj
 - copy .env.example to .env
    - edit `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
    - add field `GITHUB_TOKEN` with token as value
+   - add field `DEFAULT_ADMIN_USER_EMAIL` with email of default admin user
+   - add field `DEFAULT_ADMIN_USER_NAME` with name of default admin user
+   - add field `DEFAULT_ADMIN_USER_PASS` with password of default admin user
+   - note: default admin user vars are used only for creating initial permissions
 - run cli cmd `php artisan migrate` to setup database tables
 - run cli cmd `php artisan serve` to run web dev server (`php artisan serve &` to run in background) - (for testing only, should be installed on apache/nginx eventually)
 - run cli cmd `npm run dev` to run npm dev server (`npm run dev &` to run in background)
-- navigate to web frontend (address should be shown after `php artisan serve`) and register a new account
-- run cli cmd `php artisan db:seed --class=PermissionSeeder` to create AL permissions and roles and apply admin and super-admin roles to user #1 (not working)
+- run cli cmd `php artisan db:seed --class=PermissionSeeder` to create AL permissions and roles and apply admin and super-admin roles to DEFAULT_ADMIN_USER
+- navigate to frontend, login and change password from default
 
 ### Queues
 - run cli cmd `php artisan queue:work` to run the queue worker
