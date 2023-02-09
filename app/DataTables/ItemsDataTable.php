@@ -113,7 +113,12 @@ class ItemsDataTable extends DataTable
                     ->setTableId('items-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->searchPanes(SearchPane::make()->layout('columns-2'))
+                    ->searchPanes(
+                        SearchPane::make()
+                            ->layout('columns-2')
+                            ->dtOpts(['order'=>[1,'desc']])
+                            //->controls(false)
+                    )
                     ->dom('PBfrtip')
                     //->dom('Bfrtip')
                     ->orderBy(1)
