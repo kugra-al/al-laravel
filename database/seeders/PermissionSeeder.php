@@ -22,13 +22,18 @@ class PermissionSeeder extends Seeder
 
         // create permissions
         Permission::create(['name' => 'access admin']);
+        Permission::create(['name' => 'access items']);
 
         // create roles and assign created permissions
+
 
         // this can be done as separate statements
         $role = Role::create(['name' => 'admin']);
         $role->givePermissionTo('access admin');
+        $role->givePermissionTo('access items');
 
+        $role = Role::create(['name' => 'creator']);
+        $role->givePermissionTo('access items');
 
         $role = Role::create(['name' => 'super-admin']);
         $role->givePermissionTo(Permission::all());
