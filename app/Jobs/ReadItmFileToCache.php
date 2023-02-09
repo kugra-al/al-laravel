@@ -69,9 +69,8 @@ class ReadItmFileToCache implements ShouldQueue
                 } elseif ($field[0] === '~') {
                     $parsed[$key] .= ' ' . $value;
                 } else {
-                    // Preface all keys with 'itm_' because we need 'id' field for database
                     if (preg_match('/^[a-z_\-\d]+$/i',$field)) {
-                        $key = "itm_".strtolower($field);
+                        $key = strtolower($field);
                         $parsed[$key] = $value;
                     }
                 }
@@ -85,11 +84,11 @@ class ReadItmFileToCache implements ShouldQueue
             $parsed["path"] = $dir;
             $parsed["fullpath"] = $dir.$filename;
 
-            if (isset($parsed["itm_id"]) && strlen($parsed["itm_id"])) {
-                $parsedID = explode("#",$parsed["itm_id"])[0];
+            if (isset($parsed["id"]) && strlen($parsed["id"])) {
+                $parsedID = explode("#",$parsed["id"])[0];
                 $parsed["short"] = $parsedID;
-                if (isset($parsed["itm_adj"]) && strlen($parsed["itm_adj"])) {
-                    $parsedAdj = explode("#",$parsed["itm_adj"])[0];
+                if (isset($parsed["adj"]) && strlen($parsed["adj"])) {
+                    $parsedAdj = explode("#",$parsed["adj"])[0];
                     if ($parsedAdj != "*")
                         $parsed["short"] = $parsedAdj." ".$parsed["short"];
                 }

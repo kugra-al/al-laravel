@@ -25,6 +25,8 @@ class ItemsDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
+        if (!Item::count())
+            return (new EloquentDataTable($query));
         $paths = Cache::get('path-nums-searchpane');
         if (!$paths) {
             $tmp = DB::table('items')->selectRaw("COUNT(*) as total, SUBSTRING_INDEX(path,'/',4) as partpath")->distinct()->groupBy("partpath")->get();
@@ -42,12 +44,12 @@ class ItemsDataTable extends DataTable
 
         $objs = Cache::get('obj-nums-searchpane');
         if (!$objs) {
-            $tmp = DB::table('items')->selectRaw("COUNT(*) as total, itm_obj")->distinct()->groupBy("itm_obj")->get();
+            $tmp = DB::table('items')->selectRaw("COUNT(*) as total, obj")->distinct()->groupBy("obj")->get();
             foreach($tmp as $value) {
-                if ($value->itm_obj)
+                if ($value->obj)
                     $objs[] = [
-                        'value' => $value->itm_obj,
-                        'label' => $value->itm_obj,
+                        'value' => $value->obj,
+                        'label' => $value->obj,
                         'total' => $value->total,
                         'count' => $value->total
                     ];
@@ -69,21 +71,21 @@ class ItemsDataTable extends DataTable
                 }
             )
             ->searchPane(
-                'itm_obj',
+                'obj',
                 $objs,
                 function (\Illuminate\Database\Eloquent\Builder $query, array $values) {
                     return $query
                         ->whereIn(
-                            'itm_obj',
+                            'obj',
                             $values);
                 }
             )
             ->addColumn('action', 'items.action')
-            ->setRowId('id');
+            ->setRowId('fullpath');
 
         foreach($toIntCols as $col) {
-            $tableOut->orderColumn('itm_'.$col, function($query, $order) use($col) {
-                $query->orderByRaw('CONVERT(itm_'.$col.', SIGNED) '.$order);
+            $tableOut->orderColumn($col, function($query, $order) use($col) {
+                $query->orderByRaw('CONVERT('.$col.', SIGNED) '.$order);
             });
         }
         return $tableOut;
@@ -151,13 +153,12 @@ class ItemsDataTable extends DataTable
             }
         }
         $alwaysShow = [
-            'id'=>[],
             'fullpath'=>['searchPanes'=>true],
             'short'=>[],
-            'itm_id'=>[],
-            'itm_adj'=>[],
-            'itm_weight'=>[],
-            'itm_obj'=>['searchPanes'=>true],
+            'id'=>[],
+            'adj'=>[],
+            'weight'=>[],
+            'obj'=>['searchPanes'=>true],
           //  'updated_at'=>[],
             'action'=>[]
         ];

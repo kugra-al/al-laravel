@@ -64,12 +64,14 @@ class WriteItmCacheToDatabase implements ShouldQueue
             // If this causes problems, batch the jobs together and split the load
             //  or
             // Normalize the keys so it can be done on a single insert and skip eloquent
+            Item::unguard();
             foreach($values as $value) {
                 $item = new Item;
                 $item->fill($value);
                 $item->save();
 //                dd($value);
             }
+            Item::reguard();
             //Item::insert(array_values($values));
             Cache::forget($cacheKey);
         }

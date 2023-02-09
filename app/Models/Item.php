@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory;
-    protected $guarded = ['id'];
-    protected $fillable = [];
+    protected $primaryKey = 'fullpath';
+    public $incrementing = false;
+
 
     public static function getKeyCacheName() {
         return 'item_d-itm-keys';

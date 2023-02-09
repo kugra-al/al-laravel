@@ -14,9 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->id();
+            $table->string('fullpath');
             $table->string('filename');
             $table->string('path');
+            $table->string('short')->nullable();
             $table->timestamps();
         });
     }
