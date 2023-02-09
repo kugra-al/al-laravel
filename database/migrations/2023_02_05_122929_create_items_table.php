@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('items', function (Blueprint $table) {
+            $table->id('db_id');
             $table->string('fullpath');
             $table->string('filename');
             $table->string('path');

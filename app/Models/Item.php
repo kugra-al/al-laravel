@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'fullpath';
-    public $incrementing = false;
-
+    protected $primaryKey = 'db_id';
 
     public static function getKeyCacheName() {
         return 'item_d-itm-keys';

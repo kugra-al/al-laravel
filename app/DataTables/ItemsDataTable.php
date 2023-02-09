@@ -81,7 +81,7 @@ class ItemsDataTable extends DataTable
                 }
             )
             ->addColumn('action', 'items.action')
-            ->setRowId('fullpath');
+            ->setRowId('db_id');
 
         foreach($toIntCols as $col) {
             $tableOut->orderColumn($col, function($query, $order) use($col) {
@@ -142,17 +142,19 @@ class ItemsDataTable extends DataTable
      */
     public function getColumns(): array
     {
+        $out = [];
         if ($this->request && in_array($this->request->get('action'), ['excel', 'csv'])) {
             if ($this->request->get('visible_columns')) {
                 $out = [];
                 foreach($this->request->get('visible_columns') as $col) {
-                    if ($col != "action") // Never want to export this
+                    if ($col != "action" && $col != "db_id") // Never want to export this
                         $out[] = Column::make($col);
                 }
                 return $out;
             }
         }
         $alwaysShow = [
+            'db_id'=>[],
             'fullpath'=>['searchPanes'=>true],
             'short'=>[],
             'id'=>[],
@@ -162,8 +164,8 @@ class ItemsDataTable extends DataTable
           //  'updated_at'=>[],
             'action'=>[]
         ];
+
         $allCols = \Schema::getColumnListing('items');
-        $out = [];
         foreach($alwaysShow as $column=>$opts) {
             $col = Column::make($column);
             if (isset($opts['searchPanes']) && $opts['searchPanes'] == true)
