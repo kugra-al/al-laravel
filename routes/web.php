@@ -22,9 +22,12 @@ Route::get('/', [HomeController::class, 'index']);
 
 
 
-Auth::routes();
+Auth::routes(['register'=>false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/change-password', [App\Http\Controllers\HomeController::class, 'changePassword'])->name('change-password');
+Route::post('/change-password', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('update-password');
+
 Route::group(['middleware' => ['can:access items']], function() {
     Route::get('/items', [App\Http\Controllers\ItemController::class, 'index'])->name('items.index');
     Route::post('/items/loadfile', [App\Http\Controllers\ItemController::class, 'loadItmFile'])->name('items.loadfile');
