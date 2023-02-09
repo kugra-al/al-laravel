@@ -42,7 +42,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required',
             'password' => 'required',
-            'password_confirmation' => 'required'
+            'password_confirmation' => 'required_with:password|same:password'
         ]);
 
         if (User::where('email',$request->get('email'))->first())
@@ -79,8 +79,9 @@ class UserController extends Controller
         $user = User::find($id);
         if (!$user)
             return redirect('admin/users')->with('status',"User {$id} not found");
-        $roles = Role::all()->pluck('name');
-        return view('admin.users.edit',['user'=>$user, 'roles'=>$roles]);
+        $roles = Role::all();
+        $userRoles = $user->roles()->pluck('name')->toArray();
+        return view('admin.users.edit',['user'=>$user, 'roles'=>$roles, 'userRoles'=>$userRoles]);
     }
 
     /**
@@ -92,7 +93,35 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'password_confirmation'=>'required_with:password|same:password'
+        ]);
+        $user = User::find($id);
+        if (!$user)
+            return redirect('admin/users')->with('status','User not found');
+        if ($user->email != $request->get('email'))
+            $user->email = $request->get('email');
+        if ($user->name != $request->get('name'))
+            $user->name = $request->get('name');
+        if ($request->get('password') && strlen($request->get('password'))) {
+            $passwordHash = \Hash::make($request->get('password'));
+            if ($passwordHash != $user->password)
+                $user->password = $passwordHash;
+        }
+        $status = "User vars not updated.  ";
+        if ($user->isDirty()) {
+            $user->save();
+            $status = "User vars updated.  ";
+        }
+        $userRoles = $user->roles()->get()->pluck('name')->toArray();
+        if ($userRoles != $request->get('roles')) {
+            $user->syncRoles($request->get('roles'));
+            $status .= "User roles updated.";
+        } else
+            $status .= "User roles not updated.";
+        return redirect('admin/users')->with('status',$status);
     }
 
     /**
@@ -103,6 +132,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+        return redirect('admin/users')->with('status',"Deleted user {$id}");
     }
 }

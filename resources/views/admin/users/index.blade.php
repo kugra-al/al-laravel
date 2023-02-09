@@ -19,6 +19,11 @@
                     <td>{{ implode(", ", $user->getRoleNames()->toArray()) }}</td>
                     <td>
                         <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-info">Edit</a>
+                        <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" style="display:inline" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                            @method('DELETE')
+                            @csrf
+                            <button class="btn btn-danger">Delete User</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
@@ -26,9 +31,7 @@
         </table>
     @endif
 
-        <form>
-            <a href="{{ route('admin.users.create') }}" class="btn btn-success">Create User</a>
-        </form>
-
+    <div>
+        <a href="{{ route('admin.users.create') }}" class="btn btn-success">Create User</a>
     </div>
 @endsection

@@ -42,6 +42,7 @@ Route::group(['middleware' => ['can:access admin']], function() {
         'create' => 'admin.users.create',
         'store' => 'admin.users.store',
         'update' => 'admin.users.update',
-        'edit' => 'admin.users.edit'
+        'edit' => 'admin.users.edit',
+        'destroy' => 'admin.users.destroy'
     ]);
 });

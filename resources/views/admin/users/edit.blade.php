@@ -3,6 +3,7 @@
 @section('admin-content')
     @if(isset($user))
         <form method="POST" action="{{ route('admin.users.update',$user->id) }}">
+            @method('PATCH')
             @csrf
 
             <div class="row mb-3">
@@ -55,20 +56,25 @@
                 </div>
             </div>
 
+
+            <div class="row-mb-3">
+                <label class="col-md-4 col-form-label text-md-en">Roles</label>
+                <div class="col-md-6">
+                    @foreach($roles as $role)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="roles[]" id="role_{{$role->id}}" value="{{ $role->name }}" @if(in_array($role->name,$userRoles)!==false) checked @endif>
+                            <label class="form-check-label" for="role_{{$role->id}}">{{ $role->name }}</label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="row mb-0">
                 <div class="col-md-6 offset-md-4">
                     <button type="submit" class="btn btn-primary">
                         {{ __('Update') }}
                     </button>
                 </div>
-            </div>
-
-            <div class="row-mb-3">
-                <ul>
-                    @foreach($roles as $role)
-                        <li>{{ $role }}</li>
-                    @endforeach
-                </ul>
             </div>
         </form>
     @else
