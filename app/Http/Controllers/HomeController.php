@@ -40,12 +40,10 @@ class HomeController extends Controller
                 'new_password' => 'required|confirmed',
             ]);
 
-
             #Match The Old Password
             if(!\Hash::check($request->old_password, auth()->user()->password)){
                 return back()->with("error", "Old Password Doesn't match!");
             }
-
 
             #Update the new Password
             User::whereId(auth()->user()->id)->update([

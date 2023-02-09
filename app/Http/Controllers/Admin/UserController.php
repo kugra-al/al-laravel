@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -26,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.users.create');
     }
 
     /**
@@ -37,7 +38,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'password_confirmation' => 'required'
+        ]);
+
+        if (User::where('email',$request->get('email'))->first())
+           return back()->with("status", "User with email {$request->get('email')} already exists!");
+
+        $user = new User;
+        $user->email = $request->get('email');
+        $user->name = $request->get('name');
+        $user->password = \Hash::make($request->password);
+        $user->save();
+
+        return redirect("/admin/users/{$user->id}/edit")->with('status',"User {$user->id} created. Now add roles for user");
     }
 
     /**
@@ -59,7 +76,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        if (!$user)
+            return redirect('admin/users')->with('status',"User {$id} not found");
+        $roles = Role::all()->pluck('name');
+        return view('admin.users.edit',['user'=>$user, 'roles'=>$roles]);
     }
 
     /**

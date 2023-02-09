@@ -13,15 +13,15 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    <form method="POST" action="{{ route('password.email') }}">
+                    <p>There's no mailer so this doesn't do anything. If you forgot your password and need it reset, contact kugra or amirani on discord</p>
+                    <form method="POST" action="{{ route('password.email') }}" disabled>
                         @csrf
 
                         <div class="row mb-3">
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" disabled>
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -33,7 +33,7 @@
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" disabled>
                                     {{ __('Send Password Reset Link') }}
                                 </button>
                             </div>

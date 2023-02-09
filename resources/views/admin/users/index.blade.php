@@ -7,6 +7,7 @@
                 <th>ID</th>
                 <th>Name/th>
                 <th>Email</th>
+                <th>Roles</th>
                 <th>Action</th>
             </thead>
             <tbody>
@@ -15,11 +16,9 @@
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ implode(", ", $user->getRoleNames()->toArray()) }}</td>
                     <td>
-                        <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
-                            @csrf
-                            <button class="btn btn-info">Edit</button>
-                        </form>
+                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-info">Edit</a>
                     </td>
                 </tr>
             @endforeach
@@ -27,12 +26,9 @@
         </table>
     @endif
 
-    <div class="card">
-        <div class="card-body">
-            <form>
-                <input type="text" placeholder="Enter email" name="email" class="form-control">
-                <button class="btn btn-success">Create User</button>
-            </form>
-        </div>
+        <form>
+            <a href="{{ route('admin.users.create') }}" class="btn btn-success">Create User</a>
+        </form>
+
     </div>
 @endsection

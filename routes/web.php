@@ -40,6 +40,8 @@ Route::group(['middleware' => ['can:access admin']], function() {
     Route::resource('/admin/users', UserController::class)->names([
         'index' => 'admin.users.index',
         'create' => 'admin.users.create',
-        'update' => 'admin.users.update'
+        'store' => 'admin.users.store',
+        'update' => 'admin.users.update',
+        'edit' => 'admin.users.edit'
     ]);
 });
