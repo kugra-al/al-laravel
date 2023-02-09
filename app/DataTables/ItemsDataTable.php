@@ -154,7 +154,7 @@ class ItemsDataTable extends DataTable
             }
         }
         $alwaysShow = [
-            'db_id'=>[],
+            'db_id'=>['hidden'=>true],
             'fullpath'=>['searchPanes'=>true],
             'short'=>[],
             'id'=>[],
@@ -168,6 +168,8 @@ class ItemsDataTable extends DataTable
         $allCols = \Schema::getColumnListing('items');
         foreach($alwaysShow as $column=>$opts) {
             $col = Column::make($column);
+            if (isset($opts["hidden"]) && $opts["hidden"] == true)
+                $col->hidden();
             if (isset($opts['searchPanes']) && $opts['searchPanes'] == true)
                 $col->searchPanes(true);
             $out[] = $col;
