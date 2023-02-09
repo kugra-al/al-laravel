@@ -26,6 +26,7 @@ class ReadItmFiles implements ShouldQueue
 
     }
 
+    // Note: this job doesn't get run by itself. It gets called from job ReadItmFileToCache.php for all .itm file
     /**
      * Execute the job.
      *

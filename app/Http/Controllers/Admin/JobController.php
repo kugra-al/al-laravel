@@ -16,22 +16,21 @@ class JobController extends Controller
     {
         // Don't do this, we know what the jobs will be
         $jobs_path = public_path()."/../app/Jobs/";
-        $jobs = ['fetch-item-files','read-itm-file','read-all-itm-files','write-itms-to-db'];
+        $jobs = [
+            'fetch-item-files'=>['desc'=>'Fetch all item files from <a href="https://github.com/Amirani-al/Accursedlands-obj" target="_blank">Amirani-al/Accursedlands-obj</a>','time'=>'<10 seconds'],
+            'read-all-itm-files'=>['desc'=>'Read through all locally stored .itm files and write to cache','time'=>'~80 seconds'],
+            'write-itms-to-db'=>['desc'=>'Write all cached .itm files to database','time'=>'<10 seconds']
+        ];
         return view('admin.jobs',["jobs"=>$jobs]);
     }
 
     public function runJob(Request $request) {
         $job = $request->job;
-        $status = [];
+        $status = ['status'=>'Running job in background: '.$job];
         switch($job) {
             case "fetch-item-files" :
                 $repo = "Amirani-al/Accursedlands-obj";
                 FetchGithubRepo::dispatch($repo);
-                $status = ["success"=>"running job: $job"];
-                break;
-            case 'read-itm-file':
-                $file = "items/fetishes/bear_fang_necklace.itm";
-                ReadItmFileToCache::dispatch($file);
                 break;
             case 'read-all-itm-files':
                 ReadItmFiles::dispatch();
@@ -41,8 +40,8 @@ class JobController extends Controller
                 break;
 
             default :
-                $status = ["errors"=>"unknown job: $job"];
+                $status = ["error"=>"unknown job: $job"];
         }
-        return json_encode($status);
+        return \Redirect::to('/admin/jobs')->with($status);
     }
 }
