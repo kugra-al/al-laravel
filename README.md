@@ -43,6 +43,11 @@ If something doesn't work:
 - composer update
 - npm install
 
+### Passwords/logins
+- There's currently no mailer or password reset funcs (unless you're already logged in, or an admin)
+- If you need to reset someone elses password, you can do it via Admin > Users menu
+- You can also reset passwords using the cli cmd `php artisan password:reset`. You don't need to be logged into the frontend to do this
+
 ### Requirements
 - tested on: 
    - php -v 8.2.1
