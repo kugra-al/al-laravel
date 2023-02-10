@@ -71,6 +71,8 @@
             position: absolute;
             left: -100%;
         }
+        .rounded-pill.bg-secondary { border: 1px solid #a0a0a0; background-color: var(--bs-teal) !important; }
+        .modal-content, .modal-footer { background-color: #e3e3e3; }
     </style>
 @endsection
 

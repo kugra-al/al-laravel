@@ -15,11 +15,11 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.3/dist/sandstone/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.3/dist/zephyr/bootstrap.min.css">
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -31,7 +31,27 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        @can('access items')
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('items.index') }}">{{ __('Items') }}</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ __('Links') }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="https://github.com/Amirani-al/Accursedlands-LIB" target="_blank">
+                                        Accursedlands-LIB
+                                    </a>
+                                    <a class="dropdown-item" href="https://github.com/Amirani-al/Accursedlands-Domains" target="_blank">
+                                        Accursedlands-Domains
+                                    </a>
+                                    <a class="dropdown-item" href="https://github.com/Amirani-al/Accursedlands-obj" target="_blank">
+                                        Accursedlands-obj
+                                    </a>
+                                </div>
+                            </li>
+                        @endcan
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -50,11 +70,6 @@
                                 </li>
                             @endif
                         @else
-                            @can('access items')
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('items.index') }}">{{ __('Items') }}</a>
-                                </li>
-                            @endcan
                             @can('access admin')
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="color:#d90000">
