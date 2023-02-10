@@ -5,7 +5,7 @@
         <table class="table task-table">
             <thead>
                 <th>ID</th>
-                <th>Name/th>
+                <th>Name</th>
                 <th>Email</th>
                 <th>Roles</th>
                 <th>Action</th>
