@@ -78,7 +78,6 @@
 
 @push('scripts')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
-    <script defer src="/js/buttons.server-side.js"></script>
     <script>
         // Loads after initComplete event on DataTable
         function postInitFuncs() {
