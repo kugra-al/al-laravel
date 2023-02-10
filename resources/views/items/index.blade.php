@@ -46,7 +46,8 @@
         .dt-button-collection { overflow: auto; }
         .dt-button-collection .dropdown-menu { height: 300px; }
         .dropdown-item.active, .dropdown-item:active { background-color: #d7d7d7; }
-        #items-table_wrapper { overflow-y: auto; }
+
+        #items-table tbody td { word-break: break-word; }
         pre.code {
             white-space: pre-wrap;
             background: #181818;
@@ -97,7 +98,7 @@
             });
             $.ajax({
                 type: 'POST',
-                url: '/index.php/items/loadfile',
+                url: '/items/loadfile',
                 data: {file: file},
                 dataType: 'json',
                 success: function (data) {
