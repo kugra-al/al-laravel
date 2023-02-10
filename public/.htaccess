@@ -4,7 +4,7 @@
     </IfModule>
 
     RewriteEngine On
-    DirectoryIndex index.php
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -18,7 +18,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
-#RewriteRule ^(.*)$ public/$1 [L]
-  RewriteCond %{THE_REQUEST} ^.*/index\.php
-  RewriteRule ^index.php(.*)$ /$1 [R=301,L]
+    #RewriteRule ^(.*)$ public/$1 [L]
+    RewriteCond %{THE_REQUEST} ^.*/index\.php
+    RewriteRule ^index.php(.*)$ /$1 [R=301,L]
 </IfModule>
