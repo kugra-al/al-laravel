@@ -20,7 +20,7 @@ class GithubAL extends Model
             Cache::put($cacheKey, $members, now()->addHours(24));
         }
         foreach($members as $member) {
-            if ($memberID == $member["id"]);
+            if ($memberID == $member["id"])
                 return true;
         }
         return false;

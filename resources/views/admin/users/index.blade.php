@@ -7,6 +7,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Auth</th>
                 <th>Roles</th>
                 <th>Action</th>
             </thead>
@@ -16,6 +17,7 @@
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->auth_type }}</td>
                     <td>{{ implode(", ", $user->getRoleNames()->toArray()) }}</td>
                     <td>
                         <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-info">Edit</a>

@@ -26,7 +26,7 @@ class GitHubOAuthController extends Controller
             $searchUser = User::where('github_id', $user->id)->first();
 
             if ($user && !GithubAL::checkMemberIDInTeam('Accursed-Lands-MUD','Coders',$user->id)) {
-                return back()->with('error',"You need to be a member of the Accursed-Lands-MUD Coders team to login");
+                return redirect('/login')->withErrors("You need to be a member of the Accursed-Lands-MUD Coders team to login");
             }
             if($searchUser){
 
@@ -54,9 +54,9 @@ class GitHubOAuthController extends Controller
                         'password' => \Hash::make(\Str::random(12))
                     ]);
                 }
-                if (!$gitUser->hasRole('creators')) {
-                    $gitUser->assignRole('creators');
-                    $status .= ".  Assigned role `creators`";
+                if (!$gitUser->hasRole('creator')) {
+                    $gitUser->assignRole('creator');
+                    $status .= ".  Assigned role `creator`";
                 }
                 if (!$gitUser->hasRole('admin') && GithubAL::checkMemberIDInTeam('Accursed-Lands-MUD','webmasters',$gitUser->github_id)) {
                     $gitUser->assignRole('admin');
@@ -69,7 +69,7 @@ class GitHubOAuthController extends Controller
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return \Redirect('/login')->with('error',"Something went wrong. Error logged");
+            return \Redirect('/login')->withErrors("Something went wrong. Error logged");
         }
     }
 }
