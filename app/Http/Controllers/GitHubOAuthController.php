@@ -35,7 +35,7 @@ class GitHubOAuthController extends Controller
                 // Check for existing user and convert to gituser
                 $gitUser = User::where('email',$user->email)->first();
                 if ($gitUser) {
-                    $gituser->auth_type = 'github';
+                    $gitUser->auth_type = 'github';
                     $gitUser->github_id = $user->id;
                     $gitUser->save();
                     $status = "Converted user login to github login";
