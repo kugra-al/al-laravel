@@ -7,6 +7,7 @@ use Auth;
 use Exception;
 use Socialite;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class GitHubOAuthController extends Controller
 {
@@ -44,7 +45,9 @@ class GitHubOAuthController extends Controller
             }
 
         } catch (Exception $e) {
-            dd($e->getMessage());
+            Log::error($e->getMessage());
+            dd("Something went wrong. Error logged");
+//            dd($e->getMessage());
         }
     }
 }
