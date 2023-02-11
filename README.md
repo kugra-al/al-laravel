@@ -48,6 +48,15 @@ If something doesn't work:
 - If you need to reset someone elses password, you can do it via Admin > Users menu
 - You can also reset passwords using the cli cmd `php artisan password:reset`. You don't need to be logged into the frontend to do this
 
+### Github OAuth
+- Create OAuth app - https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app
+- Callback URL is https://websiteurl.tld/auth/github/callback (replace https://websiteurl.tld)
+- In .env add:
+   - `GITHUB_OAUTH_CLIENT_ID`
+   - `GITHUB_OAUTH_CLIENT_SECRET`
+   - `GITHUB_OAUTH_REDIRECT`         # comment or omit this to disable Login With Github button on /login
+   - `GITHUB_OAUTH_DEFAULT_PASS`     # all github users currently use same password  (change to random if possible)
+
 ### Requirements
 - tested on: 
    - php -v 8.2.1
