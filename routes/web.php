@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\GitHubOAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,8 @@ Auth::routes(['register'=>false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/change-password', [App\Http\Controllers\HomeController::class, 'changePassword'])->name('change-password');
 Route::post('/change-password', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('update-password');
+Route::get('/auth/github', [GitHubOAuthController::class, 'gitRedirect']);
+Route::get('/auth/github/callback', [GitHubOAuthController::class, 'gitCallback']);
 
 Route::group(['middleware' => ['can:access items']], function() {
     Route::get('/items', [App\Http\Controllers\ItemController::class, 'index'])->name('items.index');
