@@ -45,4 +45,5 @@ Route::group(['middleware' => ['can:access admin']], function() {
         'edit' => 'admin.users.edit',
         'destroy' => 'admin.users.destroy'
     ]);
+    Route::get('/admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('admin.logs');
 });

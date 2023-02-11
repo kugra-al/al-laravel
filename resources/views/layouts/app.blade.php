@@ -79,6 +79,7 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('admin.users.index') }}">Users</a>
                                     <a class="dropdown-item" href="{{ route('admin.jobs') }}">Jobs</a>
+                                    <a class="dropdown-item" href="{{ route('admin.logs') }}">Logs</a>
                                 </div>
                             </li>
                             @endcan

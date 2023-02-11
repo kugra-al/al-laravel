@@ -1,1 +1,1 @@
-<button class="btn btn-info view-itm-file">View</button>
+<button class="btn btn-sm btn-info view-itm-file">View</button>

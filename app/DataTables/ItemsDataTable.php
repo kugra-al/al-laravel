@@ -136,7 +136,8 @@ class ItemsDataTable extends DataTable
                         'initComplete' => "function() {
                             if (typeof postInitFuncs == 'function')
                                 postInitFuncs();
-                        }"
+                        }",
+
                     ]);
     }
 
