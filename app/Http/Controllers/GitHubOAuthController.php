@@ -31,6 +31,8 @@ class GitHubOAuthController extends Controller
                 return redirect('/home');
 
             }else{
+                if (!$user->name)
+                    $user->name = explode("@",$user->email)[0];
                 $gitUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
