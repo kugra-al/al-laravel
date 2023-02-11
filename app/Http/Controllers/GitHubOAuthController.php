@@ -47,7 +47,7 @@ class GitHubOAuthController extends Controller
                         'email' => $user->email,
                         'github_id'=> $user->id,
                         'auth_type'=> 'github',
-                        'password' => \Hash::make(\Str::random(12));
+                        'password' => \Hash::make(\Str::random(12))
                     ]);
                 }
                 Auth::login($gitUser);
