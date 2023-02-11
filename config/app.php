@@ -218,6 +218,7 @@ return [
         // ? datatables
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
     ])->toArray(),
 
 ];

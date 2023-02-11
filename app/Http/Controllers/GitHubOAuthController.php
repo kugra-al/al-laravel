@@ -8,6 +8,7 @@ use Exception;
 use Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Models\GithubAL;
 
 class GitHubOAuthController extends Controller
 {
@@ -24,6 +25,9 @@ class GitHubOAuthController extends Controller
 
             $searchUser = User::where('github_id', $user->id)->first();
 
+            if ($user && !GithubAL::checkMemberIDInTeam('Accursed-Lands-MUD','Coders',$user->id)) {
+                return back()->with('error',"You need to be a member of the Accursed-Lands-MUD Coders team to login");
+            }
             if($searchUser){
 
                 Auth::login($searchUser);
@@ -49,6 +53,14 @@ class GitHubOAuthController extends Controller
                         'auth_type'=> 'github',
                         'password' => \Hash::make(\Str::random(12))
                     ]);
+                }
+                if (!$gitUser->hasRole('creators')) {
+                    $gitUser->assignRole('creators');
+                    $status .= ".  Assigned role `creators`";
+                }
+                if (!$gitUser->hasRole('admin') && GithubAL::checkMemberIDInTeam('Accursed-Lands-MUD','webmasters',$gitUser->github_id)) {
+                    $gitUser->assignRole('admin');
+                    $status .= ".  Assigned role `admin`";
                 }
                 Auth::login($gitUser);
 
