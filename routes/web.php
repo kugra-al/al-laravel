@@ -28,7 +28,7 @@ Route::get('/auth/github', [GitHubOAuthController::class, 'gitRedirect']);
 Route::get('/auth/github/callback', [GitHubOAuthController::class, 'gitCallback']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => 'auth'], function() {
+//Route::group(['middleware' => 'auth'], function() {
     Route::get('/change-password', [App\Http\Controllers\HomeController::class, 'changePassword'])->name('change-password');
     Route::post('/change-password', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('update-password');
 
@@ -51,4 +51,4 @@ Route::group(['middleware' => 'auth'], function() {
         ]);
         Route::get('/admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('admin.logs');
     });
-});
+//});
