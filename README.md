@@ -55,7 +55,6 @@ If something doesn't work:
    - `GITHUB_OAUTH_CLIENT_ID`
    - `GITHUB_OAUTH_CLIENT_SECRET`
    - `GITHUB_OAUTH_REDIRECT`         # comment or omit this to disable Login With Github button on /login
-   - `GITHUB_OAUTH_DEFAULT_PASS`     # all github users currently use same password  (change to random if possible)
 
 ### Requirements
 - tested on: 
