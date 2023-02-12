@@ -69,7 +69,7 @@ class GitHubOAuthController extends Controller
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return \Redirect('/login')->withErrors("Something went wrong. Error logged");
+            return \Redirect('/login')->withErrors("Something went wrong. Error logged. Please try again.");
         }
     }
 }
