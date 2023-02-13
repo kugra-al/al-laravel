@@ -27,6 +27,7 @@
                             <h4>Layer Controls</h4>
                             <ul>
                                 <li><a href="#" onclick="toggleFacadeLayer();return false;">Toggle Facade Layer</a></li>
+                                <li><a href="#" onclick="toggleBuildingLayer();return false;">Toggle Building Layer</a></li>
                             </ul>
                         </div>
                         <div id='map'></div>
@@ -47,12 +48,24 @@
         const yx = L.latLng;
 
         var facadeGroup = [];
+        var buildingGroup = [];
         // y is off by 1 - need new map image
         var facades = [
             {coords: [545, 1494], title: 'Forest Heart'},
             {coords: [570, 1470], title: 'Masokaska'},
             {coords: [589, 1388], title: 'Banzar'}
         ];
+        var buildings = [
+            {coords: [575, 1505], title: 'Some building'}
+        ];
+        var redIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
 
         function xy(x, y) {
             if (Array.isArray(x)) { // When doing xy([x, y]);
@@ -77,11 +90,23 @@
         }
         var facadeLayer = L.layerGroup(facadeGroup).addTo(map);
 
+        for(i = 0; i < buildings.length; i++) {
+            var building = buildings[i];
+            buildingGroup.push(L.marker(xy(building.coords[0], building.coords[1]), {title: building.title, icon: redIcon}));
+        }
+        var buildingLayer = L.layerGroup(buildingGroup).addTo(map);
+
         function toggleFacadeLayer() {
             if (map.hasLayer(facadeLayer))
                 map.removeLayer(facadeLayer);
             else
                 map.addLayer(facadeLayer);
+        }
+        function toggleBuildingLayer() {
+            if (map.hasLayer(buildingLayer))
+                map.removeLayer(buildingLayer);
+            else
+                map.addLayer(buildingLayer);
         }
     </script>
 @endsection
