@@ -13,9 +13,6 @@
 			max-width: 100%;
 			max-height: 100%;
 		}
-		img.huechange { filter: hue-rotate(120deg); }
-		img.huechange2 { filter: hue-rotate(60deg); }
-		img.huechange3 { filter: hue-rotate(30deg); }
       #coords:before {content: "Coords: "}
 	</style>
 
@@ -26,7 +23,14 @@
                     <div class="card-header">{{ __('Map') }}</div>
 
                     <div class="card-body">
+                        <div id="layerControls" style="float: right">
+                            <h4>Layer Controls</h4>
+                            <ul>
+                                <li><a href="#" onclick="toggleFacadeLayer();return false;">Toggle Facade Layer</a></li>
+                            </ul>
+                        </div>
                         <div id='map'></div>
+
                         <div id="coords"></div>
                     </div>
                 </div>
@@ -40,8 +44,15 @@
             minZoom: -3,
             maxZoom: 4
         });
-
         const yx = L.latLng;
+
+        var facadeGroup = [];
+        // y is off by 1 - need new map image
+        var facades = [
+            {coords: [545, 1494], title: 'Forest Heart'},
+            {coords: [570, 1470], title: 'Masokaska'},
+            {coords: [589, 1388], title: 'Banzar'}
+        ];
 
         function xy(x, y) {
             if (Array.isArray(x)) { // When doing xy([x, y]);
@@ -59,13 +70,18 @@
         map.on("mousemove", function (event) {
             document.getElementById('coords').innerText = event.latlng.toString();
         });
-        // y is off by 1 - need new map image
-        var marker;
-        marker = L.marker(xy(545, 1494),{title:'Forest Heart'}).addTo(map);
-        marker._icon.classList.add("huechange");
-        marker = L.marker(xy(570, 1470),{title:'Masokaska'}).addTo(map);
-        marker._icon.classList.add("huechange2");
-        marker = L.marker(xy(589, 1388),{title:'Banzar'}).addTo(map);
-        marker._icon.classList.add("huechange3");
+
+        for(i = 0; i < facades.length; i++) {
+            var facade = facades[i];
+            facadeGroup.push(L.marker(xy(facade.coords[0], facade.coords[1]), {title: facade.title}));
+        }
+        var facadeLayer = L.layerGroup(facadeGroup).addTo(map);
+
+        function toggleFacadeLayer() {
+            if (map.hasLayer(facadeLayer))
+                map.removeLayer(facadeLayer);
+            else
+                map.addLayer(facadeLayer);
+        }
     </script>
 @endsection
