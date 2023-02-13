@@ -25,4 +25,8 @@ class GithubAL extends Model
         }
         return false;
     }
+
+    public static function getLocalRepoPath($repo) {
+        return storage_path()."/private/git/".$repo."/";
+    }
 }

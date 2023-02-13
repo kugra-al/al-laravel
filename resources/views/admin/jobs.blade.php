@@ -7,6 +7,7 @@
                 <th>Job</th>
                 <th>Description</th>
                 <th>Est. Job Time</th>
+                <th>Type</th>
                 <th>Action</th>
             </thead>
             <tbody>
@@ -15,6 +16,7 @@
                     <td>{{ $job }}</td>
                     <td>{!! $jobData['desc'] !!}</td>
                     <td>{{ $jobData['time'] }}</td>
+                    <td>{{ $jobData['type'] }}</td>
                     <td>
                         <form action="{{ route('admin.jobs.run') }}" method="POST">
                             @csrf

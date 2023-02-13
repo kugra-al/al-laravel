@@ -35,8 +35,7 @@ class FetchGithubRepo implements ShouldQueue
      */
     public function handle()
     {
- // This little maneuver saves us 100s of lines vs using the api.
-
+        // This little maneuver saves us 100s of lines vs using the api.
         $gitdir = storage_path()."/private/git/";
         if (File::exists($gitdir.explode("/",$this->repo)[1])) {
             $gitdir = $gitdir.explode("/",$this->repo)[1];
@@ -49,7 +48,7 @@ class FetchGithubRepo implements ShouldQueue
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        Log::debug($process->getOutput());
+        Log::info($process->getOutput());
 //        dd( $process->getOutput() );
     }
 }
