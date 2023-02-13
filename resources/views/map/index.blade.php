@@ -51,13 +51,20 @@
         var buildingGroup = [];
         // y is off by 1 - need new map image
         var facades = [
-            {coords: [545, 1494], title: 'Forest Heart'},
-            {coords: [570, 1470], title: 'Masokaska'},
-            {coords: [589, 1388], title: 'Banzar'}
+            @foreach($facades as $facade)
+                {coords: [ {{ $facade->x }}, {{ $facade->y }} ], title: '{{ $facade->facade_id }}' },
+            @endforeach
         ];
         var buildings = [
             {coords: [575, 1505], title: 'Some building'}
         ];
+        var facadeIcon = new L.Icon({
+            iconUrl: '/img/facade-icon.png',
+            iconSize: [10, 10],
+            iconAnchor: [1, 1],
+            popupAnchor: [1, 1],
+        });
+
         var redIcon = new L.Icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -86,13 +93,13 @@
 
         for(i = 0; i < facades.length; i++) {
             var facade = facades[i];
-            facadeGroup.push(L.marker(xy(facade.coords[0], facade.coords[1]), {title: facade.title}));
+            facadeGroup.push(L.marker(xy(facade.coords[0], facade.coords[1]), {title: facade.title, icon: facadeIcon}));
         }
         var facadeLayer = L.layerGroup(facadeGroup).addTo(map);
 
         for(i = 0; i < buildings.length; i++) {
             var building = buildings[i];
-            buildingGroup.push(L.marker(xy(building.coords[0], building.coords[1]), {title: building.title, icon: redIcon}));
+            buildingGroup.push(L.marker(xy(building.coords[0], building.coords[1]), {title: building.title}));
         }
         var buildingLayer = L.layerGroup(buildingGroup).addTo(map);
 
