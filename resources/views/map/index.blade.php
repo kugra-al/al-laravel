@@ -6,10 +6,7 @@
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
 
 	<style>
-		html, body {
-			height: 100%;
-			margin: 0;
-		}
+
 		.leaflet-container {
 			height: 600px;
 			width: 1000px;
@@ -19,8 +16,20 @@
       #coords:before {content: "Coords: "}
 	</style>
 
-    <div id='map'></div>
-    <div id="coords"></div>
+    <div class="container" style="max-width:90%">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">{{ __('Map') }}</div>
+
+                    <div class="card-body">
+                        <div id='map'></div>
+                        <div id="coords"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
 
         const map = L.map('map', {
