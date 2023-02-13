@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use App\Models\GithubAL;
+use App\Models\Facade;
 
 class WriteFacadeFileToDb implements ShouldQueue
 {
@@ -42,7 +43,7 @@ class WriteFacadeFileToDb implements ShouldQueue
             $lines = explode("\n",$data);
 
             $facadeID = str_replace(["_facade.c",GithubAL::getLocalRepoPath('Accursedlands-Domains')."wild/virtual/facades/"],"",$this->file);
-            $destination = "";
+            $destination = "none";
             $coords = [];
 
             foreach($lines as $line) {
@@ -59,8 +60,15 @@ class WriteFacadeFileToDb implements ShouldQueue
                     }
                 }
             }
-            if ($facadeID && strlen($destination) && sizeof($coords)) {
-                //
+            if ($facadeID && sizeof($coords)) {
+                if (!is_numeric($coords[0]) || !is_numeric($coords[1]) || !is_numeric($coords[2])) {
+                    \Log::warning("Failed to read facade data from {$this->file} because set_location is malformed");
+                } else {
+                    Facade::updateOrCreate(
+                        ['facade_id'=>$facadeID],
+                        ['destination'=>$destination,'x'=>$coords[0],'y'=>$coords[1],'z'=>$coords[2]]
+                    );
+                }
             } else {
                 \Log::warning("Failed to read facade data from {$this->file}");
             }
