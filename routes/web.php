@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\GitHubOAuthController;
@@ -38,6 +39,8 @@ Route::group(['middleware' => ['auth','can:access items']], function() {
     Route::get('/items', [App\Http\Controllers\ItemController::class, 'index'])->name('items.index');
     Route::post('/items/loadfile', [App\Http\Controllers\ItemController::class, 'loadItmFile'])->name('items.loadfile');
     Route::post('/items/export', [App\Http\Controllers\ItemController::class, 'index'])->name('items.export');
+
+    Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
 });
 Route::group(['middleware' => ['auth','can:access admin']], function() {
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
