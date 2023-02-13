@@ -13,6 +13,9 @@
 			max-width: 100%;
 			max-height: 100%;
 		}
+		img.huechange { filter: hue-rotate(120deg); }
+		img.huechange2 { filter: hue-rotate(60deg); }
+		img.huechange3 { filter: hue-rotate(30deg); }
       #coords:before {content: "Coords: "}
 	</style>
 
@@ -48,13 +51,21 @@
         }
 
         const bounds = [xy(0, 0), xy(2500, 2500)];
+        // Random hash just so no curious player does /img/map.png
         const image = L.imageOverlay('img/map_bb0a99b14432697bd43cd80f0bd2cd77.png', bounds).addTo(map);
 
         map.setView(xy(545, 1493), 2);
 
         map.on("mousemove", function (event) {
-        document.getElementById('coords').innerText = event.latlng.toString();
-        //L.marker(event.latlng).addTo(map);
-    });
+            document.getElementById('coords').innerText = event.latlng.toString();
+        });
+        // y is off by 1 - need new map image
+        var marker;
+        marker = L.marker(xy(545, 1494),{title:'Forest Heart'}).addTo(map);
+        marker._icon.classList.add("huechange");
+        marker = L.marker(xy(570, 1470),{title:'Masokaska'}).addTo(map);
+        marker._icon.classList.add("huechange2");
+        marker = L.marker(xy(589, 1388),{title:'Banzar'}).addTo(map);
+        marker._icon.classList.add("huechange3");
     </script>
 @endsection
