@@ -26,8 +26,10 @@
                         <div id="layerControls" style="float: right">
                             <h4>Layer Controls</h4>
                             <ul>
-                                <li><a href="#" onclick="toggleFacadeLayer();return false;">Toggle Facade Layer</a></li>
-                                <li><a href="#" onclick="toggleBuildingLayer();return false;">Toggle Building Layer</a></li>
+                                @if(isset($facades) && sizeof($facades))
+                                    <li><a href="#" onclick="toggleFacadeLayer();return false;">Toggle Facades ({{ $facades->count() }})</a></li>
+                                @endif
+                                <li><a href="#" onclick="toggleBuildingLayer();return false;">Toggle Buildings</a></li>
                             </ul>
                         </div>
                         <div id='map'></div>
@@ -52,7 +54,7 @@
         // y is off by 1 - need new map image
         var facades = [
             @foreach($facades as $facade)
-                {coords: [ {{ $facade->x }}, {{ $facade->y }} ], title: '{{ $facade->facade_id }}' },
+                {coords: [ {{ $facade->x }}, {{ $facade->y }} ], title: '{{ $facade->facade_id }}', destination: '{{ $facade->destination }}' },
             @endforeach
         ];
         var buildings = [
@@ -91,18 +93,47 @@
             document.getElementById('coords').innerText = event.latlng.toString();
         });
 
+//         var facadePopup = L.popup()
+//             .setContent('<p>test</p>')
+//             .openOn(map);
+
         for(i = 0; i < facades.length; i++) {
             var facade = facades[i];
-            facadeGroup.push(L.marker(xy(facade.coords[0], facade.coords[1]), {title: facade.title, icon: facadeIcon}));
+            var marker = L.marker(xy(facade.coords[0], facade.coords[1]), {title: facade.title, icon: facadeIcon, data: {destination: facade.destination} });
+            var domain;
+            if (facade.destination.search('city_server/') != -1) {
+                domain = facade.destination.split('city_server/')[0];
+                domain = domain.replace('/domains/','');
+            }
+            marker.bindPopup(
+                "<ul>"+
+                "<li>ID: "+facade.title+"</li>"+
+                "<li>Coords: "+facade.coords[0]+":"+facade.coords[1]+"</li>"+
+                "<li>Destination: "+facade.destination+"</li>"+
+                (domain.length ? "<li><a href='https://github.com/Amirani-al/Accursedlands-Domains/tree/master/"+domain+"' target='_blank'>View /domains/"+domain+" on Github</a></li>" : '')+
+                "</ul>",
+                {maxWidth: 'auto' }
+            );
+            marker.on('click',popupClick);
+            facadeGroup.push(marker);
+
         }
-        var facadeLayer = L.layerGroup(facadeGroup).addTo(map);
+        var facadeLayer = L.featureGroup(facadeGroup).addTo(map);
+//         facadeLayer.bindPopup('Click');
+//         facadeLayer.on('click',popupClick);
+        function popupClick(e) {
+            var popup = e.target.getPopup();
+            console.log(e);
+            var content = popup.getContent();
+
+        }
 
         for(i = 0; i < buildings.length; i++) {
             var building = buildings[i];
             buildingGroup.push(L.marker(xy(building.coords[0], building.coords[1]), {title: building.title}));
         }
         var buildingLayer = L.layerGroup(buildingGroup).addTo(map);
-
+        map.removeLayer(buildingLayer);
         function toggleFacadeLayer() {
             if (map.hasLayer(facadeLayer))
                 map.removeLayer(facadeLayer);

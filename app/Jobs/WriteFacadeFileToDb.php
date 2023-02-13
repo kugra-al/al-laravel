@@ -42,7 +42,7 @@ class WriteFacadeFileToDb implements ShouldQueue
             $data = File::get($this->file);
             $lines = explode("\n",$data);
 
-            $facadeID = str_replace(["_facade.c",GithubAL::getLocalRepoPath('Accursedlands-Domains')."wild/virtual/facades/"],"",$this->file);
+            $facadeID = str_replace(["_facade.c",".c",GithubAL::getLocalRepoPath('Accursedlands-Domains')."wild/virtual/facades/"],"",$this->file);
             $destination = "none";
             $coords = [];
 
