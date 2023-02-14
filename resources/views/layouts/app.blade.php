@@ -17,6 +17,12 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <script defer src="/js/buttons.server-side.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.3/dist/zephyr/bootstrap.min.css">
+    <style>
+        div.dataTables_processing>div:last-child>div:nth-child(1) { background: red; }
+        div.dataTables_processing>div:last-child>div:nth-child(2) { background: green; }
+        div.dataTables_processing>div:last-child>div:nth-child(3) { background: blue; }
+        div.dataTables_processing>div:last-child>div:nth-child(4) { background: yellow; }
+    </style>
 </head>
 <body>
     <div id="app">

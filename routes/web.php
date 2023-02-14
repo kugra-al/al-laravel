@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth','can:access items']], function() {
 
     Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
     Route::get('/data/{type}', [App\Http\Controllers\DataController::class, 'index'])->name('data.index');
+    //Route::post('/data/{type}/export', [App\Http\Controllers\DataController::class, 'index'])->name('data.export');
 });
 Route::group(['middleware' => ['auth','can:access admin']], function() {
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');

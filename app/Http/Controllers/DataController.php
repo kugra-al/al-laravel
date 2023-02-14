@@ -5,22 +5,35 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Death;
 use App\Models\Facade;
+use DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class DataController extends Controller
 {
-    public function index($type)
+    public function index(Builder $builder, $type)
     {
-        $data = [];
+        $model = [];
         switch($type) {
             case 'deaths' :
-                $data = Death::orderBy('event_date','desc')->select('event_date','player','cause','location','x','y','z')->paginate(20);
+                $model = Death::orderBy('event_date','desc')->select('event_date','player','cause','location','x','y','z')->get();
                 break;
             case 'facades' :
-                $data = Facade::paginate(20);
+                $model = Facade::get();
                 break;
             default :
                 return back()->with('warning','Unknown data type');
         }
-        return view('data.index',['data'=>$data,'type'=>$type]);
+        if (request()->ajax()) {
+            return DataTables::of($model)->toJson();
+        }
+        if ($model) {
+            $keys = array_keys($model->first()->toArray());
+            $columns = [];
+            foreach($keys as $key) {
+                $columns[] = ['data' => $key];
+            }
+            $dataTable = $builder->columns($columns)->parameters(['buttons'=>[]]);
+        }
+        return view('data.index',['type'=>$type, "dataTable"=>$dataTable]);
     }
 }

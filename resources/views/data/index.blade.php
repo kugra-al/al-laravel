@@ -8,30 +8,15 @@
                     <div class="card-header">{{ __($type) }}</div>
 
                     <div class="card-body">
-    @if(isset($data) && sizeof($data))
-        <table class="table task-table">
-            <thead>
-                @foreach(array_keys($data->first()->toArray()) as $key)
-                    <th>{{ $key }}</th>
-                @endforeach
-            </thead>
-            <tbody>
-                @foreach($data as $line)
-                    <tr>
-                        @foreach($line->toArray() as $key=>$value)
-                            <td>{{ $value }}</td>
-                        @endforeach
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        {{ $data->links() }}
-    @else
-        No data found
-    @endif
+                        {{ $dataTable->table() }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+@endpush
