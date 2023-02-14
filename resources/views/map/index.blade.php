@@ -15,6 +15,7 @@
 			max-width: 100%;
 			max-height: 100%;
 		}
+		.marker-cluster div { width: auto; }
       #coords:before {content: "Coords: "}
 	</style>
 
@@ -38,7 +39,7 @@
         const map = L.map('map', {
             crs: L.CRS.Simple,
             minZoom: -3,
-            maxZoom: 4
+            maxZoom: 7
         });
         const yx = L.latLng;
 
