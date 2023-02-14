@@ -9,7 +9,7 @@
 
 		.leaflet-container {
 			height: 600px;
-			width: 1000px;
+			width: 80%;
 			max-width: 100%;
 			max-height: 100%;
 		}
@@ -23,15 +23,6 @@
                     <div class="card-header">{{ __('Map') }}</div>
 
                     <div class="card-body">
-                        <div id="layerControls" style="float: right">
-                            <h4>Layer Controls</h4>
-                            <ul>
-                                @if(isset($facades) && sizeof($facades))
-                                    <li><a href="#" onclick="toggleFacadeLayer();return false;">Toggle Facades ({{ $facades->count() }})</a></li>
-                                @endif
-                                <li><a href="#" onclick="toggleBuildingLayer();return false;">Toggle Buildings</a></li>
-                            </ul>
-                        </div>
                         <div id='map'></div>
 
                         <div id="coords"></div>
@@ -50,16 +41,7 @@
         const yx = L.latLng;
 
         var facadeGroup = [];
-        var buildingGroup = [];
-        // y is off by 1 - need new map image
-        var facades = [
-            @foreach($facades as $facade)
-                {coords: [ {{ $facade->x }}, {{ $facade->y }} ], title: '{{ $facade->facade_id }}', destination: '{{ $facade->destination }}' },
-            @endforeach
-        ];
-        var buildings = [
-            {coords: [575, 1505], title: 'Some building'}
-        ];
+
         var facadeIcon = new L.Icon({
             iconUrl: '/img/facade-icon.png',
             iconSize: [10, 10],
@@ -90,15 +72,24 @@
         map.setView(xy(545, 1493), 2);
 
         map.on("mousemove", function (event) {
-            document.getElementById('coords').innerText = event.latlng.toString();
+            document.getElementById('coords').innerText = Math.round(event.latlng.lat)+":"+Math.round(event.latlng.lng);
         });
+//         map.on("contextmenu", function (event) {
+//             var newMarker = new L.marker(event.latlng).addTo(map);
+//         });
 
-//         var facadePopup = L.popup()
-//             .setContent('<p>test</p>')
-//             .openOn(map);
+        // y is off by 1 - need new map image
+        var overlays = {
+            facades:
+                [
+                    @foreach($facades as $facade)
+                        {coords: [ {{ $facade->x }}, {{ $facade->y }} ], title: '{{ $facade->facade_id }}', destination: '{{ $facade->destination }}' },
+                    @endforeach
+                ]
+        };
 
-        for(i = 0; i < facades.length; i++) {
-            var facade = facades[i];
+        for(i = 0; i < overlays.facades.length; i++) {
+            var facade = overlays.facades[i];
             var marker = L.marker(xy(facade.coords[0], facade.coords[1]), {title: facade.title, icon: facadeIcon, data: {destination: facade.destination} });
             var domain;
             if (facade.destination.search('city_server/') != -1) {
@@ -114,37 +105,12 @@
                 "</ul>",
                 {maxWidth: 'auto' }
             );
-            marker.on('click',popupClick);
             facadeGroup.push(marker);
 
         }
-        var facadeLayer = L.featureGroup(facadeGroup).addTo(map);
-//         facadeLayer.bindPopup('Click');
-//         facadeLayer.on('click',popupClick);
-        function popupClick(e) {
-            var popup = e.target.getPopup();
-            console.log(e);
-            var content = popup.getContent();
+        var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
 
-        }
+        var layerControl = L.control.layers(null, {"Facades" : facadeLayer}).addTo(map);
 
-        for(i = 0; i < buildings.length; i++) {
-            var building = buildings[i];
-            buildingGroup.push(L.marker(xy(building.coords[0], building.coords[1]), {title: building.title}));
-        }
-        var buildingLayer = L.layerGroup(buildingGroup).addTo(map);
-        map.removeLayer(buildingLayer);
-        function toggleFacadeLayer() {
-            if (map.hasLayer(facadeLayer))
-                map.removeLayer(facadeLayer);
-            else
-                map.addLayer(facadeLayer);
-        }
-        function toggleBuildingLayer() {
-            if (map.hasLayer(buildingLayer))
-                map.removeLayer(buildingLayer);
-            else
-                map.addLayer(buildingLayer);
-        }
     </script>
 @endsection
