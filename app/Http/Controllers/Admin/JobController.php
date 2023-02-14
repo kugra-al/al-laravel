@@ -11,6 +11,7 @@ use App\Jobs\ReadItmFiles;
 use App\Jobs\WriteItmCacheToDatabase;
 use App\Jobs\ResetItemsTable;
 use App\Jobs\WriteFacadesToDb;
+use App\Jobs\WriteDeathsToDb;
 
 class JobController extends Controller
 {
@@ -28,6 +29,8 @@ class JobController extends Controller
             'fetch-domain-files'=>['desc'=>'Fetch all lib files from <a href="https://github.com/Amirani-al/Accursedlands-Domains" target="_blank">Amirani-al/Accursedlands-Domains</a>','time'=>'<10 seconds','type'=>'domains'],
             // map
             'write-facades-to-db'=>['desc'=>'Read all facade files from /domains/wild/virtual/facades/ and write to db','time'=>'???','type'=>'map'],
+            // deaths
+            'write-deaths-to-db'=>['desc'=>'Read any new deaths from death log and write to db','time'=>'???','type'=>'deaths'],
         ];
         return view('admin.jobs',["jobs"=>$jobs]);
     }
@@ -57,6 +60,10 @@ class JobController extends Controller
                 break;
             case 'write-facades-to-db' :
                 WriteFacadesToDb::dispatch();
+                break;
+
+            case 'write-deaths-to-db' :
+                WriteDeathsToDb::dispatch();
                 break;
             default :
                 $status = ["error"=>"unknown job: $job"];
