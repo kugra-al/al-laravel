@@ -76,7 +76,7 @@
         map.setView(xy(545, 1493), 2);
 
         map.on("mousemove", function (event) {
-            document.getElementById('coords').innerText = Math.round(event.latlng.lat)+":"+Math.round(event.latlng.lng);
+            document.getElementById('coords').innerText = Math.round(event.latlng.lng)+":"+Math.round(event.latlng.lat);
         });
 //         map.on("contextmenu", function (event) {
 //             var newMarker = new L.marker(event.latlng).addTo(map);
