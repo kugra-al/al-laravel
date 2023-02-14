@@ -32,7 +32,7 @@ class DataController extends Controller
             foreach($keys as $key) {
                 $columns[] = ['data' => $key];
             }
-            $dataTable = $builder->columns($columns)->parameters(['buttons'=>[]]);
+            $dataTable = $builder->columns($columns)->parameters(['buttons'=>[],'search'=>['return'=>true]]);
         }
         return view('data.index',['type'=>$type, "dataTable"=>$dataTable]);
     }
