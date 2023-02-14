@@ -26,7 +26,15 @@ class WriteDeathsToDb implements ShouldQueue
     public function __construct($fetchAll = false)
     {
         $this->fetchAll = $fetchAll;
+    }
 
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
         $deathDir = GithubAL::getDeathLogDir();
         $files = File::files($deathDir);
         $deathCount = Death::count();
@@ -44,8 +52,6 @@ class WriteDeathsToDb implements ShouldQueue
             } else {
                 $data = File::get($file);
                 $data = explode("\n",$data);
-
-
 
                 foreach($data as $line) {
                     if (!strlen($line))
@@ -72,6 +78,10 @@ class WriteDeathsToDb implements ShouldQueue
                             $death['z'] = $coords[2] || 0;
                             $deaths[] = $death;
                         } else {
+                            $death['x'] = null;
+                            $death['y'] = null;
+                            $death['z'] = null;
+                            $deaths[] = $death;
                             // todo - get gps coords for non-wild locations
                         }
                     } else {
@@ -80,21 +90,11 @@ class WriteDeathsToDb implements ShouldQueue
                 }
                 \Log::info("Read data from {$file}");
             }
-            if (sizeof($deaths)) {
-                foreach(array_chunk($deaths,5000) as $chunk) {
-                    Death::insert($chunk);
-                }
+        }
+        if (sizeof($deaths)) {
+            foreach(array_chunk($deaths,5000) as $chunk) {
+                Death::insert($chunk);
             }
         }
-    }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        //
     }
 }

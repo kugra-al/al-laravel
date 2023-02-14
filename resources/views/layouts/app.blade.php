@@ -41,6 +41,19 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ __('Data') }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('data.index', 'deaths') }}">
+                                        Deaths
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('data.index', 'facades') }}">
+                                        Facades
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ __('Links') }}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
