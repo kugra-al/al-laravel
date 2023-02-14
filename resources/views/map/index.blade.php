@@ -3,8 +3,10 @@
 @section('content')
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.1.0/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.1.0/dist/MarkerCluster.Default.css">
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
-
+    <script src="https://unpkg.com/leaflet.markercluster@1.1.0/dist/leaflet.markercluster.js"></script>
 	<style>
 
 		.leaflet-container {
@@ -41,6 +43,7 @@
         const yx = L.latLng;
 
         var facadeGroup = [];
+        var deathGroup = [];
 
         var facadeIcon = new L.Icon({
             iconUrl: '/img/facade-icon.png',
@@ -85,7 +88,15 @@
                     @foreach($facades as $facade)
                         {coords: [ {{ $facade->x }}, {{ $facade->y }} ], title: '{{ $facade->facade_id }}', destination: '{{ $facade->destination }}' },
                     @endforeach
+                ],
+            @if(isset($deaths) && sizeof($deaths))
+            'deaths':
+                [
+                    @foreach($deaths as $death)
+                        {coords: [ {{ $death->x }}, {{ $death->y }} ], title: '{{ $death->event_date }}', destination: '{{ $death->location }}', data: {'event_date':'{{ $death->event_date }}', 'player':'{{ $death->player }}','cause':'{{ $death->cause }}','location':'{{ $death->location }}' } },
+                    @endforeach
                 ]
+            @endif
         };
 
         for(i = 0; i < overlays.facades.length; i++) {
@@ -106,11 +117,25 @@
                 {maxWidth: 'auto' }
             );
             facadeGroup.push(marker);
-
         }
-        var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
+        var deathLayer = L.markerClusterGroup();
+        for(i = 0; i < overlays.deaths.length; i++) {
+            var death = overlays.deaths[i];
+            var marker = L.marker(xy(death.coords[0], death.coords[1], {title: death.title}));
+            var popupContents = "";
+            Object.keys(death.data).forEach(function(key, value) {
+                popupContents += "<li>"+key+": "+death.data[key]+"</li>";
+            });
+            marker.bindPopup(
+                "<ul>"+
+                popupContents+
+                "</ul>"
+            );
+            deathLayer.addLayer(marker);
+        }
 
-        var layerControl = L.control.layers(null, {"Facades" : facadeLayer}).addTo(map);
+        var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
+        var layerControl = L.control.layers(null, {"Facades" : facadeLayer, 'Deaths': deathLayer}).addTo(map);
 
     </script>
 @endsection
