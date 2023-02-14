@@ -29,4 +29,12 @@ class GithubAL extends Model
     public static function getLocalRepoPath($repo) {
         return storage_path()."/private/git/".$repo."/";
     }
+
+    public static function getLocalGitApiPath() {
+        return storage_path()."/private/gitapi/";
+    }
+
+    public static function getDeathLogDir() {
+        return GithubAL::getLocalGitApiPath()."deaths/";
+    }
 }

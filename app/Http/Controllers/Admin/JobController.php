@@ -12,6 +12,7 @@ use App\Jobs\WriteItmCacheToDatabase;
 use App\Jobs\ResetItemsTable;
 use App\Jobs\WriteFacadesToDb;
 use App\Jobs\WriteDeathsToDb;
+use App\Jobs\FetchDeathLogs;
 
 class JobController extends Controller
 {
@@ -31,6 +32,7 @@ class JobController extends Controller
             'write-facades-to-db'=>['desc'=>'Read all facade files from /domains/wild/virtual/facades/ and write to db','time'=>'???','type'=>'map'],
             // deaths
             'write-deaths-to-db'=>['desc'=>'Read any new deaths from death log and write to db','time'=>'???','type'=>'deaths'],
+            'fetch-death-logs'=>['desc'=>'Fetch death logs','time'=>'<10s','type'=>'deaths']
         ];
         return view('admin.jobs',["jobs"=>$jobs]);
     }
@@ -64,6 +66,9 @@ class JobController extends Controller
 
             case 'write-deaths-to-db' :
                 WriteDeathsToDb::dispatch();
+                break;
+            case 'fetch-death-logs' :
+                FetchDeathLogs::dispatch(false);
                 break;
             default :
                 $status = ["error"=>"unknown job: $job"];

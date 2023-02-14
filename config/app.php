@@ -219,6 +219,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
+        'Github' => GrahamCampbell\GitHub\Facades\GitHub::class,
     ])->toArray(),
 
 ];

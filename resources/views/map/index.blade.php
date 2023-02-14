@@ -135,7 +135,10 @@
         }
 
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
-        var layerControl = L.control.layers(null, {"Facades" : facadeLayer, 'Deaths': deathLayer}).addTo(map);
+        var layerControl = L.control.layers(null, {
+            "Facades " : facadeLayer,
+            "Deaths ": deathLayer
+        }).addTo(map);
 
     </script>
 @endsection
