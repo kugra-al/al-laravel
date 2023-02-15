@@ -52,4 +52,12 @@ class GithubAL extends Model
         return $coords;
     }
 
+    public static function convertLPCDataToJson($data, $decode = true) {
+        $data = str_replace(['({', '})', '({|', '|})', '}', '{','([','])'], ['[', ']', '[', ']', '}', '{','{','}'], $data);
+        $data = str_replace([",}",",]"],["}","]"],$data);
+        if ($decode)
+            $data = json_decode($data, true);
+        return $data;
+    }
 }
+
