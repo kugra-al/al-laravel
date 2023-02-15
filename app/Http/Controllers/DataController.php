@@ -23,7 +23,7 @@ class DataController extends Controller
                 $model = Facade::get();
                 break;
             case 'perms' :
-                $model = Perm::select('id','filename','location','object','x','y','z','lastseen','sign_title','psets','touched_by')->get();
+                $model = Perm::select(\DB::Raw('id, filename, location, object, x ,y, z, lastseen, sign_title, psets, touched_by, LENGTH(data) as data_length'))->get();
                 break;
             default :
                 return back()->with('warning','Unknown data type');
