@@ -37,4 +37,19 @@ class GithubAL extends Model
     public static function getDeathLogDir() {
         return GithubAL::getLocalGitApiPath()."deaths/";
     }
+
+    public static function getCoordsFromLocation($location) {
+        $coords = [];
+        $location = str_replace(["/domains/player/built/data/"],"",$location);
+        if (strpos($location,"/domains/wild/virtual/server/") !== false) {
+            $tmp = str_replace("/domains/wild/virtual/server/","",$location);
+            $tmp = explode("/",$tmp);
+
+            $coords['x'] = (int)$tmp[0];
+            $coords['y'] = (int)$tmp[1];
+            $coords['z'] = (int)$tmp[2];
+        }
+        return $coords;
+    }
+
 }

@@ -56,6 +56,9 @@
                                     <a class="dropdown-item" href="{{ route('data.index', 'facades') }}">
                                         Facades
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('data.index', 'perms') }}">
+                                        Perms
+                                    </a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">

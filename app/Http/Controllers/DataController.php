@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Death;
 use App\Models\Facade;
+use App\Models\Perm;
 use DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -15,10 +16,13 @@ class DataController extends Controller
         $model = [];
         switch($type) {
             case 'deaths' :
-                $model = Death::orderBy('event_date','desc')->select('event_date','player','cause','location','x','y','z')->get();
+                $model = Death::select('event_date','player','cause','location','x','y','z')->get();
                 break;
             case 'facades' :
                 $model = Facade::get();
+                break;
+            case 'perms' :
+                $model = Perm::select('filename','location','object','x','y','z')->get();
                 break;
             default :
                 return back()->with('warning','Unknown data type');

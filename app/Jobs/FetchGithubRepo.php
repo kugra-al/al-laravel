@@ -18,14 +18,16 @@ class FetchGithubRepo implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $repo;
+    public $branch;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($repo)
+    public function __construct($repo, $branch = "master")
     {
         $this->repo = $repo;
+        $this->branch = $branch;
     }
 
     /**
@@ -39,16 +41,18 @@ class FetchGithubRepo implements ShouldQueue
         $gitdir = storage_path()."/private/git/";
         if (File::exists($gitdir.explode("/",$this->repo)[1])) {
             $gitdir = $gitdir.explode("/",$this->repo)[1];
-            $process = new Process(['git', 'pull', '--rebase', '--autostash', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$this->repo.'.git', 'master']);
+            $process = new Process(['git', 'pull', '--rebase', '--autostash', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$this->repo.'.git', $this->branch]);
         } else {
-            $process = new Process(['git', 'clone', 'https://'.env('GITHUB_TOKEN').'@github.com/'.$this->repo.'.git']);
+            $process = new Process(['git', 'clone', '-b', $this->branch, 'https://'.env('GITHUB_TOKEN').'@github.com/'.$this->repo.'.git']);
         }
         $process->setWorkingDirectory($gitdir);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        Log::info($process->getOutput());
-//        dd( $process->getOutput() );
+        Log::info("Fetched latest version of: {$this->repo} on branch: {$this->branch}");
+        $output = $process->getOutput();
+        if ($output && strlen($output))
+            Log::info($process->getOutput());
     }
 }
