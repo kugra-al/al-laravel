@@ -23,17 +23,17 @@
     </div>
 </div>
     <div class="modal" id="itmFileModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width:1000px;">
+        <div class="modal-dialog" style="min-width:70%;">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="$('#itmFileModal').hide()"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="$('#itmFileModal').modal('hide')"></button>
                 </div>
                 <div class="modal-body">
                     <p>Modal body text goes here.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick="$('#itmFileModal').hide()">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick="$('#itmFileModal').modal('hide')">Close</button>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
             left: -100%;
         }
         .rounded-pill.bg-secondary { border: 1px solid #a0a0a0; background-color: var(--bs-teal) !important; }
-        .modal-content, .modal-footer { background-color: #e3e3e3; }
+
     </style>
 @endsection
 
@@ -102,7 +102,7 @@
                 data: {file: file},
                 dataType: 'json',
                 success: function (data) {
-                    $('#itmFileModal').show();
+                    $('#itmFileModal').modal("show");
                    // $('#itmFileModal').find('.modal-body').html("<pre style='background:#111; color: #1af21a'>"+data+"</pre>");
                     var pre = document.createElement('pre');
                     $(pre).prop('id', 'file-code');

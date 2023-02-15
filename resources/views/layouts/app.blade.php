@@ -14,6 +14,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <script defer src="/js/buttons.server-side.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.3/dist/zephyr/bootstrap.min.css">
@@ -22,6 +23,7 @@
         div.dataTables_processing>div:last-child>div:nth-child(2) { background: green; }
         div.dataTables_processing>div:last-child>div:nth-child(3) { background: blue; }
         div.dataTables_processing>div:last-child>div:nth-child(4) { background: yellow; }
+        .modal-backdrop { background-color: rgb(0 0 0 / 30%); }
     </style>
 </head>
 <body>
@@ -158,5 +160,6 @@
     </div>
 
     @stack('scripts')
+    <script defer src="/js/modals.bootstrap.min.js"></script>
 </body>
 </html>

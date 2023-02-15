@@ -16,17 +16,17 @@
     </div>
 
     <div class="modal" id="dataModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width:1000px;">
+        <div class="modal-dialog" style="min-width: 80%">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="$('#dataModal').hide()"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Modal body text goes here.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick="$('#dataModal').hide()">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 data: {id: id},
                 dataType: 'json',
                 success: function (data) {
-                    $('#dataModal').show();
+                    $('#dataModal').modal("show");
                     var lines = data.data;
                     console.log(lines);
                     $('#dataModal').find('.modal-body').html("");
