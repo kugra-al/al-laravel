@@ -59,5 +59,17 @@ class GithubAL extends Model
             $data = json_decode($data, true);
         return $data;
     }
+
+    public static function convertDataFromPermToJson($data,$decode = true) {
+        $tmp = explode("\n",$data);
+        $object = $tmp[0];
+        unset($tmp[0]);
+        foreach($tmp as $k=>$t) {
+            if (str_ends_with($t,$object))
+                $t = substr($t,0,(0-strlen($object)));
+            $tmp[$k] = GithubAL::convertLPCDataToJson($t,$decode);
+        }
+        return $tmp;
+    }
 }
 

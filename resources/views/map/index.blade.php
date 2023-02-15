@@ -53,8 +53,15 @@
             popupAnchor: [1, 1],
         });
 
-        var redIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        var signpostIcon = new L.Icon({
+            iconUrl: '/img/signpost-icon.svg',
+            iconSize: [25, 25],
+            iconAnchor: [1, 25],
+            popupAnchor: [1, -25],
+        });
+
+        var purpleIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
             iconSize: [25, 41],
             iconAnchor: [12, 41],
@@ -100,7 +107,7 @@
             'perms' :
                 [
                     @foreach($perms as $perm)
-                        {coords: [ {{ $perm->x }}, {{ $perm->y }} ], title: '{{ $perm->filename }}', data: {'object': '{{ $perm->object }}', 'location': '{{ $perm->location }}', 'filename' : '{{ $perm->filename }}', 'lastseen': '{{ $perm->lastseen }}' } },
+                        {coords: [ {{ $perm->x }}, {{ $perm->y }} ], title: '{{ $perm->filename }}', data: {'object': '{{ $perm->object }}', 'location': '{{ $perm->location }}', 'filename' : '{{ $perm->filename }}', 'lastseen': '{{ $perm->lastseen }}' @if(isset($perm->sign_title)) , 'sign_title': '{{ $perm->sign_title }}' @endif } },
                     @endforeach
                 ]
             @endif
@@ -144,7 +151,16 @@
         var permLayer = L.markerClusterGroup();
         for(i = 0; i < overlays.perms.length; i++) {
             var perm = overlays.perms[i];
-            var marker = L.marker(xy(perm.coords[0], perm.coords[1], {title: perm.title}));
+            var options = {title: perm.title, icon: purpleIcon};
+            switch(perm.data.object) {
+                case "/obj/base/misc/signpost" :
+                    options.icon = signpostIcon;
+                    console.log(perm.data.object);
+                    console.log(options);
+                    break;
+            }
+            var marker = L.marker(xy(perm.coords[0], perm.coords[1]), options);
+
             var popupContents = "";
             Object.keys(perm.data).forEach(function(key, value) {
                 popupContents += "<li>"+key+": "+perm.data[key]+"</li>";
