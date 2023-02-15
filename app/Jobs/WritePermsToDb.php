@@ -24,6 +24,17 @@ class WritePermsToDb implements ShouldQueue
      */
     public function __construct()
     {
+
+    }
+
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
         $dir = GithubAL::getLocalRepoPath('Accursedlands-perms')."perm_objs/";
         $perms = [];
         foreach(File::files($dir) as $file) {
@@ -54,16 +65,5 @@ class WritePermsToDb implements ShouldQueue
                 $perms,
                 ['filename'],['data','lastseen','x','y','z','object','location']
             );
-    }
-
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        //
     }
 }
