@@ -54,6 +54,7 @@ class WritePermsToDb implements ShouldQueue
                 $perm['object'] = $data[0];
             $location = explode(":",$filename)[0];
             $location = str_replace("_","/",$location);
+            $location = str_replace("/domains/player/built/data/","",$location);
             $perm['location'] = $location;
             $coords = GithubAL::getCoordsFromLocation($location);
             if (sizeof($coords) && sizeof($coords) == 3)
