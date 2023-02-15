@@ -87,19 +87,19 @@
                     var lines = data.data.parsed;
 
                     $('#dataModal').find('.modal-body').html("");
-                    $('#dataModal').find('.modal-body').append("<h4>Original data from /perms/perm_obj/"+data.filename+"</h4><textarea style='width:100%; height: 150px'>"+data.data.original+"</textarea>");
+                    $('#dataModal').find('.modal-body').append("<h4>Original data from /perms/perm_objs/"+data.filename+"</h4><textarea style='width:100%; height: 150px'>"+data.data.original+"</textarea>");
                     var linenum = 2;
+                    $('#dataModal').find('.modal-body').append("<p><b>Line #1 object:</b> <pre class='code'>"+data.object+"</pre></p>");
                     for(const [key,line] of Object.entries(lines)) {
                         var pre = document.createElement('pre');
                         $(pre).prop('id', 'file-code');
                         $(pre).addClass('code');
-
                         var lineJson;
                         try {
                             var lineJson = JSON.parse(line);
                             lineJson = JSON.stringify(lineJson,null,2);
                             lineJson = lineJson.split("\n");
-                            $("#dataModal").find(".modal-body").append("<b>Parsed from line "+linenum+"</b>");
+                            $("#dataModal").find(".modal-body").append("<b>Line #"+linenum+" parsed to JSON:</b>");
                             console.log(lineJson);
                         } catch (e) {
                             $("#dataModal").find(".modal-body").append("<b>Failed to parse line</b>");
