@@ -96,6 +96,12 @@
                     @foreach($deaths as $death)
                         {coords: [ {{ $death->x }}, {{ $death->y }} ], title: '{{ $death->event_date }}', destination: '{{ $death->location }}', data: {'event_date':'{{ $death->event_date }}', 'player':'{{ $death->player }}','cause':'{{ $death->cause }}','location':'{{ $death->location }}' } },
                     @endforeach
+                ],
+            'perms' :
+                [
+                    @foreach($perms as $perm)
+                        {coords: [ {{ $perm->x }}, {{ $perm->y }} ], title: '{{ $perm->filename }}', data: {'object': '{{ $perm->object }}', 'location': '{{ $perm->location }}', 'filename' : '{{ $perm->filename }}', 'lastseen': '{{ $perm->lastseen }}' } },
+                    @endforeach
                 ]
             @endif
         };
@@ -135,10 +141,27 @@
             deathLayer.addLayer(marker);
         }
 
+        var permLayer = L.markerClusterGroup();
+        for(i = 0; i < overlays.perms.length; i++) {
+            var perm = overlays.perms[i];
+            var marker = L.marker(xy(perm.coords[0], perm.coords[1], {title: perm.title}));
+            var popupContents = "";
+            Object.keys(perm.data).forEach(function(key, value) {
+                popupContents += "<li>"+key+": "+perm.data[key]+"</li>";
+            });
+            marker.bindPopup(
+                "<ul>"+
+                popupContents+
+                "</ul>"
+            );
+            permLayer.addLayer(marker);
+        }
+
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers(null, {
             "Facades " : facadeLayer,
-            "Deaths ": deathLayer
+            "Deaths ": deathLayer,
+            'Perms' : permLayer
         }).addTo(map);
 
     </script>
