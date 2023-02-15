@@ -55,6 +55,7 @@ class GithubAL extends Model
     public static function convertLPCDataToJson($data, $decode = true) {
         $data = str_replace(['({', '})', '({|', '|})', '}', '{','([','])'], ['[', ']', '[', ']', '}', '{','{','}'], $data);
         $data = str_replace([",}",",]"],["}","]"],$data);
+        $data = preg_replace('/:{0:(\d+)}/', ':[$1]', $data); // Edge case with arrays
         if ($decode)
             $data = json_decode($data, true);
         return $data;

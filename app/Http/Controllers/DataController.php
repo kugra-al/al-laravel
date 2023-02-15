@@ -23,7 +23,7 @@ class DataController extends Controller
                 $model = Facade::get();
                 break;
             case 'perms' :
-                $model = Perm::select('id','filename','location','object','x','y','z','lastseen')->get();
+                $model = Perm::select('id','filename','location','object','x','y','z','lastseen','sign_title','psets','touched_by')->get();
                 break;
             default :
                 return back()->with('warning','Unknown data type');
@@ -64,9 +64,6 @@ class DataController extends Controller
             switch($type) {
                 case "perms" :
                     $data = Perm::find((int)request()->get('id'));
-                    if ($data["data"]) {
-                        $data["data"] = ['original'=>$data["data"],"parsed"=>GithubAL::convertDataFromPermToJson($data['data'],false)];
-                    }
                     break;
                 default :
                     $data = ["error"=>"unknown type"];

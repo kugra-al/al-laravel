@@ -107,7 +107,17 @@
             'perms' :
                 [
                     @foreach($perms as $perm)
-                        {coords: [ {{ $perm->x }}, {{ $perm->y }} ], title: '{{ $perm->filename }}', data: {'object': '{{ $perm->object }}', 'location': '{{ $perm->location }}', 'filename' : '{{ $perm->filename }}', 'lastseen': '{{ $perm->lastseen }}' @if(isset($perm->sign_title)) , 'sign_title': '{{ $perm->sign_title }}' @endif } },
+                        {coords: [ {{ $perm->x }}, {{ $perm->y }} ], title: '{{ $perm->filename }}', data: {
+                            'object': '{{ $perm->object }}',
+                            'location': '{{ $perm->location }}',
+                            'filename' : '{{ $perm->filename }}',
+                            'lastseen': '{{ $perm->lastseen }}',
+                            'sign_title': '{{ $perm->sign_title }}',
+                            'last_touched': '{{ $perm->last_touched }}',
+                            'touched_by': '{{ $perm->touched_by }}',
+                            'psets': '{{ $perm->psets }}'
+
+                        }},
                     @endforeach
                 ]
             @endif
@@ -157,6 +167,9 @@
                     options.icon = signpostIcon;
                     console.log(perm.data.object);
                     console.log(options);
+                    break;
+                default :
+                    delete perm.data.sign_title;
                     break;
             }
             var marker = L.marker(xy(perm.coords[0], perm.coords[1]), options);
