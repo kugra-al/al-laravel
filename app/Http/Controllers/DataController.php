@@ -65,16 +65,7 @@ class DataController extends Controller
                 case "perms" :
                     $data = Perm::find((int)request()->get('id'));
                     if ($data["data"]) {
-                        $tmp = explode("\n",$data["data"]);
-                        $object = $tmp[0];
-                        unset($tmp[0]);
-                        foreach($tmp as $k=>$t) {
-                            if (str_ends_with($t,$object))
-                                $t = substr($t,0,(0-strlen($object)));
-                            $tmp[$k] = GithubAL::convertLPCDataToJson($t,false);
-                        }
-                        //dd($tmp);
-                        $data["data"] = $tmp;
+                        $data["data"] = ['original'=>$data["data"],"parsed"=>GithubAL::convertDataFromPermToJson($data['data'],false)];
                     }
                     break;
                 default :

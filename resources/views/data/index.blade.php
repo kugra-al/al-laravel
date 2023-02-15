@@ -84,37 +84,40 @@
                 dataType: 'json',
                 success: function (data) {
                     $('#dataModal').modal("show");
-                    var lines = data.data;
-                    console.log(lines);
+                    var lines = data.data.parsed;
+
                     $('#dataModal').find('.modal-body').html("");
+                    $('#dataModal').find('.modal-body').append("<h4>Original data from /perms/perm_obj/"+data.filename+"</h4><textarea style='width:100%; height: 150px'>"+data.data.original+"</textarea>");
+                    var linenum = 2;
                     for(const [key,line] of Object.entries(lines)) {
                         var pre = document.createElement('pre');
                         $(pre).prop('id', 'file-code');
                         $(pre).addClass('code');
-                        console.log(line);
+
                         var lineJson;
                         try {
                             var lineJson = JSON.parse(line);
                             lineJson = JSON.stringify(lineJson,null,2);
                             lineJson = lineJson.split("\n");
-                            $("#dataModal").find(".modal-body").append("<b>Note this is converted from LPC to JSON so it gets output nicer</b>");
+                            $("#dataModal").find(".modal-body").append("<b>Parsed from line "+linenum+"</b>");
                             console.log(lineJson);
                         } catch (e) {
-                            $("#dataModal").find(".modal-body").append("<b>Failed to parse file</b>");
+                            $("#dataModal").find(".modal-body").append("<b>Failed to parse line</b>");
                             $(pre).removeClass('code');
                             lineJson = line.split('\n');
                         }
+                        linenum++;
                         for(x = 0; x < lineJson.length; x++) {
                             $(pre).append("<code>"+lineJson[x]+"</code>");
                         }
 
                         $('#dataModal').find('.modal-body').append(pre);
-                        console.log(line);
+
                     }
-                    if (!Object.keys.length == 0) {
+                    if (Object.keys.length == 0) {
                         $('#dataModal').find('.modal-body').append("No data to show");
                     }
-                    console.log(data);
+
                     //$('#dataModal').find('.modal-body').html("<a target='_blank' style='color: #3700ce' href='"+file.replace('/obj/','https://github.com/Amirani-al/Accursedlands-obj/blob/master/')+"'>View "+file+" on github</a><br/>");
                    // $('#dataModal').find('.modal-title').text('File: '+file);
                 },
