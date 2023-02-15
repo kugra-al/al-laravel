@@ -69,6 +69,29 @@
             shadowSize: [41, 41]
         });
 
+        var redIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+        var alertIcon = redIcon;
+
+        var tentIcon = new L.Icon({
+            iconUrl: '/img/tent-icon.png',
+            iconSize: [25, 25],
+            iconAnchor: [1, 25],
+            popupAnchor: [1, -25],
+        });
+        var buildingIcon = new L.Icon({
+            iconUrl: '/img/building-icon.svg',
+            iconSize: [25, 25],
+            iconAnchor: [1, 25],
+            popupAnchor: [1, -25],
+        });
+
         function xy(x, y) {
             if (Array.isArray(x)) { // When doing xy([x, y]);
                 return yx(x[1], x[0]);
@@ -159,16 +182,25 @@
         }
 
         var permLayer = L.markerClusterGroup();
+        var signpostLayer = L.markerClusterGroup();
         for(i = 0; i < overlays.perms.length; i++) {
             var perm = overlays.perms[i];
-            var options = {title: perm.title, icon: purpleIcon};
+            var options = {title: perm.title, icon: buildingIcon};
             switch(perm.data.object) {
                 case "/obj/base/misc/signpost" :
                     options.icon = signpostIcon;
-                    console.log(perm.data.object);
-                    console.log(options);
+                    break;
+                case "/obj/base/containers/permanent_well":
+                    options.icon = purpleIcon;
+                    break;
+                case "/obj/items/other/conical_leather_tent":
+                case "/obj/items/other/large_canvas_tent":
+                    options.icon = tentIcon;
                     break;
                 default :
+                    if (perm.data.object.search('/wiz/') != -1)
+                        options.icon = alertIcon;
+
                     delete perm.data.sign_title;
                     break;
             }
@@ -183,14 +215,18 @@
                 popupContents+
                 "</ul>"
             );
-            permLayer.addLayer(marker);
+            if (perm.data.object == "/obj/base/misc/signpost")
+                signpostLayer.addLayer(marker);
+            else
+                permLayer.addLayer(marker);
         }
 
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers(null, {
             "Facades " : facadeLayer,
             "Deaths ": deathLayer,
-            'Perms' : permLayer
+            'Buildings' : permLayer,
+            'Signposts' : signpostLayer
         }).addTo(map);
 
     </script>
