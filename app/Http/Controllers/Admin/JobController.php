@@ -28,7 +28,7 @@ class JobController extends Controller
             'reset-items-table'=>['desc'=>'Resets all columns and values in items table.  Run before `write-items-to-db` to reset columns and data','time'=>'<10 seconds','type'=>'items'],
             'write-itms-to-db'=>['desc'=>'Write all cached .itm files to database','time'=>'~20 seconds','type'=>'items'],
             // domains
-            'fetch-domain-files'=>['desc'=>'Fetch all lib files from <a href="https://github.com/Amirani-al/Accursedlands-Domains" target="_blank">Amirani-al/Accursedlands-Domains</a>','time'=>'<10 seconds','type'=>'domains'],
+            'fetch-domain-files'=>['desc'=>'Fetch all lib files from <a href="https://github.com/Amirani-al/Accursedlands-Domains" target="_blank">Amirani-al/Accursedlands-Domains</a> on branch production_mud_fluffos','time'=>'<10 seconds','type'=>'domains'],
             // map
             'write-facades-to-db'=>['desc'=>'Read all facade files from /domains/wild/virtual/facades/ and write to db','time'=>'???','type'=>'map'],
             // deaths
@@ -37,6 +37,7 @@ class JobController extends Controller
             // perms
             'fetch-perm-files'=>['desc'=>'Fetch all perms files from <a href="https://github.com/Amirani-al/Accursedlands-perms" target="_blank">Amirani-al/Accursedlands-perms</a> on branch production_mud_fluffos','time'=>'<10 seconds','type'=>'perms'],
             'write-perms-to-db'=>['desc'=>'Read any perms and write to db','time'=>'???','type'=>'perms'],
+            'fetch-data-files'=>['desc'=>'Fetch all data files from <a href="https://github.com/Amirani-al/Accursedlands-DATA" target="_blank">Amirani-al/Accursedlands-DATA</a> on branch production_mud_fluffos','time'=>'<10 seconds','type'=>'perms'],
         ];
         return view('admin.jobs',["jobs"=>$jobs]);
     }
@@ -62,7 +63,7 @@ class JobController extends Controller
 
             case 'fetch-domain-files' :
                 $repo = "Amirani-al/Accursedlands-Domains";
-                FetchGithubRepo::dispatch($repo);
+                FetchGithubRepo::dispatch($repo,"production_mud_fluffos");
                 break;
             case 'write-facades-to-db' :
                 WriteFacadesToDb::dispatch();
@@ -82,7 +83,10 @@ class JobController extends Controller
             case 'write-perms-to-db' :
                 WritePermsToDb::dispatch();
                 break;
-
+            case 'fetch-data-files' :
+                $repo = "Amirani-al/Accursedlands-DATA";
+                FetchGithubRepo::dispatch($repo,"production_mud_fluffos");
+                break;
             default :
                 $status = ["error"=>"unknown job: $job"];
         }

@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\PermItem;
+use App\Models\Perm;
 
-class Perm extends Model
+class PermItem extends Model
 {
     use HasFactory;
-    protected $guarded = [];
 
-    public function items()
+    public function perm()
     {
-        return $this->hasMany(PermItem::class);
+        return $this->belongsTo(Perm::class);
     }
 }

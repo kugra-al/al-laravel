@@ -23,7 +23,8 @@ class DataController extends Controller
                 $model = Facade::get();
                 break;
             case 'perms' :
-                $model = Perm::select(\DB::Raw('id, filename, location, object, x ,y, z, lastseen, sign_title, psets, touched_by, LENGTH(data) as data_length'))->get();
+                //$model = Perm::select(\DB::Raw('id, filename, location, object, x ,y, z, lastseen, psets, touched_by, LENGTH(data) as data_length, destroyed, live, perm_type, save_type, map_dir'))->get();
+                $model = Perm::select(\DB::Raw('id, filename, location, object, x ,y, z, LENGTH(data) as data_length, destroyed, live, perm_type, save_type, map_dir, inventory_location'))->get();
                 break;
             default :
                 return back()->with('warning','Unknown data type');
@@ -36,6 +37,8 @@ class DataController extends Controller
 
             return $dataTable->toJson();
         }
+
+
         if ($model) {
             $keys = array_keys($model->first()->toArray());
             $columns = [];

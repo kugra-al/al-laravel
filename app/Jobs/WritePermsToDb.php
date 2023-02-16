@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use App\Models\GithubAL;
 use App\Models\Perm;
+use App\Models\PermItem;
 
 class WritePermsToDb implements ShouldQueue
 {
@@ -24,19 +25,9 @@ class WritePermsToDb implements ShouldQueue
      */
     public function __construct()
     {
-
-    }
-
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
         $dir = GithubAL::getLocalRepoPath('Accursedlands-perms')."perm_objs/";
         $perms = [];
+
         foreach(File::files($dir) as $file) {
             $filename = File::name($file);
             $contents = utf8_encode(File::get($file));
@@ -52,26 +43,65 @@ class WritePermsToDb implements ShouldQueue
                 'sign_title' => null,
                 'touched_by' => null,
                 'last_touched' => null,
-                'psets' => null
+                'psets' => null,
+
+                'perm_id'=>null,
+                'map_dir'=>null,
+                'destroyed'=>null,
+                'live'=>null,
+
+                'save_type'=>null,
+                'perm_type'=>null,
+
+                'is_inventory_container'=>false,
+                'inventory_location'=>null
             ];
 
-
-            $location = explode(":",$filename)[0];
-            $location = str_replace("_","/",$location);
-            $location = str_replace("/domains/player/built/data/","",$location);
-            $perm['location'] = $location;
-            $coords = GithubAL::getCoordsFromLocation($location);
-            if (sizeof($coords) && sizeof($coords) == 3)
-                $perm = array_merge($perm,$coords);
-
+            // Do any data reading stuff here on main save
             if (sizeof($data)) {
                 $perm['object'] = $data[0];
 
-                if ($perm['object'] == "/obj/base/misc/signpost") {
-                    preg_match('/"sign_title":"(.*?)","/',$perm['data'],$matches);
-                    if (isset($matches[1]) && strlen($matches[1]))
-                        $perm['sign_title'] = json_encode($matches[1]);
+                switch($perm['object']) {
+                    case "/obj/base/misc/signpost":
+                        preg_match('/"sign_title":"(.*?)","/',$perm['data'],$matches);
+                        if (isset($matches[1]) && strlen($matches[1]))
+                            $perm['sign_title'] = json_encode($matches[1]);
+                        $perm["perm_type"] = "signpost";
+                        break;
+                    case "/std/shop_shelves":
+                    case "/obj/base/misc/shop_shelves":
+                        $perm["perm_type"] = "shop";
+                        $perm["is_inventory_container"] = true;
+                        break;
+                    case "/std/stasis_container":
+                    case "/std/stasis/stasis_chest":
+                        $perm["perm_type"] = "stasis_container";
+                        $perm["is_inventory_container"] = true;
+                        break;
+                    case "/obj/items/other/large_canvas_tent":
+                    case "/obj/items/other/conical_leather_tent":
+                        $perm["perm_type"] = "tent";
+                        $perm["is_inventory_container"] = true;
+                        break;
+                    case "/obj/base/misc/unfinished_perm":
+                        $perm["perm_type"] = "unfinished";
+                        break;
+                    case "/domains/player_built/base/lock_installable_base_facade":
+                    case "/domains/player_built/base/closeable_base_facade":
+                    case "/obj/base/misc/permanent_building":
+                        $perm["perm_type"] = "building";
+                        $perm["is_inventory_container"] = true;
+                        break;
+                    case "/std/cart":
+                    case "/obj/base/vehicles/rowboat":
+                        $perm["perm_type"] = "vehicle";
+                        break;
+                    case "/obj/base/containers/permanent_well":
+                        $perm["perm_type"] = "well";
+                        break;
                 }
+
+                // Touch vars we want for everything
                 preg_match('/"touched_by":\((.*?)\)/',$perm['data'],$matches);
                 if (sizeof($matches) > 1) {
                     if (strlen($matches[1]) > 4)
@@ -88,16 +118,143 @@ class WritePermsToDb implements ShouldQueue
                         $perm['psets'] = $matches[1];
                 }
             }
+
+            $location = $filename;
+
+            $playerBuilt = [];
+            // Find map dirs for any /domains/player_built/ perms
+
+            // These are all /obj/items/other/large_canvas_tent that have _domains_player_built in the filename
+            if (strpos($filename,"_domains_player_built_data_") !== false) {
+                $location = str_replace("_domains_player_built_data_","",$location);
+                preg_match("/(.*):(\d+)_city_server/",$location,$matches);
+                $playerBuilt['perm_id'] = $matches[2];
+                $playerBuilt['map_dir'] = $matches[1];
+                $playerBuilt['save_type'] = 'stasis|perm';
+            } else {
+                // These are for all buildings
+                if ($perm['perm_type'] == "building") {
+                    $tmp = explode(":",$perm["filename"]);
+                    $playerBuilt['perm_id'] = $tmp[1];
+                    $playerBuilt['map_dir'] = $tmp[0];
+                    $playerBuilt['save_type'] = 'stasis';
+                }
+                // These are for older tents
+                if($perm['perm_type'] == "tent") {
+                    $playerBuilt['save_type'] = 'perm';
+                }
+            }
+            if (sizeof($playerBuilt)) {
+                $perm["save_type"] = $playerBuilt["save_type"];
+                // Check for player_built saves
+                if ($playerBuilt['save_type'] == 'stasis') {
+                    $perm['perm_id'] = $playerBuilt['perm_id'];
+                    $liveMapDir = "Accursedlands-Domains/player_built/data/".$playerBuilt['map_dir'].":".$perm['perm_id'];
+                    if (File::exists(GithubAL::getLocalRepoPath($liveMapDir))) {
+                        $perm['live'] = true;
+                        $perm['destroyed'] = false;
+                        $perm['map_dir'] = $liveMapDir;
+                    }
+                    $destroyedMapDir = "Accursedlands-Domains/player_built/destroyed/".$playerBuilt['map_dir'].":".$perm['perm_id'];
+                    if (File::exists(GithubAL::getLocalRepoPath($destroyedMapDir))) {
+                        $perm['destroyed'] = true;
+
+                        if (File::exists(GithubAL::getLocalRepoPath($liveMapDir))) {
+                            $perm['live'] = true;
+                            $perm['map_dir'] = $liveMapDir.", ".$destroyedMapDir;
+                        } else {
+                            $perm['live'] = false;
+                            $perm['map_dir'] = $destroyedMapDir;
+                        }
+                    }
+                } else {
+                    if (strpos($contents,'"#inventory#":({"') !== false) {
+                        $perm["save_type"] = "perm_broken";
+                        $perm["inventory_location"] = "Accursedlands-perms/perm_objs/".$filename;
+                    }
+                }
+            }
+            // Look for inventory
+            if ($perm["is_inventory_container"] && !$perm["inventory_location"] && $perm['perm_type'] != 'shop' && $perm['perm_type'] != 'stasis_container') {
+                // Find file from perm filename
+                //  _domains_autra_city_server_10_0_0:41544
+                // _domains_autra_city_server_10_0_0:_obj_items_other_large_canvas_tent:_perms_perm_objs__domains_autra_city_server_10_0_0:41544
+                $search = "Accursedlands-DATA/permanent_rooms/";
+                $tmp = explode(":",$filename);
+                $search .= $tmp[0].":".str_replace("/","_",$perm['object']).":_perms_perm_objs_".$filename;
+                $fileSearch = substr(GithubAL::getLocalRepoPath($search),0,-1);
+
+                if (File::exists($fileSearch)) {
+                    $perm["inventory_location"] = $search;
+                    $perm["save_type"] = "data";
+                }
+                else {
+               // if ($filename == "_domains_player_built_data__domains_wild_virtual_server_467_1373_0:60311_city_server_0_0_0:64796")
+               // dd('ok');
+                    // Find file like
+                    // _domains_player_built_data__domains_wild_virtual_server_467_1373_0:60311_city_server_0_0_0:64796
+                    $search = "Accursedlands-DATA/permanent_rooms/";
+                    $tmp = explode(":",$filename);
+                    if (sizeof($tmp) === 3)
+                        $tmp = $tmp[0].":".$tmp[1];
+                    else
+                        $tmp = $filename;
+
+                    $search .= ":".$tmp.":";
+
+                    $fileSearch = substr(GithubAL::getLocalRepoPath($search),0,-1);
+                    if (File::exists($fileSearch)) {
+                        $perm["inventory_location"] = $search;
+                        $perm["save_type"] = "data";
+                    } else {
+                        // Find
+                        // _domains_wild_virtual_server_612_1433_0:89777
+                        $search = "Accursedlands-DATA/permanent_rooms/";
+                        $tmp = "_domains_player_built_data_".$filename."_city_server_0_0_0";
+                        $search .= ":".$tmp.":";
+
+                        $fileSearch = substr(GithubAL::getLocalRepoPath($search),0,-1);
+                        if (File::exists($fileSearch)) {
+                            $perm["inventory_location"] = $search;
+                            $perm["save_type"] = "data";
+                        }
+                    }
+                }
+            }
+
+            $location = str_replace("_","/",$location);
+            $location = explode(":",$location)[0];
+           // $location = str_replace("/domains/player/built/data/","",$location);
+            $perm['location'] = $location;
+            $coords = GithubAL::getCoordsFromLocation($location);
+            if (sizeof($coords) && sizeof($coords) == 3)
+                $perm = array_merge($perm,$coords);
+
+
             $perms[] = $perm;
         }
+
         if (sizeof($perms)) {
             Perm::upsert(
                 $perms,
-                ['filename'],['data','lastseen','x','y','z','object','location']
+                ['filename'],['data','lastseen','x','y','z','object','location','map_dir','destroyed','live','perm_type','save_type','is_inventory_container','inventory_location']
             );
             \Log::info("Wrote perms");
         } else {
             \Log::info("Nothing to write");
         }
+
     }
+
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+
+    }
+
 }

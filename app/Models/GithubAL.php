@@ -53,6 +53,10 @@ class GithubAL extends Model
     }
 
     public static function convertLPCDataToJson($data, $decode = true) {
+        $data = preg_replace('/("room_coords":\(\[(.*?)\]\),)/','',$data);
+        $data = preg_replace('/("persist_flags":\(\[(.*?)\]\),)/','',$data);
+        $data = preg_replace('/("found":\(\[(.*?)\]\),)/','',$data);
+        $data = str_replace('"who":,',"",$data);
         $data = str_replace(['({', '})', '({|', '|})', '}', '{','([','])'], ['[', ']', '[', ']', '}', '{','{','}'], $data);
         $data = str_replace([",}",",]"],["}","]"],$data);
         $data = preg_replace('/:{0:(\d+)}/', ':[$1]', $data); // Edge case with arrays
@@ -68,7 +72,11 @@ class GithubAL extends Model
         foreach($tmp as $k=>$t) {
             if (str_ends_with($t,$object))
                 $t = substr($t,0,(0-strlen($object)));
-            $tmp[$k] = GithubAL::convertLPCDataToJson($t,$decode);
+            $converted = GithubAL::convertLPCDataToJson($t,$decode);
+            if (!$converted)
+                unset($tmp[$k]);
+            else
+                $tmp[$k] = $converted;
         }
         return $tmp;
     }
