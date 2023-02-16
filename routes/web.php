@@ -41,6 +41,12 @@ Route::group(['middleware' => ['auth','can:access items']], function() {
     Route::post('/items/export', [App\Http\Controllers\ItemController::class, 'index'])->name('items.export');
 
     Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
+
+    Route::get('/perms',[App\Http\Controllers\PermController::class, 'index'])->name('perms.index');
+    Route::get('/data/perms',function() { return redirect('/perms'); });
+    Route::post('/perms/data', [App\Http\Controllers\PermController::class, 'loadData'])->name('perms.data');
+    Route::post('/perms/export', [App\Http\Controllers\PermController::class, 'index'])->name('perms.export');
+
     Route::get('/data/{type}', [App\Http\Controllers\DataController::class, 'index'])->name('data.index');
     Route::post('/data/{type}/data', [App\Http\Controllers\DataController::class, 'loadData'])->name('data.data');
     //Route::post('/data/{type}/export', [App\Http\Controllers\DataController::class, 'index'])->name('data.export');
