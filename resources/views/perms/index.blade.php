@@ -30,7 +30,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="$('#dataModal').modal('hide')"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Modal body text goes here.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick="$('#dataModal').modal('hide')">Close</button>
@@ -83,7 +82,8 @@
 
         function loadData(id) {
             console.log("Loading data for "+id);
-
+            $('#dataModal').modal("show");
+            $('#dataModal').find(".modal-body").html('<img src="/img/loader-text.gif">');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -95,14 +95,22 @@
                 data: {id: id},
                 dataType: 'json',
                 success: function (data) {
-                    $('#dataModal').modal("show");
                     var lines = data.data;
 
-                    $('#dataModal').find('.modal-body').html("<h4>Original data from /perms/perm_objs/"+data.filename+"</h4><textarea style='width:100%; height: 400px'>"+data.data+"</textarea>");
-
-                    if (Object.keys.length == 0) {
-                        $('#dataModal').find('.modal-body').append("No data to show");
+                    if (Object.keys(data).length == 0) {
+                        $('#dataModal').find('.modal-body').html("No data to show");
+                        return;
                     }
+                    $('#dataModal').find('.modal-body').html("<h4>Original data from /perms/perm_objs/"+data.filename+"</h4><textarea style='width:100%; height: 400px'>"+data.data+"</textarea>");
+                    if (data.items && data.items.length) {
+                        $('#dataModal').find('.modal-body').append("<p>Found "+data.num_items+" items with total size of "+data.item_data_size+" in "+data.inventory_location+"</p>");
+                        for(var x = 0; x < data.items.length; x++) {
+                            var item = data.items[x];
+                            $('#dataModal').find('.modal-body').append("<b>"+item.object+"</b><textarea style='height:150px;width:100%'>"+item.data+"</textarea>");
+                        }
+                    }
+
+
 
                     //$('#dataModal').find('.modal-body').html("<a target='_blank' style='color: #3700ce' href='"+file.replace('/obj/','https://github.com/Amirani-al/Accursedlands-obj/blob/master/')+"'>View "+file+" on github</a><br/>");
                    // $('#dataModal').find('.modal-title').text('File: '+file);

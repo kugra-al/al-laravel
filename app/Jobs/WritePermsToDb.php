@@ -27,7 +27,7 @@ class WritePermsToDb implements ShouldQueue
     {
         $dir = GithubAL::getLocalRepoPath('Accursedlands-perms')."perm_objs/";
         $perms = [];
-
+        $permItems = [];
         foreach(File::files($dir) as $file) {
             $filename = File::name($file);
             $contents = utf8_encode(File::get($file));
@@ -72,11 +72,13 @@ class WritePermsToDb implements ShouldQueue
                     case "/obj/base/misc/shop_shelves":
                         $perm["perm_type"] = "shop";
                         $perm["is_inventory_container"] = true;
+                        $perm["save_type"] = "shop_stasis";
                         break;
                     case "/std/stasis_container":
                     case "/std/stasis/stasis_chest":
                         $perm["perm_type"] = "stasis_container";
                         $perm["is_inventory_container"] = true;
+                        $perm["save_type"] = "stasis";
                         break;
                     case "/obj/items/other/large_canvas_tent":
                     case "/obj/items/other/conical_leather_tent":
@@ -85,6 +87,7 @@ class WritePermsToDb implements ShouldQueue
                         break;
                     case "/obj/base/misc/unfinished_perm":
                         $perm["perm_type"] = "unfinished";
+                        $perm["save_type"] = "none";
                         break;
                     case "/domains/player_built/base/lock_installable_base_facade":
                     case "/domains/player_built/base/closeable_base_facade":
@@ -95,9 +98,11 @@ class WritePermsToDb implements ShouldQueue
                     case "/std/cart":
                     case "/obj/base/vehicles/rowboat":
                         $perm["perm_type"] = "vehicle";
+                        $perm["save_type"] = "none";
                         break;
                     case "/obj/base/containers/permanent_well":
                         $perm["perm_type"] = "well";
+                        $perm["save_type"] = "none";
                         break;
                 }
 
@@ -125,7 +130,7 @@ class WritePermsToDb implements ShouldQueue
             // Find map dirs for any /domains/player_built/ perms
 
             // These are all /obj/items/other/large_canvas_tent that have _domains_player_built in the filename
-            if (strpos($filename,"_domains_player_built_data_") !== false) {
+            if (strpos($filename,"_domains_player_built_data_") !== false && ($perm['perm_type'] == 'building' || $perm['perm_type'] == "tent")) {
                 $location = str_replace("_domains_player_built_data_","",$location);
                 preg_match("/(.*):(\d+)_city_server/",$location,$matches);
                 $playerBuilt['perm_id'] = $matches[2];
@@ -217,7 +222,10 @@ class WritePermsToDb implements ShouldQueue
                         if (File::exists($fileSearch)) {
                             $perm["inventory_location"] = $search;
                             $perm["save_type"] = "data";
+                        } else {
+                            $perm["save_type"] = "unknown";
                         }
+
                     }
                 }
             }

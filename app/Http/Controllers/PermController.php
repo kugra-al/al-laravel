@@ -16,7 +16,7 @@ class PermController extends Controller
     }
 
     public function loadData() {
-        $data = Perm::find((int)request()->get('id'));
+        $data = Perm::with('items')->find((int)request()->get('id'));
         return json_encode($data);
     }
 }

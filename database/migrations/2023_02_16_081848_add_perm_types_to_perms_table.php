@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('save_type')->nullable();
             $table->boolean('is_inventory_container')->nullable();
             $table->string('inventory_location')->nullable();
+            $table->string('inventory_version')->nullable();
+            $table->integer('num_items')->nullable();
+            $table->integer('item_data_size')->nullable();
         });
     }
 
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropColumns("perms", ["perm_type","save_type","is_inventory_container","inventory_location"]);
+        Schema::dropColumns("perms", ["perm_type","save_type","is_inventory_container","inventory_location","inventory_version","num_items","item_data_size"]);
     }
 };

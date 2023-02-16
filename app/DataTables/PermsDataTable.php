@@ -55,7 +55,21 @@ class PermsDataTable extends DataTable
                         'count' => $value->total
                     ];
             }
-            Cache::forever('perm-object-nums-searchpane', $types);
+            Cache::forever('perm-object-nums-searchpane', $objects);
+        }
+        $saveTypes = Cache::get('perm-save_type-nums-searchpane');
+        if (!$saveTypes) {
+            $tmp = DB::table('perms')->selectRaw("COUNT(*) as total, save_type")->distinct()->groupBy("save_type")->get();
+            foreach($tmp as $value) {
+                if ($value->save_type)
+                    $saveTypes[] = [
+                        'value' => $value->save_type,
+                        'label' => $value->save_type,
+                        'total' => $value->total,
+                        'count' => $value->total
+                    ];
+            }
+            Cache::forever('perm-save_type-nums-searchpane', $saveTypes);
         }
 
         $tableOut = (new EloquentDataTable($query))
@@ -81,7 +95,18 @@ class PermsDataTable extends DataTable
                             "%".$values[0]."%");
                 }
             )
-
+            ->searchPane(
+                'save_type',
+                $saveTypes,
+                function (\Illuminate\Database\Eloquent\Builder $query, array $values) {
+                    return $query
+                        ->where(
+                            'save_type',
+                            'like',
+                            "%".$values[0]."%");
+                }
+            )
+          //  ->addColumn('num-items', $query->with('items')->select('object'))
             ->addColumn('action', 'perms.action')
             ->setRowId('db_id');
 
@@ -112,7 +137,7 @@ class PermsDataTable extends DataTable
                     ->minifiedAjax()
                     ->searchPanes(
                         SearchPane::make()
-                            ->layout('columns-2')
+                            ->layout('columns-3')
                             ->dtOpts(['order'=>[1,'desc']])
                             //->controls(false)
                     )
@@ -157,6 +182,7 @@ class PermsDataTable extends DataTable
             'location'=>[],
             'object'=>['searchPanes'=>true],
             'perm_type'=>['searchPanes'=>true],
+            'save_type'=>['searchPanes'=>true],
             'x'=>[],
             'y'=>[],
             'z'=>[],
@@ -176,6 +202,7 @@ class PermsDataTable extends DataTable
             if (in_array($c,array_keys($alwaysShow))===false)
                 $out[] = Column::make($c)->hidden();
         }
+      //  $out[] = Column::make('num-items');
         return $out;
     }
 
