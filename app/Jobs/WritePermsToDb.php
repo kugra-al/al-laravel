@@ -25,7 +25,7 @@ class WritePermsToDb implements ShouldQueue
      */
     public function __construct()
     {
-       $this->handle();
+       //$this->handle();
     }
 
 

@@ -119,7 +119,7 @@ class GithubAL extends Model
             }
             $out[$var] = null;
             if ($escape) // For v1 object format
-                $regex = str_replace('"','////"',$regex);
+                $regex = str_replace('"','\\\\"',$regex);
             if ($regex) {
                 preg_match($regex,$data,$matches);
 
