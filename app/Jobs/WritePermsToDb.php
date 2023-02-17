@@ -25,7 +25,7 @@ class WritePermsToDb implements ShouldQueue
      */
     public function __construct()
     {
-
+       $this->handle();
     }
 
 
@@ -119,23 +119,9 @@ class WritePermsToDb implements ShouldQueue
                         $perm["perm_type"] = "unknown";
                         break;
                 }
+                $objectVars = GithubAL::readVarsFromObjectData($perm['data'], ['touched_by','last_touched','psets']);
+                $perm = array_merge($perm,$objectVars);
 
-                // Touch vars we want for everything
-                preg_match('/"touched_by":\((.*?)\)/',$perm['data'],$matches);
-                if (sizeof($matches) > 1) {
-                    if (strlen($matches[1]) > 4)
-                        $perm['touched_by'] = $matches[1];
-                }
-                preg_match('/"last_touched":(\d+)/',$perm['data'],$matches);
-                if (sizeof($matches) > 1) {
-                    if (strlen($matches[1]) > 4)
-                        $perm['last_touched'] = $matches[1];
-                }
-                preg_match('/"psets":\((.*?)\)/',$perm['data'],$matches);
-                if (sizeof($matches) > 1) {
-                    if (strlen($matches[1]) > 4)
-                        $perm['psets'] = $matches[1];
-                }
             }
 
             $location = $filename;

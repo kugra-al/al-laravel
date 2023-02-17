@@ -88,6 +88,7 @@ class WritePermItemsToDb implements ShouldQueue
                             $pathname = $matches[1];
                         }
                     } else {
+                        // catch v1 pathname
                         $split = explode(":",$line);
                         $object = $split[0];
                         $object = str_replace(["([","\""],"",$object);

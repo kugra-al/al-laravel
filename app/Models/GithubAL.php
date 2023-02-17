@@ -80,5 +80,58 @@ class GithubAL extends Model
         }
         return $tmp;
     }
+
+    public static function readVarsFromObjectData($data, $vars = ['touched_by', 'last_touched', 'psets'], $escape = false) {
+        $out = [];
+        foreach($vars as $var) {
+            $regex = null;
+            switch($var) {
+                case "touched_by" :
+                    $regex = '/"touched_by":\((.*?)\)/';
+                    break;
+                case 'last_touched' :
+                    $regex = '/"last_touched":(\d+)/';
+                    break;
+                case 'psets' :
+                    $regex = '/"psets":\((.*?)\)/';
+                    break;
+                case 'primary_id':
+                    $regex = '/"primary_id":"(.*?)"/';
+                    break;
+                case 'primary_adj':
+                    $regex = '/"primary_adj":"(.*?)"/';
+                    break;
+                case 'ids':
+                    $regex = '/"ids":\(\[(.*?)\]\)/';
+                    break;
+                case 'adjs':
+                    $regex = '/"adjs":\(\[(.*?)\]\)/';
+                    break;
+                case 'decay_value':
+                    $regex = '/"decay_value":(\d+)/';
+                    break;
+                case 'last_decay_time':
+                    $regex = '/"last_decay_time":(\d+)';
+                    break;
+                case 'pathname':
+                    $regex = '/"pathname":"(.*?)"/';
+                    break;
+            }
+            $out[$var] = null;
+            if ($escape) // For v1 object format
+                $regex = str_replace('"','////"',$regex);
+            if ($regex) {
+                preg_match($regex,$data,$matches);
+
+                if (sizeof($matches) > 1) {
+                    if (strlen($matches[1]) > 4) {
+                        $out[$var] = $matches[1];
+                    }
+                }
+            }
+        }
+        return $out;
+    }
+
 }
 
