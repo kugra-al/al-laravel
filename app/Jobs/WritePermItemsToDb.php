@@ -34,25 +34,57 @@ class WritePermItemsToDb implements ShouldQueue
                 $data = File::get($file);
                 $tmp = explode("\n",$data);
                 $version = $tmp[0];
-                if (strlen($version) < 10) {
+                $version = str_replace("v","",$version);
+                if (strlen($version) < 10 && $version != "([])") {
                     if ($perm->inventory_version != $version) {
                         $perm->inventory_version = $version;
                     }
                     unset($tmp[0]);
+                } else {
+                    $perm->inventory_version = "1.0";
                 }
                 $numItems = 0;
                 $itemDataSize = 0;
                 foreach($tmp as $line) {
                     if (!strlen($line))
                         continue;
-                    $split = explode("|",$line);
-                    $object = $split[0];
-                    if (strlen($object) > 150)
-                        $object = "unknown";
+                    // v1 object like: (["/obj/base/misc/furniture#519":"([\"resistances\":
+                    $object = "unknown";
+                   // $code = $line;
+                    $pathname = null;
+
+                    if ($version == "2.0") {
+                        $split = explode("|",$line);
+                        $object = $split[0];
+                        // v2.0 items store things like this
+                        if (strlen($object) > 150) {
+                            $object = "unknown";
+                           // $code = $line;
+                        }
+                       // else
+                      //      $code = $split[1];
+
+                        // Catches v2 only. v1 is like: \"pathname\":\"/obj/items/furniture/stone_stool.itm\"
+                        preg_match('/"pathname":"(.*?)"/',$line,$matches);
+                        if (sizeof($matches)) {
+                            $pathname = $matches[1];
+                        }
+                    } else {
+                        $split = explode(":",$line);
+                        $object = $split[0];
+                        $object = str_replace(["([","\""],"",$object);
+                        if (strlen($object) > 150 || strlen($object) < 5)
+                            $object = "unknown";
+                        preg_match('/\\\\"pathname\\\\":\\\\"(.*?)\\\\"/',$line,$matches);
+                        if (sizeof($matches))
+                            $pathname = $matches[1];
+                    }
+
                     $item = [
                         'data' => $line,
                         'object' => $object,
-                        'perm_id' => $perm->id
+                        'perm_id' => $perm->id,
+                        'pathname' => $pathname
                     ];
                     $items[] = $item;
                     $numItems++;
@@ -70,7 +102,7 @@ class WritePermItemsToDb implements ShouldQueue
                 PermItem::upsert(
                     $chunk,
                     ['object','perm_id'],
-                    ['data','object','perm_id']
+                    ['data','object','perm_id','pathname']
                 );
             }
         }

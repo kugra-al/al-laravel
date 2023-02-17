@@ -8,7 +8,11 @@
                     <div class="card-header">{{ __(ucfirst($type)) }}</div>
 
                     <div class="card-body">
-                        {{ $dataTable->table() }}
+                        @if($dataTable)
+                            {{ $dataTable->table() }}
+                        @else
+                            No data found for model: {{ $type }}. Nothing to display
+                        @endif
                     </div>
                 </div>
             </div>
@@ -57,51 +61,63 @@
 @endsection
 
 @push('scripts')
-    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
-    <script>
-        // Loads after initComplete event on DataTable
-        function postInitFuncs() {
-             var table = window.LaravelDataTables['dataTableBuilder'];
-             console.log(table);
-             $('#dataTableBuilder tbody').on('click', 'tr button.view-data', function() {
-                var data = table.row( $(this).parents('tr').first() ).data();
-                loadData(data['id']);
-             });
-            console.log('ok');
-        }
+    @if($dataTable)
+        {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+        <script>
+            // Loads after initComplete event on DataTable
+            function postInitFuncs() {
+                var table = window.LaravelDataTables['dataTableBuilder'];
+                console.log(table);
+                $('#dataTableBuilder tbody').on('click', 'tr button.view-data', function() {
+                    var data = table.row( $(this).parents('tr').first() ).data();
+                    loadData(data['id']);
+                });
+                console.log('ok');
+            }
 
-        function loadData(id) {
-            console.log("Loading data for "+id);
+            function loadData(id) {
+                console.log("Loading data for "+id);
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: 'POST',
-                url: window.location.pathname+"/data",
-                data: {id: id},
-                dataType: 'json',
-                success: function (data) {
-                    $('#dataModal').modal("show");
-                    var lines = data.data;
-
-                    $('#dataModal').find('.modal-body').html("<h4>Original data from /perms/perm_objs/"+data.filename+"</h4><textarea style='width:100%; height: 400px'>"+data.data+"</textarea>");
-
-                    if (Object.keys.length == 0) {
-                        $('#dataModal').find('.modal-body').append("No data to show");
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                     }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.pathname+"/data",
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#dataModal').modal("show");
+                        var lines = data.data;
 
-                    //$('#dataModal').find('.modal-body').html("<a target='_blank' style='color: #3700ce' href='"+file.replace('/obj/','https://github.com/Amirani-al/Accursedlands-obj/blob/master/')+"'>View "+file+" on github</a><br/>");
-                   // $('#dataModal').find('.modal-title').text('File: '+file);
-                },
-                error: function (data) {
-                    alert('There was an error (see console for details)');
-                    console.log('error');
-                    console.log(data);
-                }
-            });
-        }
-    </script>
+                        if (data.data) {
+                            $('#dataModal').find('.modal-body').html("<h4>Data for: "+data.id+"</h4><textarea style='width:100%; height: 400px'>"+data.data+"</textarea>");
+                            $('#dataModal').find('.modal-body').append('<h5>Other database values</h5>');
+                            var table = "<table class='table table-striped'><thead><th>Key</th><th>Value</th></thead><tbody>";
+                            Object.entries(data).forEach(entry => {
+                                const [key, value] = entry;
+                                if (key != 'data' && key != 'items')
+                                    table += "<tr><td>"+key+"</td><td>"+value+"</td></tr>";
+                            });
+                            table += "</tbody></table";
+                            $('#dataModal').find('.modal-body').append(table);
+                        }
+                        else
+                            $('#dataModal').find('.modal-body').html("No data to show");
+
+
+                        //$('#dataModal').find('.modal-body').html("<a target='_blank' style='color: #3700ce' href='"+file.replace('/obj/','https://github.com/Amirani-al/Accursedlands-obj/blob/master/')+"'>View "+file+" on github</a><br/>");
+                    // $('#dataModal').find('.modal-title').text('File: '+file);
+                    },
+                    error: function (data) {
+                        alert('There was an error (see console for details)');
+                        console.log('error');
+                        console.log(data);
+                    }
+                });
+            }
+        </script>
+    @endif
 @endpush

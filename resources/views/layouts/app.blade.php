@@ -61,6 +61,9 @@
                                     <a class="dropdown-item" href="{{ route('perms.index') }}">
                                         Perms
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('data.index', 'perm_items') }}">
+                                        Perm Items
+                                    </a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">

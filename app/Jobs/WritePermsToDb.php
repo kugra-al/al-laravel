@@ -51,7 +51,7 @@ class WritePermsToDb implements ShouldQueue
                 'live'=>null,
 
                 'save_type'=>null,
-                'perm_type'=>null,
+                'perm_type'=>"unknown",
 
                 'is_inventory_container'=>false,
                 'inventory_location'=>null
@@ -103,6 +103,9 @@ class WritePermsToDb implements ShouldQueue
                     case "/obj/base/containers/permanent_well":
                         $perm["perm_type"] = "well";
                         $perm["save_type"] = "none";
+                        break;
+                    default :
+                        $perm["perm_type"] = "unknown";
                         break;
                 }
 
@@ -232,6 +235,7 @@ class WritePermsToDb implements ShouldQueue
 
             $location = str_replace("_","/",$location);
             $location = explode(":",$location)[0];
+            $location = str_replace('city/server','city_server',$location);
            // $location = str_replace("/domains/player/built/data/","",$location);
             $perm['location'] = $location;
             $coords = GithubAL::getCoordsFromLocation($location);

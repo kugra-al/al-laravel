@@ -62,6 +62,8 @@
         .dt-button-collection { overflow: auto; }
         .dt-button-collection .dropdown-menu { height: 300px; }
         .dropdown-item.active, .dropdown-item:active { background-color: #d7d7d7; }
+        .modal-body textarea.data { width: 90%; height: 200px; margin-left: 50px; }
+        .modal-body table tbody td { word-break: break-all; }
     </style>
 @endsection
 
@@ -101,19 +103,24 @@
                         $('#dataModal').find('.modal-body').html("No data to show");
                         return;
                     }
-                    $('#dataModal').find('.modal-body').html("<h4>Original data from /perms/perm_objs/"+data.filename+"</h4><textarea style='width:100%; height: 400px'>"+data.data+"</textarea>");
+                    $('#dataModal').find('.modal-body').html("<h4>Data from /perms/perm_objs/"+data.filename+"</h4><textarea class='data'>"+data.data+"</textarea>");
+                    $('#dataModal').find('.modal-body').append('<h5>Database values</h5>');
+                    var table = "<table class='table table-striped'><thead><th>Key</th><th>Value</th></thead><tbody>";
+                    Object.entries(data).forEach(entry => {
+                        const [key, value] = entry;
+                        if (key != 'data' && key != 'items')
+                            table += "<tr><td>"+key+"</td><td>"+value+"</td></tr>";
+                    });
+                    table += "</tbody></table";
+                    $('#dataModal').find('.modal-body').append(table);
                     if (data.items && data.items.length) {
                         $('#dataModal').find('.modal-body').append("<p>Found "+data.num_items+" items with total size of "+data.item_data_size+" in "+data.inventory_location+"</p>");
                         for(var x = 0; x < data.items.length; x++) {
                             var item = data.items[x];
-                            $('#dataModal').find('.modal-body').append("<b>"+item.object+"</b><textarea style='height:150px;width:100%'>"+item.data+"</textarea>");
+                            $('#dataModal').find('.modal-body').append("<h5>Object: "+item.object+":"+item.pathname+"</h5><textarea class='data'>"+item.data+"</textarea>");
                         }
                     }
 
-
-
-                    //$('#dataModal').find('.modal-body').html("<a target='_blank' style='color: #3700ce' href='"+file.replace('/obj/','https://github.com/Amirani-al/Accursedlands-obj/blob/master/')+"'>View "+file+" on github</a><br/>");
-                   // $('#dataModal').find('.modal-title').text('File: '+file);
                 },
                 error: function (data) {
                     alert('There was an error (see console for details)');

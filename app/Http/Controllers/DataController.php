@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Death;
 use App\Models\Facade;
-use App\Models\Perm;
+use App\Models\PermItem;
 use DataTables;
 use App\Models\GithubAL;
 use Yajra\DataTables\Html\Builder;
@@ -22,30 +22,27 @@ class DataController extends Controller
             case 'facades' :
                 $model = Facade::get();
                 break;
-            case 'perms' :
-                //$model = Perm::select(\DB::Raw('id, filename, location, object, x ,y, z, lastseen, psets, touched_by, LENGTH(data) as data_length, destroyed, live, perm_type, save_type, map_dir'))->get();
-                $model = Perm::select(\DB::Raw('id, filename, location, object, x ,y, z, LENGTH(data) as data_length, destroyed, live, perm_type, save_type, map_dir, inventory_location'))->get();
+            case 'perm_items':
+                $model = PermItem::select('id','object','perm_id','pathname')->get();
                 break;
             default :
-                return back()->with('warning','Unknown data type');
+                return back()->with('warning',"Unknown data type: {$type}");
         }
         if (request()->ajax()) {
 
             $dataTable = DataTables::of($model);
-            if ($type == 'perms')
-                $dataTable->addColumn('action','data.buttons.perm');
-
+            if ($type == 'perm_items')
+                $dataTable->addColumn('action','data.buttons.view');
             return $dataTable->toJson();
         }
-
-
-        if ($model) {
+        $dataTable = null;
+        if ($model->count()) {
             $keys = array_keys($model->first()->toArray());
             $columns = [];
             foreach($keys as $key) {
                 $columns[] = ['data' => $key];
             }
-            if ($type == 'perms')
+            if ($type == 'perm_items')
                 $columns[] = ['data' => 'action'];
             $dataTable = $builder
                 ->columns($columns)
@@ -65,8 +62,8 @@ class DataController extends Controller
         $data = [];
         if ($type && request()->get('id')) {
             switch($type) {
-                case "perms" :
-                    $data = Perm::find((int)request()->get('id'));
+                case "perm_items" :
+                    $data = PermItem::find((int)request()->get('id'));
                     break;
                 default :
                     $data = ["error"=>"unknown type"];

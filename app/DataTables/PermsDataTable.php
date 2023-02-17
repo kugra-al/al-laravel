@@ -102,8 +102,8 @@ class PermsDataTable extends DataTable
                     return $query
                         ->where(
                             'save_type',
-                            'like',
-                            "%".$values[0]."%");
+                            '=',
+                            $values[0]);
                 }
             )
           //  ->addColumn('num-items', $query->with('items')->select('object'))
