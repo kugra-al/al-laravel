@@ -25,9 +25,27 @@ class WritePermItemsToDb implements ShouldQueue
      */
     public function __construct()
     {
+
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
         $perms = Perm::where('save_type','data')->whereNotNull('inventory_location')->select('id','inventory_location','inventory_version')->get();
         $items = [];
         foreach($perms as $perm) {
+            if (sizeof($items) > 2000) {
+                PermItem::upsert(
+                    $items,
+                    ['object','perm_id'],
+                    ['data','object','perm_id','pathname']
+                );
+                $items = [];
+            }
             $file = substr(GithubAL::getLocalRepoPath($perm->inventory_location),0,-1);
 
             if (File::exists($file)) {
@@ -97,24 +115,5 @@ class WritePermItemsToDb implements ShouldQueue
                 }
             }
         }
-        if (sizeof($items)) {
-            foreach(array_chunk($items,2000) as $chunk) {
-                PermItem::upsert(
-                    $chunk,
-                    ['object','perm_id'],
-                    ['data','object','perm_id','pathname']
-                );
-            }
-        }
-    }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        //
     }
 }

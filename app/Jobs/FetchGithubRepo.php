@@ -30,6 +30,20 @@ class FetchGithubRepo implements ShouldQueue
         $this->branch = $branch;
     }
 
+
+/* - to get just 1 dir
+https://blog.tericcabrel.com/clone-folder-git-repository-sparse-checkout/
+
+git clone --no-checkout https://github.com/tericcabrel/blog-tutorials.git
+
+cd blog-tutorials
+
+git sparse-checkout init --cone
+
+git sparse-checkout set deploy-node-app
+
+git checkout @
+*/
     /**
      * Execute the job.
      *

@@ -25,6 +25,17 @@ class WritePermsToDb implements ShouldQueue
      */
     public function __construct()
     {
+
+    }
+
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
         $dir = GithubAL::getLocalRepoPath('Accursedlands-perms')."perm_objs/";
         $perms = [];
         $permItems = [];
@@ -255,17 +266,6 @@ class WritePermsToDb implements ShouldQueue
         } else {
             \Log::info("Nothing to write");
         }
-
-    }
-
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
 
     }
 
