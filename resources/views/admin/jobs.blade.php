@@ -20,6 +20,26 @@
                     <td>
                         <form action="{{ route('admin.jobs.run') }}" method="POST">
                             @csrf
+                            @switch($job)
+                                @case('fetch-repo')
+                                    @if (isset($jobData['repos']) && sizeof($jobData['repos']))
+                                        <select class="form-control">
+                                            @foreach($jobData['repos'] as $repo)
+                                                <option value="{{ $repo }}">{{ $repo }}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
+                                    @if (isset($jobData['branches']) && sizeof($jobData['branches']))
+                                        <select class="form-control">
+                                            @foreach($jobData['branches'] as $branch)
+                                                <option value="{{ $branch }}">{{ $branch }}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
+                                    @break
+                            @endswitch
+
+                            @csrf
                             <input type="hidden" name="job" value="{{ $job }}">
                             <button class="btn btn-warning">Run</button>
                         </form>

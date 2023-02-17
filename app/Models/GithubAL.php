@@ -133,5 +133,25 @@ class GithubAL extends Model
         return $out;
     }
 
+    public static function getALRepos()
+    {
+        return [
+            'Accursedlands-DATA',
+            'Accursedlands-Domains',
+            'Accursedlands-wiz',
+            'Accursedlands-perms',
+            'Accursedlands-obj',
+            'Accursedlands-LOGS'
+        ];
+    }
+
+    public static function getALRepoBranches()
+    {
+        return [
+            'production_mud_fluffos',
+            'master'
+        ];
+    }
+
 }
 
