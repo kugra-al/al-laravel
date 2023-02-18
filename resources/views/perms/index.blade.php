@@ -62,8 +62,8 @@
         .dt-button-collection { overflow: auto; }
         .dt-button-collection .dropdown-menu { height: 300px; }
         .dropdown-item.active, .dropdown-item:active { background-color: #d7d7d7; }
-        .modal-body textarea.data { width: 90%; height: 200px; margin-left: 50px; }
-        .modal-body table tbody td { word-break: break-all; }
+        .modal-body textarea.data { width: 100%; height: 300px; }
+        .modal-body table tbody td, .modal-body div.item-row { word-break: break-all; }
     </style>
 @endsection
 
