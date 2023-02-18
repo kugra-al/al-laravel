@@ -116,5 +116,6 @@ class WritePermItemsToDb implements ShouldQueue
                 }
             }
         }
+        \Log::info('Wrote perm items');
     }
 }
