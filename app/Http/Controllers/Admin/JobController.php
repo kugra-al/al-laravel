@@ -45,13 +45,13 @@ class JobController extends Controller
             ],
             // deaths
             'write-deaths-to-db'=>['desc'=>'Read any new deaths from death log and write to db','time'=>'???','type'=>'write','sources'=>['jobs'=>'fetch-death-logs']],
-            'fetch-death-logs'=>['desc'=>'Fetch death logs','time'=>'<10s','type'=>'fetch'],
+            'fetch-death-logs'=>['desc'=>'Fetch death logs','time'=>'<10s','type'=>'fetch','sources'=>['github_api'=>['Accursedlands-LOGS'],'branches'=>['production_mud_fluffos','master']]],
 
-            'write-perms-to-db'=>['desc'=>'Read any perms and write to db','time'=>'???','type'=>'write','sources'=>['repos'=>['Accursedlands-perms','Accursedlands-domains'],'branch'=>'production_mud_fluffos']],
+            'write-perms-to-db'=>['desc'=>'Read any perms and write to db','time'=>'???','type'=>'write','sources'=>['repos'=>['Accursedlands-perms','Accursedlands-Domains','Accursedlands-DATA'],'branch'=>'production_mud_fluffos']],
             'write-perm-items-to-db'=>['desc'=>'Read any perm items and write to db','time'=>'~20s','type'=>'write',
-                'sources'=>['repos'=>['Accursedlands-perms','Accursedlands-domains'],'branch'=>'production_mud_fluffos']],
+                'sources'=>['repos'=>['Accursedlands-perms','Accursedlands-Domains','Accursedlands-DATA'],'branch'=>'production_mud_fluffos']],
 
-            'fetch-repo'=>['desc'=>'Fetch selected repo from Amirani-AL/* on selected branch','time'=>'~10s','type'=>'fetch',
+            'fetch-repo'=>['desc'=>'Fetch selected repo from Amirani-AL/* on selected branch.<br/>Accursedlands-DATA is on a sparse-checkout with /data/permanent_rooms.<br/>Don\'t fetch new repo data unless needed (limited space)','time'=>'~10s','type'=>'fetch',
                 'repos'=>GithubAL::getALRepos(),
                 'branches'=>GithubAL::getALRepoBranches(),
             ],
