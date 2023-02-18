@@ -61,7 +61,7 @@
                 <div class="row item-row">
                     <div class="col-sm-4">{{ $item->short }}</div>
                     <div class="col-sm-5">
-                        @if(strlen($item->touched_by) > 150)
+                        @if(strlen($item->touched_by) > 300)
                             <textarea style="width:100%; height: 150px">{{ $item->touched_by }}</textarea>
                         @else
                             {{ $item->touched_by }}
