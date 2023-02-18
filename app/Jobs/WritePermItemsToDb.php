@@ -25,7 +25,7 @@ class WritePermItemsToDb implements ShouldQueue
      */
     public function __construct()
     {
-
+       //$this->handle();
     }
 
     /**
@@ -42,7 +42,7 @@ class WritePermItemsToDb implements ShouldQueue
                 PermItem::upsert(
                     $items,
                     ['object','perm_id'],
-                    ['data','object','perm_id','pathname']
+                    ['data','object','perm_id','pathname','filename','primary_id','primary_adj','short','touched_by','pathname','last_touched','psets']
                 );
                 $items = [];
             }
@@ -59,6 +59,7 @@ class WritePermItemsToDb implements ShouldQueue
                     }
                     unset($tmp[0]);
                 } else {
+                    $version = "1.0";
                     $perm->inventory_version = "1.0";
                 }
                 $numItems = 0;
@@ -71,22 +72,32 @@ class WritePermItemsToDb implements ShouldQueue
                    // $code = $line;
                     $pathname = null;
 
+                    $item = [
+                        'data' => $line,
+                        'object' => null,
+                        'perm_id' => $perm->id,
+                        'pathname' => null,
+                        'primary_id'=>null,
+                        'primary_adj'=>null,
+                        'short'=>null,
+                        'touched_by'=>null,
+                        'pathname'=>null,
+                        'version'=>$version,
+                        'filename'=>$perm->inventory_location
+                    ];
+
                     if ($version == "2.0") {
                         $split = explode("|",$line);
-                        $object = $split[0];
+                        $item["object"] = $split[0];
                         // v2.0 items store things like this
-                        if (strlen($object) > 150) {
-                            $object = "unknown";
-                           // $code = $line;
-                        }
-                       // else
-                      //      $code = $split[1];
+                        if (strlen($item["object"]) > 150) {
+                            $item["object"] = "unknown";
 
-                        // Catches v2 only. v1 is like: \"pathname\":\"/obj/items/furniture/stone_stool.itm\"
-                        preg_match('/"pathname":"(.*?)"/',$line,$matches);
-                        if (sizeof($matches)) {
-                            $pathname = $matches[1];
                         }
+
+                        $vars = GithubAL::readVarsFromObjectData($line,['primary_id','primary_adj','short','touched_by','pathname','psets','last_touched']);
+
+                        $item = array_merge($item,$vars);
                     } else {
                         // catch v1 pathname
                         $split = explode(":",$line);
@@ -94,17 +105,13 @@ class WritePermItemsToDb implements ShouldQueue
                         $object = str_replace(["([","\""],"",$object);
                         if (strlen($object) > 150 || strlen($object) < 5)
                             $object = "unknown";
-                        preg_match('/\\\\"pathname\\\\":\\\\"(.*?)\\\\"/',$line,$matches);
-                        if (sizeof($matches))
-                            $pathname = $matches[1];
+                        $item["object"] = $object;
+                        $vars = GithubAL::readVarsFromObjectData($line,['primary_id','primary_adj','short','touched_by','pathname','psets','last_touched'],true);
+
+                        $item = array_merge($item,$vars);
                     }
 
-                    $item = [
-                        'data' => $line,
-                        'object' => $object,
-                        'perm_id' => $perm->id,
-                        'pathname' => $pathname
-                    ];
+
                     $items[] = $item;
                     $numItems++;
                     $itemDataSize += strlen($line);

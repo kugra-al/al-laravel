@@ -117,7 +117,10 @@
                         $('#dataModal').find('.modal-body').append("<p>Found "+data.num_items+" items with total size of "+data.item_data_size+" in "+data.inventory_location+"</p>");
                         for(var x = 0; x < data.items.length; x++) {
                             var item = data.items[x];
-                            $('#dataModal').find('.modal-body').append("<h5>Object: "+item.object+":"+item.pathname+"</h5><textarea class='data'>"+item.data+"</textarea>");
+                            $('#dataModal').find('.modal-body').append("<h5>Object: "+item.object+":"+item.pathname+":"+item.short+"</h5>");
+                            if (item.touched_by)
+                                $('#dataModal').find('.modal-body').append("<b>Touched by: </b><span style='word-break: break-word'>"+item.touched_by+"</span>");
+                            $('#dataModal').find('.modal-body').append("<textarea class='data'>"+item.data+"</textarea>");
                         }
                     }
 

@@ -23,7 +23,7 @@ class DataController extends Controller
                 $model = Facade::get();
                 break;
             case 'perm_items':
-                $model = PermItem::select('id','object','perm_id','pathname')->get();
+                $model = PermItem::select('id','object','perm_id','pathname','short','touched_by')->get();
                 break;
             default :
                 return back()->with('warning',"Unknown data type: {$type}");

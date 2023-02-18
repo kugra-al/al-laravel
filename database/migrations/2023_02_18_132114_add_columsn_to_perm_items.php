@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('perms', function (Blueprint $table) {
+        Schema::table('perm_items', function (Blueprint $table) {
             $table->string('primary_id')->nullable();
             $table->string('primary_adj')->nullable();
             $table->string('short')->nullable();
-            $table->string('pathname')->nullable();
-            $table->integer('decay_value')->nullable();
-            $table->integer('last_decay_time')->nullable();
+            $table->string('filename')->nullable();
+            $table->string('version')->nullable();
+            $table->text('touched_by')->nullable();
+            $table->text('psets')->nullable();
+            $table->string('last_touched')->nullable();
         });
     }
 
@@ -30,6 +32,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropColumns("perms",['primary_id','primary_adj','short','decay_value','last_decay_time','pathname']);
+        Schema::table('perm_items', function (Blueprint $table) {
+            Schema::dropColumns("perm_items",['primary_id','primary_adj','short','filename','version','touched_by','psets','last_touched']);
+        });
     }
 };

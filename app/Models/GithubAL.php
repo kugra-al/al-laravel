@@ -134,6 +134,7 @@ class GithubAL extends Model
             }
         }
         if (in_array("short",$vars)) {
+
             if (strlen($out["primary_id"]) || strlen($out["primary_adj"])) {
                 $out['short'] = "";
                 if (strlen($out["primary_adj"]))
@@ -144,6 +145,7 @@ class GithubAL extends Model
                     $out["short"] .= $out["primary_id"];
                 }
             }
+                // dd($out);
         }
         return $out;
     }
