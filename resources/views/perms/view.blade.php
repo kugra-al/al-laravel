@@ -5,6 +5,9 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-12">
+                            <b>Short:</b> {{ $perm->short }}
+                        </div>
+                        <div class="col-sm-12">
                             <h5>File data</h5>
                             <textarea style="padding: 5px" class="data">{!! $perm->data !!}</textarea>
                         </div>
