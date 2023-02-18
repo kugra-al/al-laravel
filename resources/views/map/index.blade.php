@@ -11,7 +11,7 @@
 
 		.leaflet-container {
 			height: 600px;
-			width: 80%;
+			width: 100%;
 			max-width: 100%;
 			max-height: 100%;
 		}

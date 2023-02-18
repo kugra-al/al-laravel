@@ -40,26 +40,46 @@
                             @switch($job)
                                 @case('fetch-repo')
                                     @if (isset($jobData['repos']) && sizeof($jobData['repos']))
-                                        <select name="repo" class="form-control">
-                                            @foreach($jobData['repos'] as $repo)
-                                                <option value="{{ $repo }}">{{ $repo }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text" for="inputGroupSelect01">Repo</label>
+                                            </div>
+
+                                            <select name="repo" class="custom-select form-control" id="inputGroupSelect01">
+                                                <option>Select..</option>
+                                                @foreach($jobData['repos'] as $repo)
+                                                    <option value="{{ $repo }}">{{ $repo }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     @endif
                                     @if (isset($jobData['branches']) && sizeof($jobData['branches']))
-                                        <select name="branch" class="form-control">
-                                            @foreach($jobData['branches'] as $branch)
-                                                <option value="{{ $branch }}">{{ $branch }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text" for="inputGroupSelect02">Branch</label>
+                                            </div>
+                                            <select name="branch" class="form-control custom-select" id="inputGroupSelect02">
+                                                <option>Select..</option>
+                                                @foreach($jobData['branches'] as $branch)
+                                                    <option value="{{ $branch }}">{{ $branch }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     @endif
                                     @break
                                 @case('reset-table')
                                     @if(isset($jobData['tables']))
-                                        <select name='table' class='form-control'>
-                                        @foreach($jobData['tables'] as $table)
-                                            <option value='{{ $table }}'>{{ $table }}</option>
-                                        @endforeach
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text" for="inputGroupSelect03">Table</label>
+                                            </div>
+                                            <select name='table' class='form-control custom-select' id="inputGroupSelect03">
+                                                <option>Select..</option>
+                                            @foreach($jobData['tables'] as $table)
+                                                <option value='{{ $table }}'>{{ $table }}</option>
+                                            @endforeach
+                                            </select>
+                                        </div>
                                     @endif
                                     @break
                             @endswitch
