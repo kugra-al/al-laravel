@@ -83,6 +83,7 @@ class GithubAL extends Model
 
     public static function readVarsFromObjectData($data, $vars = ['touched_by', 'last_touched', 'psets'], $escape = false) {
         $out = [];
+
         foreach($vars as $var) {
             $regex = null;
             switch($var) {
@@ -111,10 +112,12 @@ class GithubAL extends Model
                     $regex = '/"decay_value":(\d+)/';
                     break;
                 case 'last_decay_time':
-                    $regex = '/"last_decay_time":(\d+)';
+                    $regex = '/"last_decay_time":(\d+)/';
                     break;
                 case 'pathname':
                     $regex = '/"pathname":"(.*?)"/';
+                    break;
+                case 'short':
                     break;
             }
             $out[$var] = null;
@@ -124,9 +127,21 @@ class GithubAL extends Model
                 preg_match($regex,$data,$matches);
 
                 if (sizeof($matches) > 1) {
-                    if (strlen($matches[1]) > 4) {
+                    if (strlen($matches[1]) > 3) {
                         $out[$var] = $matches[1];
                     }
+                }
+            }
+        }
+        if (in_array("short",$vars)) {
+            if (strlen($out["primary_id"]) || strlen($out["primary_adj"])) {
+                $out['short'] = "";
+                if (strlen($out["primary_adj"]))
+                    $out["short"] .= $out["primary_adj"];
+                if (strlen($out["primary_id"])) {
+                    if (strlen($out["short"]))
+                        $out["short"] .= " ";
+                    $out["short"] .= $out["primary_id"];
                 }
             }
         }
@@ -151,6 +166,12 @@ class GithubAL extends Model
             'production_mud_fluffos',
             'master'
         ];
+    }
+
+    public static function getALTables()
+    {
+        return
+            ['perms','perm_items','facades','deaths','items'];
     }
 
 }

@@ -8,6 +8,7 @@
                 <th style='width: 25%'>Description</th>
                 <th>Est. Job Time</th>
                 <th>Type</th>
+                <th>Group</th>
                 <th>Source</th>
                 <th>Action</th>
             </thead>
@@ -18,6 +19,7 @@
                     <td>{!! $jobData['desc'] !!}</td>
                     <td>{{ $jobData['time'] }}</td>
                     <td>{{ $jobData['type'] }}</td>
+                    <td>{{ $jobData['group'] }}</td>
                     <td>
                         @if(isset($jobData['sources']))
                             @foreach($jobData['sources'] as $key=>$value)

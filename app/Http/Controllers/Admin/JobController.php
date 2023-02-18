@@ -26,37 +26,58 @@ class JobController extends Controller
         $jobs_path = public_path()."/../app/Jobs/";
         $jobs = [
             // items
-
             'read-all-itm-files'=>[
                 'desc'=>'Read through all locally stored .itm files and write to cache',
-                'time'=>'~80 seconds','type'=>'process',
+                'time'=>'~80 seconds','type'=>'process','group'=>'items',
                 'sources'=>['repos'=>['Accursedlands-obj']]
             ],
             'reset-items-table'=>[
                 'desc'=>'Resets all columns and values in items table.  Run before `write-items-to-db` to reset columns and data',
-                'time'=>'<10 seconds','type'=>'reset'],
+                'time'=>'<10 seconds','type'=>'reset','group'=>'items'],
             'write-itms-to-db'=>[
-                'desc'=>'Write all cached .itm files to database','time'=>'~20 seconds','type'=>'write'],
+                'desc'=>'Write all cached .itm files to database','time'=>'~20 seconds','type'=>'write','group'=>'items'],
 
             // map
             'write-facades-to-db'=>[
                 'desc'=>'Read all facade files from /domains/wild/virtual/facades/ and write to db','time'=>'???','type'=>'write',
-                'sources'=>['repos'=>['Accursedlands-Domains'],'branch'=>'production_mud_fluffos']
+                'sources'=>['repos'=>['Accursedlands-Domains'],'branch'=>'production_mud_fluffos'],'group'=>'map',
             ],
+
             // deaths
-            'write-deaths-to-db'=>['desc'=>'Read any new deaths from death log and write to db','time'=>'???','type'=>'write','sources'=>['jobs'=>'fetch-death-logs']],
-            'fetch-death-logs'=>['desc'=>'Fetch death logs','time'=>'<10s','type'=>'fetch','sources'=>['github_api'=>['Accursedlands-LOGS'],'branches'=>['production_mud_fluffos','master']]],
+            'write-deaths-to-db'=>[
+                'desc'=>'Read any new deaths from death log and write to db','time'=>'???','type'=>'write',
+                'sources'=>['jobs'=>'fetch-death-logs'],'group'=>'deaths',
+            ],
+            'fetch-death-logs'=>[
+                'desc'=>'Fetch death logs','time'=>'<10s','type'=>'fetch',
+                'sources'=>['github_api'=>['Accursedlands-LOGS'],'branches'=>['production_mud_fluffos','master']],
+                'group'=>'deaths'
+            ],
 
-            'write-perms-to-db'=>['desc'=>'Read any perms and write to db','time'=>'???','type'=>'write','sources'=>['repos'=>['Accursedlands-perms','Accursedlands-Domains','Accursedlands-DATA'],'branch'=>'production_mud_fluffos']],
-            'write-perm-items-to-db'=>['desc'=>'Read any perm items and write to db','time'=>'~20s','type'=>'write',
-                'sources'=>['repos'=>['Accursedlands-perms','Accursedlands-Domains','Accursedlands-DATA'],'branch'=>'production_mud_fluffos']],
+            // Perms
+            'write-perms-to-db'=>[
+                'desc'=>'Read any perms and write to db','time'=>'???','type'=>'write',
+                'sources'=>['repos'=>['Accursedlands-perms','Accursedlands-Domains','Accursedlands-DATA'],'branch'=>'production_mud_fluffos'],
+                'group'=>'perms',
+            ],
+            'write-perm-items-to-db'=>[
+                'desc'=>'Read any perm items and write to db','time'=>'~20s','type'=>'write',
+                'sources'=>['repos'=>['Accursedlands-perms','Accursedlands-Domains','Accursedlands-DATA'],'branch'=>'production_mud_fluffos'],
+                'group'=>'perms',
+            ],
 
-            'fetch-repo'=>['desc'=>'Fetch selected repo from Amirani-AL/* on selected branch.<br/>Accursedlands-DATA is on a sparse-checkout with /data/permanent_rooms.<br/>Don\'t fetch new repo data unless needed (limited space)','time'=>'~10s','type'=>'fetch',
+            // Multiuse
+            'fetch-repo'=>[
+                'desc'=>'Fetch selected repo from Amirani-AL/* on selected branch.<br/>Accursedlands-DATA is on a sparse-checkout with /data/permanent_rooms.<br/>Don\'t fetch new repo data unless needed (limited space)',
+                'time'=>'~10s','type'=>'fetch',
                 'repos'=>GithubAL::getALRepos(),
                 'branches'=>GithubAL::getALRepoBranches(),
+                'group'=>'git'
             ],
-            'reset-table'=>['desc'=>'Resets an AL data table. For items, use job reset-items-table','time'=>'~10s','type'=>'reset',
-                'tables'=>['perms','perm_items','facades','deaths']
+            'reset-table'=>[
+                'desc'=>'Resets an AL data table. For items, use job reset-items-table','time'=>'~10s','type'=>'reset',
+                'tables'=>['perms','perm_items','facades','deaths'],
+                'group'=>'mysql'
             ],
 
         ];
@@ -100,6 +121,14 @@ class JobController extends Controller
                 $repo = $request->get('repo');
                 $branch = $request->get('branch');
                 if ($repo && $branch) {
+                    if (in_array($repo,GithubAL::getALRepos()) === false) {
+                        $status = ['warning'=>"unknown repo: $repo"];
+                        break;
+                    }
+                    if (in_array($branch,GithubAL::getALRepoBranches()) === false) {
+                        $status = ['warning'=>"unknown branch: $branch"];
+                        break;
+                    }
                     FetchGithubRepo::dispatch("Amirani-al/".$repo,$branch);
                     $status = ['status'=>"Fetching: $repo on branch: $branch"];
                 } else {
@@ -109,7 +138,14 @@ class JobController extends Controller
                 break;
 
             case 'reset-table':
-                ResetTable::dispatch($request->get('table'));
+                $table = $request->get('table');
+                if ($table) {
+                    if (in_array($table,GithubAL::getALTables()) === false) {
+                        $status = ['warning'=>"unknown table: $table"];
+                        break;
+                    }
+                    ResetTable::dispatch($request->get('table'));
+                }
                 break;
             default :
                 $status = ["warning"=>"unknown job: $job"];

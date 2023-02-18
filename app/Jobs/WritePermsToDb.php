@@ -25,7 +25,7 @@ class WritePermsToDb implements ShouldQueue
      */
     public function __construct()
     {
-       //$this->handle();
+       $this->handle();
     }
 
 
@@ -65,7 +65,14 @@ class WritePermsToDb implements ShouldQueue
                 'perm_type'=>"unknown",
 
                 'is_inventory_container'=>false,
-                'inventory_location'=>null
+                'inventory_location'=>null,
+
+                'primary_id'=>null,
+                'primary_adj'=>null,
+                'short'=>null,
+                'pathname'=>null,
+                'decay_value'=>null,
+                'last_decay_time'=>null
             ];
 
             // Do any data reading stuff here on main save
@@ -119,7 +126,10 @@ class WritePermsToDb implements ShouldQueue
                         $perm["perm_type"] = "unknown";
                         break;
                 }
-                $objectVars = GithubAL::readVarsFromObjectData($perm['data'], ['touched_by','last_touched','psets']);
+                $objectVars = GithubAL::readVarsFromObjectData($perm['data'],
+                    ['touched_by','last_touched','psets','pathname','primary_id','primary_adj','decay_value','last_decay_time','short']
+                );
+
                 $perm = array_merge($perm,$objectVars);
 
             }
@@ -246,7 +256,7 @@ class WritePermsToDb implements ShouldQueue
         if (sizeof($perms)) {
             Perm::upsert(
                 $perms,
-                ['filename'],['data','lastseen','x','y','z','object','location','map_dir','destroyed','live','perm_type','save_type','is_inventory_container','inventory_location']
+                ['filename'],['data','lastseen','x','y','z','object','location','map_dir','destroyed','live','perm_type','save_type','is_inventory_container','inventory_location','touched_by','last_touched','psets','pathname','primary_id','primary_adj','decay_value','last_decay_time','short']
             );
             \Log::info("Wrote perms");
         } else {

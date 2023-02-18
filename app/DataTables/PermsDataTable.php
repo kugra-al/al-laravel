@@ -142,7 +142,7 @@ class PermsDataTable extends DataTable
                             //->controls(false)
                     )
                     ->dom('PBfrtip')
-                    ->orderBy(1)
+                    ->orderBy(3,'asc')
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('postCsvVisibleColumns'),
@@ -183,9 +183,8 @@ class PermsDataTable extends DataTable
             'object'=>['searchPanes'=>true],
             'perm_type'=>['searchPanes'=>true],
             'save_type'=>['searchPanes'=>true],
-            'x'=>[],
-            'y'=>[],
-            'z'=>[],
+            'short'=>[],
+            'num_items'=>[],
             'action'=>[]
         ];
 
