@@ -38,7 +38,7 @@ class WritePermItemsToDb implements ShouldQueue
         $perms = Perm::where('save_type','data')->whereNotNull('inventory_location')->select('id','inventory_location','inventory_version')->get();
         $items = [];
         foreach($perms as $perm) {
-            if (sizeof($items) > 2000) {
+            if (sizeof($items) > 1000) {
                 PermItem::upsert(
                     $items,
                     ['object','perm_id'],
