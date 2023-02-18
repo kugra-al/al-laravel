@@ -97,32 +97,11 @@
                 data: {id: id},
                 dataType: 'json',
                 success: function (data) {
-                    var lines = data.data;
+                    console.log(data);
+                    $('#dataModal').find('.modal-body').html(data.html);
+                    $('#dataModal').find('.modal-title').text(data.title);
+                    return;
 
-                    if (Object.keys(data).length == 0) {
-                        $('#dataModal').find('.modal-body').html("No data to show");
-                        return;
-                    }
-                    $('#dataModal').find('.modal-body').html("<h4>Data from /perms/perm_objs/"+data.filename+"</h4><textarea class='data'>"+data.data+"</textarea>");
-                    $('#dataModal').find('.modal-body').append('<h5>Database values</h5>');
-                    var table = "<table class='table table-striped'><thead><th>Key</th><th>Value</th></thead><tbody>";
-                    Object.entries(data).forEach(entry => {
-                        const [key, value] = entry;
-                        if (key != 'data' && key != 'items')
-                            table += "<tr><td>"+key+"</td><td>"+value+"</td></tr>";
-                    });
-                    table += "</tbody></table";
-                    $('#dataModal').find('.modal-body').append(table);
-                    if (data.items && data.items.length) {
-                        $('#dataModal').find('.modal-body').append("<p>Found "+data.num_items+" items with total size of "+data.item_data_size+" in "+data.inventory_location+"</p>");
-                        for(var x = 0; x < data.items.length; x++) {
-                            var item = data.items[x];
-                            $('#dataModal').find('.modal-body').append("<h5>Object: "+item.object+":"+item.pathname+":"+item.short+"</h5>");
-                            if (item.touched_by)
-                                $('#dataModal').find('.modal-body').append("<b>Touched by: </b><span style='word-break: break-word'>"+item.touched_by+"</span>");
-                            $('#dataModal').find('.modal-body').append("<textarea class='data'>"+item.data+"</textarea>");
-                        }
-                    }
 
                 },
                 error: function (data) {
