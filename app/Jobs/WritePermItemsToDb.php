@@ -25,7 +25,7 @@ class WritePermItemsToDb implements ShouldQueue
      */
     public function __construct()
     {
-       //$this->handle();
+        //$this->handle();
     }
 
     /**
@@ -53,6 +53,8 @@ class WritePermItemsToDb implements ShouldQueue
                 $tmp = explode("\n",$data);
                 $version = $tmp[0];
                 $version = str_replace("v","",$version);
+                if ($version == "([])")
+                    continue;
                 if (strlen($version) < 10 && $version != "([])") {
                     if ($perm->inventory_version != $version) {
                         $perm->inventory_version = $version;
@@ -96,7 +98,6 @@ class WritePermItemsToDb implements ShouldQueue
                         }
 
                         $vars = GithubAL::readVarsFromObjectData($line,['primary_id','primary_adj','short','touched_by','pathname','psets','last_touched']);
-
                         $item = array_merge($item,$vars);
                     } else {
                         // catch v1 pathname
@@ -107,7 +108,6 @@ class WritePermItemsToDb implements ShouldQueue
                             $object = "unknown";
                         $item["object"] = $object;
                         $vars = GithubAL::readVarsFromObjectData($line,['primary_id','primary_adj','short','touched_by','pathname','psets','last_touched'],true);
-
                         $item = array_merge($item,$vars);
                     }
 

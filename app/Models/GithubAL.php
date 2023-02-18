@@ -127,7 +127,7 @@ class GithubAL extends Model
                 preg_match($regex,$data,$matches);
 
                 if (sizeof($matches) > 1) {
-                    if (strlen($matches[1]) > 3) {
+                    if ($matches[1] != "([])" && $matches[1] != "{}" && $matches != '[]' && strlen($matches[1])) {
                         $out[$var] = $matches[1];
                     }
                 }
