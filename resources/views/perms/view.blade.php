@@ -63,8 +63,31 @@
                 @if($item->touched_by && 1==2)
                     <b>Touched By: </b> <span style='word-break: break-word'>{{ $item->touched_by }}</span>
                 @endif
-                <div class="row" style="display:none" id="obj_row_{{ $item->id }}">
-                    <textarea class='data'>{!! $item->data !!}</textarea>
+                <div class="row" style="display:none;background:#e5e5e5;padding:20px" id="obj_row_{{ $item->id }}">
+                    <div class='col-sm-12'>
+                        <h5>Item data</h5>
+                        <textarea class='data'>{!! $item->data !!}</textarea>
+                    </div>
+                    <div class='col-sm-12'>
+                        <h5>Database data</h5>
+                        <table class='table table-striped'>
+                            <thead>
+                                <th>Key</th>
+                                <th>Value</th>
+                            </thead>
+                            <tbody>
+                                @foreach($item->toArray() as $key=>$value)
+                                    @if($key == 'data' || $key == 'items')
+                                        @continue
+                                    @endif
+                                    <tr>
+                                        <td>{{ $key }}</td>
+                                        <td>{!! $value !!}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             @endforeach
     @else
