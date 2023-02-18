@@ -60,7 +60,13 @@
             @foreach($perm->items as $item)
                 <div class="row item-row">
                     <div class="col-sm-4">{{ $item->short }}</div>
-                    <div class="col-sm-5">{{ $item->touched_by }}</div>
+                    <div class="col-sm-5">
+                        @if(strlen($item->touched_by) > 150)
+                            <textarea style="width:100%; height: 150px">{{ $item->touched_by }}</textarea>
+                        @else
+                            {{ $item->touched_by }}
+                        @endif
+                    </div>
                     <div class="col-sm-3"><button class="btn btn-info btn-sm" onclick='$("#obj_row_{{ $item->id }}").toggle();'+>View data</button></div>
                 </div>
                 @if($item->touched_by && 1==2)
