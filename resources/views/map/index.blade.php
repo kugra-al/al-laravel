@@ -34,6 +34,7 @@
             </div>
         </div>
     </div>
+    @include('perms.modal')
     <script>
 
         const map = L.map('map', {
@@ -131,6 +132,7 @@
                 [
                     @foreach($perms as $perm)
                         {coords: [ {{ $perm->x }}, {{ $perm->y }} ], title: '{{ $perm->filename }}', data: {
+                            'id': '{{ $perm->id }}',
                             'object': '{{ $perm->object }}',
                             'location': '{{ $perm->location }}',
                             'filename' : '{{ $perm->filename }}',
@@ -156,7 +158,7 @@
             }
             marker.bindPopup(
                 "<ul>"+
-                "<li>ID: "+facade.title+"</li>"+
+                "<li>Filename: "+facade.title+"</li>"+
                 "<li>Coords: "+facade.coords[0]+":"+facade.coords[1]+"</li>"+
                 "<li>Destination: "+facade.destination+"</li>"+
                 (domain.length ? "<li><a href='https://github.com/Amirani-al/Accursedlands-Domains/tree/master/"+domain+"' target='_blank'>View /domains/"+domain+" on Github</a></li>" : '')+
@@ -213,7 +215,7 @@
             marker.bindPopup(
                 "<ul>"+
                 popupContents+
-                "</ul>"
+                "</ul><a href='#' onclick='loadPermData("+perm.data.id+");'>View Data</a>"
             );
             if (perm.data.object == "/obj/base/misc/signpost")
                 signpostLayer.addLayer(marker);
