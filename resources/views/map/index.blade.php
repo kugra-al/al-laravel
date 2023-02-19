@@ -35,6 +35,8 @@
         </div>
     </div>
     @include('perms.modal')
+    <script src="/js/L.Control.Layers.Tree.js"></script>
+    <link rel="stylesheet" href="/css/L.Control.Layers.Tree.css">
     <script>
 
         const map = L.map('map', {
@@ -248,16 +250,46 @@
         }
 
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
-        var layerControl = L.control.layers(null, {
-            "Facades " : facadeLayer,
-            "Deaths ": deathLayer,
-            'Buildings' : buildingLayer,
-            'Tents': tentLayer,
-            'Destroyed Buildings/Tents' : destroyedLayer,
-            'Unfinished Buildings' : unfinishedLayer,
-            'Signposts' : signpostLayer,
-            'Other Perms': otherPermLayer
-        }).addTo(map);
+        var layerControl = L.control.layers.tree(null,
+            {
+                'label': 'Overlays',
+                'children':
+                [
+                    {
+                        'label': 'Areas', selectAllCheckbox: true,
+                        'children': [
+                            {'label':'Facades', 'layer': facadeLayer }
+                        ]
+                    },
+                    {
+                        'label': 'Events', selectAllCheckbox: true,
+                        'children': [
+                            {'label':'Deaths', 'layer': deathLayer }
+                        ]
+                    },
+                    {
+                        'label':'Perms', selectAllCheckbox: true,
+                        'children': [
+                            {'label':'Buildings', 'layer': buildingLayer },
+                            {'label':'Tents', 'layer': tentLayer },
+                            {'label':'Destroyed Buildings/tents', 'layer': destroyedLayer },
+                            {'label':'Unfinished Buildings', 'layer': unfinishedLayer },
+                            {'label':'Signposts', 'layer': signpostLayer },
+                            {'label':'Other Perms', 'layer': otherPermLayer }
+                        ]
+                    }
+                ]
+
+            }
+//             "Facades " : facadeLayer,
+//             "Deaths ": deathLayer,
+//             'Buildings' : buildingLayer,
+//             'Tents': tentLayer,
+//             'Destroyed Buildings/Tents' : destroyedLayer,
+//             'Unfinished Buildings' : unfinishedLayer,
+//             'Signposts' : signpostLayer,
+//             'Other Perms': otherPermLayer
+        ,{collapsed:false}).addTo(map);
 
     </script>
 @endsection
