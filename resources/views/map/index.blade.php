@@ -185,11 +185,12 @@
             deathLayer.addLayer(marker);
         }
 
-        var permLayer = L.markerClusterGroup();
+        var buildingLayer = L.markerClusterGroup();
         var signpostLayer = L.markerClusterGroup();
         var destroyedLayer = L.markerClusterGroup();
         var unfinishedLayer = L.markerClusterGroup();
         var otherPermLayer = L.markerClusterGroup();
+        var tentLayer = L.markerClusterGroup();
         for(i = 0; i < overlays.perms.length; i++) {
             var perm = overlays.perms[i];
             var options = {title: perm.title, icon: buildingIcon};
@@ -250,7 +251,7 @@
         var layerControl = L.control.layers(null, {
             "Facades " : facadeLayer,
             "Deaths ": deathLayer,
-            'Buildings' : permLayer,
+            'Buildings' : buildingLayer,
             'Tents': tentLayer,
             'Destroyed Buildings/Tents' : destroyedLayer,
             'Unfinished Buildings' : unfinishedLayer,
