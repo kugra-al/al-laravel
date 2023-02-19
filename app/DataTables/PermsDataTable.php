@@ -185,6 +185,7 @@ class PermsDataTable extends DataTable
             'save_type'=>['searchPanes'=>true],
             'short'=>[],
             'num_items'=>[],
+            'last_decay_time'=>[],
             'action'=>[]
         ];
 
