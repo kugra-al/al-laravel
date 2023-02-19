@@ -26,7 +26,7 @@ class JobController extends Controller
         $jobs_path = public_path()."/../app/Jobs/";
         $jobs = [
             // items
-            'read-all-itm-files'=>[
+            'read-itm-files-to-cache'=>[
                 'desc'=>'Read through all locally stored .itm files and write to cache',
                 'time'=>'~80 seconds','type'=>'process','group'=>'items',
                 'sources'=>['repos'=>['Accursedlands-obj']]
@@ -35,7 +35,9 @@ class JobController extends Controller
                 'desc'=>'Resets all columns and values in items table.  Run before `write-items-to-db` to reset columns and data',
                 'time'=>'<10 seconds','type'=>'reset','group'=>'items'],
             'write-itms-to-db'=>[
-                'desc'=>'Write all cached .itm files to database','time'=>'~20 seconds','type'=>'write','group'=>'items'],
+                'desc'=>'Write all cached .itm files to database','time'=>'~20 seconds','type'=>'write','group'=>'items',
+                'sources'=>['jobs'=>'read-itm-files-to-cache']
+            ],
 
             // map
             'write-facades-to-db'=>[
@@ -49,7 +51,7 @@ class JobController extends Controller
                 'sources'=>['jobs'=>'fetch-death-logs'],'group'=>'deaths',
             ],
             'fetch-death-logs'=>[
-                'desc'=>'Fetch death logs','time'=>'<10s','type'=>'fetch',
+                'desc'=>'Fetch death logs<br/>Historical ones are on branch: master<br/>Most recent ones are on branch: production_mud_fluffos','time'=>'<10s','type'=>'fetch',
                 'sources'=>['github_api'=>['Accursedlands-LOGS'],'branches'=>['production_mud_fluffos','master']],
                 'group'=>'deaths'
             ],
@@ -92,7 +94,7 @@ class JobController extends Controller
             case 'reset-items-table' :
                 ResetItemsTable::dispatch();
                 break;
-            case 'read-all-itm-files':
+            case 'read-itm-files-to-cache':
                 ReadItmFiles::dispatch();
                 break;
             case 'write-itms-to-db':
