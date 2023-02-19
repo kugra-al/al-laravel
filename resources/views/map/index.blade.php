@@ -39,7 +39,7 @@
 
         const map = L.map('map', {
             crs: L.CRS.Simple,
-            minZoom: -3,
+            minZoom: -2,
             maxZoom: 7
         });
         const yx = L.latLng;

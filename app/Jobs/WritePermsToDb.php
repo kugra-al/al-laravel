@@ -129,7 +129,8 @@ class WritePermsToDb implements ShouldQueue
                 $objectVars = GithubAL::readVarsFromObjectData($perm['data'],
                     ['touched_by','last_touched','psets','pathname','primary_id','primary_adj','decay_value','last_decay_time','short']
                 );
-
+                if ($objectVars['last_decay_time'])
+                    $objectVars['last_decay_time'] = \Carbon\Carbon::createFromTimestamp($objectVars['last_decay_time'])->toDateTimeString();
                 $perm = array_merge($perm,$objectVars);
 
             }
