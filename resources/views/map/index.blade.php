@@ -141,7 +141,8 @@
                             'sign_title': '{{ $perm->sign_title }}',
                             'last_touched': '{{ $perm->last_touched }}',
                             'touched_by': '{{ $perm->touched_by }}',
-                            'psets': '{{ $perm->psets }}'
+                            'psets': '{{ $perm->psets }}',
+                            @if($perm->destroyed)'destroyed': 1 @endif
 
                         }},
                     @endforeach
@@ -186,6 +187,8 @@
 
         var permLayer = L.markerClusterGroup();
         var signpostLayer = L.markerClusterGroup();
+        var destroyedLayer = L.markerClusterGroup();
+        var unfinishedLayer = L.markerClusterGroup();
         for(i = 0; i < overlays.perms.length; i++) {
             var perm = overlays.perms[i];
             var options = {title: perm.title, icon: buildingIcon};
@@ -220,16 +223,26 @@
             );
             if (perm.data.object == "/obj/base/misc/signpost")
                 signpostLayer.addLayer(marker);
-            else
-                permLayer.addLayer(marker);
+            else {
+            //    if (perm.data.destroyed)
+            //        destroyedLayer.addLayer(marker);
+           //     else {
+                    if (perm.data.object == "/obj/base/misc/unfinished_perm")
+                        unfinishedLayer.addLayer(marker);
+                    else
+                        permLayer.addLayer(marker);
+                }
+          //  }
         }
 
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers(null, {
             "Facades " : facadeLayer,
             "Deaths ": deathLayer,
-            'Buildings' : permLayer,
-            'Signposts' : signpostLayer
+            'Buildings/Tents' : permLayer,
+   //         'Destroyed Buildings' : destroyedLayer,
+            'Unfinished Buildings' : unfinishedLayer,
+            'Signposts' : signpostLayer,
         }).addTo(map);
 
     </script>
