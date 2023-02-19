@@ -142,6 +142,7 @@
                             'last_touched': '{{ $perm->last_touched }}',
                             'touched_by': '{{ $perm->touched_by }}',
                             'psets': '{{ $perm->psets }}',
+                            'type': '{{ $perm->perm_type }}'
                             @if($perm->destroyed)'destroyed': 1 @endif
 
                         }},
@@ -189,6 +190,7 @@
         var signpostLayer = L.markerClusterGroup();
         var destroyedLayer = L.markerClusterGroup();
         var unfinishedLayer = L.markerClusterGroup();
+        var otherPermLayer = L.markerClusterGroup();
         for(i = 0; i < overlays.perms.length; i++) {
             var perm = overlays.perms[i];
             var options = {title: perm.title, icon: buildingIcon};
@@ -197,6 +199,8 @@
                     options.icon = signpostIcon;
                     break;
                 case "/obj/base/containers/permanent_well":
+                case "/std/shop_shelves":
+                case "/obj/base/vehicles/rowboat":
                     options.icon = purpleIcon;
                     break;
                 case "/obj/items/other/conical_leather_tent":
@@ -204,7 +208,7 @@
                     options.icon = tentIcon;
                     break;
                 default :
-                    if (perm.data.object.search('/wiz/') != -1)
+                    if (perm.data.object.search('/wiz/') != -1 || !perm.data.object.length)
                         options.icon = alertIcon;
 
                     delete perm.data.sign_title;
@@ -229,8 +233,13 @@
            //     else {
                     if (perm.data.object == "/obj/base/misc/unfinished_perm")
                         unfinishedLayer.addLayer(marker);
-                    else
-                        permLayer.addLayer(marker);
+                    else {
+                        if (perm.data.type == "building" || perm.data.type == "tent")
+                            permLayer.addLayer(marker);
+                        else {
+                            otherPermLayer.addLayer(marker);
+                        }
+                    }
                 }
           //  }
         }
@@ -243,6 +252,7 @@
    //         'Destroyed Buildings' : destroyedLayer,
             'Unfinished Buildings' : unfinishedLayer,
             'Signposts' : signpostLayer,
+            'Other Perms': otherPermLayer
         }).addTo(map);
 
     </script>
