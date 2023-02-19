@@ -142,7 +142,7 @@ class PermsDataTable extends DataTable
                             //->controls(false)
                     )
                     ->dom('PBfrtip')
-                    ->orderBy(3,'asc')
+                    ->orderBy(7,'desc')
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('postCsvVisibleColumns'),
