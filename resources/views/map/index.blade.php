@@ -142,9 +142,8 @@
                             'last_touched': '{{ $perm->last_touched }}',
                             'touched_by': '{{ $perm->touched_by }}',
                             'psets': '{{ $perm->psets }}',
-                            'type': '{{ $perm->perm_type }}'
-                            @if($perm->destroyed)'destroyed': 1 @endif
-
+                            'type': '{{ $perm->perm_type }}',
+                            'destroyed' : {!! json_encode($perm->destroyed) !!}
                         }},
                     @endforeach
                 ]
@@ -228,28 +227,32 @@
             if (perm.data.object == "/obj/base/misc/signpost")
                 signpostLayer.addLayer(marker);
             else {
-            //    if (perm.data.destroyed)
-            //        destroyedLayer.addLayer(marker);
-           //     else {
+                if (perm.data.destroyed)
+                    destroyedLayer.addLayer(marker);
+                else {
                     if (perm.data.object == "/obj/base/misc/unfinished_perm")
                         unfinishedLayer.addLayer(marker);
                     else {
-                        if (perm.data.type == "building" || perm.data.type == "tent")
-                            permLayer.addLayer(marker);
+                        if (perm.data.type == "building")
+                            buildingLayer.addLayer(marker);
                         else {
-                            otherPermLayer.addLayer(marker);
+                            if(perm.data.type == "tent")
+                                tentLayer.addLayer(marker);
+                            else
+                                otherPermLayer.addLayer(marker);
                         }
                     }
                 }
-          //  }
+            }
         }
 
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers(null, {
             "Facades " : facadeLayer,
             "Deaths ": deathLayer,
-            'Buildings/Tents' : permLayer,
-   //         'Destroyed Buildings' : destroyedLayer,
+            'Buildings' : permLayer,
+            'Tents': tentLayer,
+            'Destroyed Buildings/Tents' : destroyedLayer,
             'Unfinished Buildings' : unfinishedLayer,
             'Signposts' : signpostLayer,
             'Other Perms': otherPermLayer

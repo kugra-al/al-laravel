@@ -25,7 +25,7 @@ class WritePermsToDb implements ShouldQueue
      */
     public function __construct()
     {
-      // $this->handle();
+       $this->handle();
     }
 
 
@@ -159,33 +159,40 @@ class WritePermsToDb implements ShouldQueue
                     $playerBuilt['save_type'] = 'perm';
                 }
             }
+
             if (sizeof($playerBuilt)) {
+
                 $perm["save_type"] = $playerBuilt["save_type"];
                 // Check for player_built saves
-                if ($playerBuilt['save_type'] == 'stasis') {
+                //if ($playerBuilt['save_type'] == 'stasis') {
+                if (isset($playerBuilt['perm_id']))
                     $perm['perm_id'] = $playerBuilt['perm_id'];
-                    $liveMapDir = "Accursedlands-Domains/player_built/data/".$playerBuilt['map_dir'].":".$perm['perm_id'];
-                    if (File::exists(GithubAL::getLocalRepoPath($liveMapDir))) {
-                        $perm['live'] = true;
-                        $perm['destroyed'] = false;
-                        $perm['map_dir'] = $liveMapDir;
-                    }
-                    $destroyedMapDir = "Accursedlands-Domains/player_built/destroyed/".$playerBuilt['map_dir'].":".$perm['perm_id'];
-                    if (File::exists(GithubAL::getLocalRepoPath($destroyedMapDir))) {
-                        $perm['destroyed'] = true;
-
+                // Items that save inventory
+                if (strpos($contents,'"#inventory#":({"') !== false) {
+                    $perm["save_type"] = "perm_broken";
+                    $perm["inventory_location"] = "Accursedlands-perms/perm_objs/".$filename;
+                } else {
+                $check = false;
+                    if (isset($playerBuilt['perm_id'])) {
+                        $perm['perm_id'] = $playerBuilt['perm_id'];
+                        $liveMapDir = "Accursedlands-Domains/player_built/data/".$playerBuilt['map_dir'].":".$perm['perm_id'];
                         if (File::exists(GithubAL::getLocalRepoPath($liveMapDir))) {
                             $perm['live'] = true;
-                            $perm['map_dir'] = $liveMapDir.", ".$destroyedMapDir;
-                        } else {
-                            $perm['live'] = false;
-                            $perm['map_dir'] = $destroyedMapDir;
+                            $perm['destroyed'] = false;
+                            $perm['map_dir'] = $liveMapDir;
                         }
-                    }
-                } else {
-                    if (strpos($contents,'"#inventory#":({"') !== false) {
-                        $perm["save_type"] = "perm_broken";
-                        $perm["inventory_location"] = "Accursedlands-perms/perm_objs/".$filename;
+                        $destroyedMapDir = "Accursedlands-Domains/player_built/destroyed/".$playerBuilt['map_dir'].":".$perm['perm_id'];
+                        if (File::exists(GithubAL::getLocalRepoPath($destroyedMapDir))) {
+                            $perm['destroyed'] = true;
+
+                            if (File::exists(GithubAL::getLocalRepoPath($liveMapDir))) {
+                                $perm['live'] = true;
+                                $perm['map_dir'] = $liveMapDir.", ".$destroyedMapDir;
+                            } else {
+                                $perm['live'] = false;
+                                $perm['map_dir'] = $destroyedMapDir;
+                            }
+                        }
                     }
                 }
             }
