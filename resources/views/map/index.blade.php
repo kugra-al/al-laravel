@@ -36,14 +36,23 @@
     </div>
     @include('perms.modal')
     <script src="/js/L.Control.Layers.Tree.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
     <link rel="stylesheet" href="/css/L.Control.Layers.Tree.css">
+
     <script>
 
         const map = L.map('map', {
             crs: L.CRS.Simple,
             minZoom: -2,
-            maxZoom: 7
+            maxZoom: 7,
+         //   drawControl: true
         });
+
+
+   // Do whatever else you need to. (save to db; add to map etc)
+//   map.addLayer(layer);
+
         const yx = L.latLng;
 
         var facadeGroup = [];
@@ -272,6 +281,20 @@
             // but e.target !== rect
          //   console.info(e);
      //   }).addTo(edraLayer);
+
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+        var drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems
+            }
+        });
+        map.addControl(drawControl);
+        map.on('draw:created', function(e) {
+            e.layer.addTo(drawnItems);
+    //        drawnItems.add(e);
+        });
+
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers.tree(null,
             {
@@ -305,12 +328,25 @@
                             {'label':'Destroyed Buildings/tents', 'layer': destroyedLayer },
                             {'label':'Unfinished Buildings', 'layer': unfinishedLayer },
                             {'label':'Signposts', 'layer': signpostLayer },
-                            {'label':'Other Perms', 'layer': otherPermLayer }
+                            {'label':'Other Perms', 'layer': otherPermLayer },
+                        ]
+                    },
+                    {
+                        'label':'Custom', selectAllCheckbox: true,
+                        'children': [
+                            {'label':'Drawn', 'layer':drawnItems}
                         ]
                     }
                 ]
+            },
 
-            }
+//             {
+//                 'label':'Draw layer',
+//                 'children' : [
+//                     {'label':'Draw Layer', layer:drawnItems}
+//                 ]
+//
+//             }
 //             "Facades " : facadeLayer,
 //             "Deaths ": deathLayer,
 //             'Buildings' : buildingLayer,
@@ -319,7 +355,8 @@
 //             'Unfinished Buildings' : unfinishedLayer,
 //             'Signposts' : signpostLayer,
 //             'Other Perms': otherPermLayer
-        ,{collapsed:false}).addTo(map);
+        ).addTo(map);
+  // FeatureGroup is to store editable layers
 
     </script>
 @endsection
