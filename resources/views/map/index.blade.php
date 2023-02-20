@@ -36,8 +36,9 @@
     </div>
     @include('perms.modal')
     <script src="/js/L.Control.Layers.Tree.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
     <link rel="stylesheet" href="/css/L.Control.Layers.Tree.css">
 
     <script>
@@ -282,18 +283,15 @@
          //   console.info(e);
      //   }).addTo(edraLayer);
 
-        var drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
-        var drawControl = new L.Control.Draw({
-            edit: {
-                featureGroup: drawnItems
-            }
-        });
-        map.addControl(drawControl);
-        map.on('draw:created', function(e) {
-            e.layer.addTo(drawnItems);
-    //        drawnItems.add(e);
-        });
+//         var drawnItems = new L.FeatureGroup();
+//         map.addLayer(drawnItems);
+//         var drawControl = new L.Control.Draw({
+//             edit: {
+//                 featureGroup: drawnItems
+//             }
+//         });
+//         map.addControl(drawControl);
+
 
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers.tree(null,
@@ -331,12 +329,12 @@
                             {'label':'Other Perms', 'layer': otherPermLayer },
                         ]
                     },
-                    {
-                        'label':'Custom', selectAllCheckbox: true,
-                        'children': [
-                            {'label':'Drawn', 'layer':drawnItems}
-                        ]
-                    }
+//                     {
+//                         'label':'Custom', selectAllCheckbox: true,
+//                         'children': [
+//                             {'label':'Drawn', 'layer':drawnItems}
+//                         ]
+//                     }
                 ]
             },
 
@@ -357,6 +355,19 @@
 //             'Other Perms': otherPermLayer
         ).addTo(map);
   // FeatureGroup is to store editable layers
-
+        map.pm.addControls({
+            drawControls: true,
+            editControls: true,
+            optionsControls: true,
+            customControls: true,
+            oneBlock: false,
+        });
+map.pm.setGlobalOptions({continueDrawing:false});
+        map.on('pm:drawend', function(e) {
+            console.log(e);
+          //  e.layer.options.color = '#000';
+   //         e.layer.addTo(drawnItems);
+    //        drawnItems.add(e);
+        });
     </script>
 @endsection
