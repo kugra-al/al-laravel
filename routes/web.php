@@ -41,6 +41,9 @@ Route::group(['middleware' => ['auth','can:access items']], function() {
     Route::post('/items/export', [App\Http\Controllers\ItemController::class, 'index'])->name('items.export');
 
     Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
+    Route::get('/map/modal/{type}', [App\Http\Controllers\MapController::class, 'modal'])->name('map.modal');
+    Route::post('/map/layer/save',  [App\Http\Controllers\MapController::class, 'saveLayer'])->name('map.layer.save');
+    Route::post('/map/layer/load',  [App\Http\Controllers\MapController::class, 'loadLayer'])->name('map.layer.load');
 
     Route::get('/perms',[App\Http\Controllers\PermController::class, 'index'])->name('perms.index');
     Route::get('/data/perms',function() { return redirect('/perms'); });

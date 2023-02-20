@@ -19,6 +19,13 @@
 		.leaflet-pm-toolbar .leaflet-pm-icon-trash {
             background-image: url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSI4NzUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMjgxLjI5NmwwIC02OC4zNTVxMS45NTMgLTM3LjEwNyAyOS4yOTUgLTYyLjQ5NnQ2NC40NDkgLTI1LjM4OWw5My43NDQgMGwwIC0zMS4yNDhxMCAtMzkuMDYgMjcuMzQyIC02Ni40MDJ0NjYuNDAyIC0yNy4zNDJsMzEyLjQ4IDBxMzkuMDYgMCA2Ni40MDIgMjcuMzQydDI3LjM0MiA2Ni40MDJsMCAzMS4yNDhsOTMuNzQ0IDBxMzcuMTA3IDAgNjQuNDQ5IDI1LjM4OXQyOS4yOTUgNjIuNDk2bDAgNjguMzU1cTAgMjUuMzg5IC0xOC41NTMgNDMuOTQzdC00My45NDMgMTguNTUzbDAgNTMxLjIxNnEwIDUyLjczMSAtMzYuMTMgODguODYydC04OC44NjIgMzYuMTNsLTQ5OS45NjggMHEtNTIuNzMxIDAgLTg4Ljg2MiAtMzYuMTN0LTM2LjEzIC04OC44NjJsMCAtNTMxLjIxNnEtMjUuMzg5IDAgLTQzLjk0MyAtMTguNTUzdC0xOC41NTMgLTQzLjk0M3ptNjIuNDk2IDBsNzQ5Ljk1MiAwbDAgLTYyLjQ5NnEwIC0xMy42NzEgLTguNzg5IC0yMi40NnQtMjIuNDYgLTguNzg5bC02ODcuNDU2IDBxLTEzLjY3MSAwIC0yMi40NiA4Ljc4OXQtOC43ODkgMjIuNDZsMCA2Mi40OTZ6bTYyLjQ5NiA1OTMuNzEycTAgMjUuMzg5IDE4LjU1MyA0My45NDN0NDMuOTQzIDE4LjU1M2w0OTkuOTY4IDBxMjUuMzg5IDAgNDMuOTQzIC0xOC41NTN0MTguNTUzIC00My45NDNsMCAtNTMxLjIxNmwtNjI0Ljk2IDBsMCA1MzEuMjE2em02Mi40OTYgLTMxLjI0OGwwIC00MDYuMjI0cTAgLTEzLjY3MSA4Ljc4OSAtMjIuNDZ0MjIuNDYgLTguNzg5bDYyLjQ5NiAwcTEzLjY3MSAwIDIyLjQ2IDguNzg5dDguNzg5IDIyLjQ2bDAgNDA2LjIyNHEwIDEzLjY3MSAtOC43ODkgMjIuNDZ0LTIyLjQ2IDguNzg5bC02Mi40OTYgMHEtMTMuNjcxIDAgLTIyLjQ2IC04Ljc4OXQtOC43ODkgLTIyLjQ2em0zMS4yNDggMGw2Mi40OTYgMGwwIC00MDYuMjI0bC02Mi40OTYgMGwwIDQwNi4yMjR6bTMxLjI0OCAtNzE4LjcwNGwzNzQuOTc2IDBsMCAtMzEuMjQ4cTAgLTEzLjY3MSAtOC43ODkgLTIyLjQ2dC0yMi40NiAtOC43ODlsLTMxMi40OCAwcS0xMy42NzEgMCAtMjIuNDYgOC43ODl0LTguNzg5IDIyLjQ2bDAgMzEuMjQ4em0xMjQuOTkyIDcxOC43MDRsMCAtNDA2LjIyNHEwIC0xMy42NzEgOC43ODkgLTIyLjQ2dDIyLjQ2IC04Ljc4OWw2Mi40OTYgMHExMy42NzEgMCAyMi40NiA4Ljc4OXQ4Ljc4OSAyMi40NmwwIDQwNi4yMjRxMCAxMy42NzEgLTguNzg5IDIyLjQ2dC0yMi40NiA4Ljc4OWwtNjIuNDk2IDBxLTEzLjY3MSAwIC0yMi40NiAtOC43ODl0LTguNzg5IC0yMi40NnptMzEuMjQ4IDBsNjIuNDk2IDBsMCAtNDA2LjIyNGwtNjIuNDk2IDBsMCA0MDYuMjI0em0xNTYuMjQgMGwwIC00MDYuMjI0cTAgLTEzLjY3MSA4Ljc4OSAtMjIuNDZ0MjIuNDYgLTguNzg5bDYyLjQ5NiAwcTEzLjY3MSAwIDIyLjQ2IDguNzg5dDguNzg5IDIyLjQ2bDAgNDA2LjIyNHEwIDEzLjY3MSAtOC43ODkgMjIuNDZ0LTIyLjQ2IDguNzg5bC02Mi40OTYgMHEtMTMuNjcxIDAgLTIyLjQ2IC04Ljc4OXQtOC43ODkgLTIyLjQ2em0zMS4yNDggMGw2Mi40OTYgMGwwIC00MDYuMjI0bC02Mi40OTYgMGwwIDQwNi4yMjR6Ii8+PC9zdmc+);
         }
+        .leaflet-pm-toolbar .leaflet-pm-icon-save {
+            background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB3aWR0aD0iMTc5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNTEyIDE1MzZoNzY4di0zODRoLTc2OHYzODR6bTg5NiAwaDEyOHYtODk2cTAtMTQtMTAtMzguNXQtMjAtMzQuNWwtMjgxLTI4MXEtMTAtMTAtMzQtMjB0LTM5LTEwdjQxNnEwIDQwLTI4IDY4dC02OCAyOGgtNTc2cS00MCAwLTY4LTI4dC0yOC02OHYtNDE2aC0xMjh2MTI4MGgxMjh2LTQxNnEwLTQwIDI4LTY4dDY4LTI4aDgzMnE0MCAwIDY4IDI4dDI4IDY4djQxNnptLTM4NC05Mjh2LTMyMHEwLTEzLTkuNS0yMi41dC0yMi41LTkuNWgtMTkycS0xMyAwLTIyLjUgOS41dC05LjUgMjIuNXYzMjBxMCAxMyA5LjUgMjIuNXQyMi41IDkuNWgxOTJxMTMgMCAyMi41LTkuNXQ5LjUtMjIuNXptNjQwIDMydjkyOHEwIDQwLTI4IDY4dC02OCAyOGgtMTM0NHEtNDAgMC02OC0yOHQtMjgtNjh2LTEzNDRxMC00MCAyOC02OHQ2OC0yOGg5MjhxNDAgMCA4OCAyMHQ3NiA0OGwyODAgMjgwcTI4IDI4IDQ4IDc2dDIwIDg4eiIvPjwvc3ZnPg==);
+        }
+        .leaflet-pm-toolbar .leaflet-pm-icon-load {
+
+         background-image: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDE1IDE0Ij4KPHBhdGggZD0iTTEzLjkxNCA3LjI3M3EwLTAuMjczLTAuNDE0LTAuMjczaC04LjVxLTAuMzEyIDAtMC42NjggMC4xNjh0LTAuNTU5IDAuNDFsLTIuMjk3IDIuODM2cS0wLjE0MSAwLjE4Ny0wLjE0MSAwLjMxMiAwIDAuMjczIDAuNDE0IDAuMjczaDguNXEwLjMxMiAwIDAuNjcyLTAuMTcydDAuNTU1LTAuNDE0bDIuMjk3LTIuODM2cTAuMTQxLTAuMTcyIDAuMTQxLTAuMzA1ek01IDZoNnYtMS4yNXEwLTAuMzEyLTAuMjE5LTAuNTMxdC0wLjUzMS0wLjIxOWgtNC41cS0wLjMxMiAwLTAuNTMxLTAuMjE5dC0wLjIxOS0wLjUzMXYtMC41cTAtMC4zMTItMC4yMTktMC41MzF0LTAuNTMxLTAuMjE5aC0yLjVxLTAuMzEyIDAtMC41MzEgMC4yMTl0LTAuMjE5IDAuNTMxdjYuNjY0bDItMi40NjFxMC4zNDQtMC40MTQgMC45MDYtMC42ODR0MS4wOTQtMC4yN3pNMTQuOTE0IDcuMjczcTAgMC40ODQtMC4zNTkgMC45MzdsLTIuMzA1IDIuODM2cS0wLjMzNiAwLjQxNC0wLjkwNiAwLjY4NHQtMS4wOTQgMC4yN2gtOC41cS0wLjcxOSAwLTEuMjM0LTAuNTE2dC0wLjUxNi0xLjIzNHYtNy41cTAtMC43MTkgMC41MTYtMS4yMzR0MS4yMzQtMC41MTZoMi41cTAuNzE5IDAgMS4yMzQgMC41MTZ0MC41MTYgMS4yMzR2MC4yNWg0LjI1cTAuNzE5IDAgMS4yMzQgMC41MTZ0MC41MTYgMS4yMzR2MS4yNWgxLjVxMC40MjIgMCAwLjc3MyAwLjE5MXQwLjUyMyAwLjU1MXEwLjExNyAwLjI1IDAuMTE3IDAuNTMxeiI+PC9wYXRoPgo8L3N2Zz4K);
+        }
       #coords:before {content: "Coords: "}
 	</style>
 
@@ -269,6 +276,106 @@
         L.polygon([xy(609,1383), xy(585,1365), xy(582, 1321), xy(558, 1317), xy(564, 1292),
             xy(616, 1300), xy(653, 1369), xy(653, 1407), xy(622,1412)],{color:'blue', weight: 1}).addTo(moorvaLayer);
 
+        function loadLayerModal(type) {
+            var modal = $('#dataModal');
+            switch(type) {
+                case 'load' :
+                    title = 'load';
+                    url = '/map/modal/load';
+                    break;
+                case 'save' :
+                    title = 'save';
+                    url = '/map/modal/save';
+                    break;
+                default :
+                    alert('unknown type');
+                    return;
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: 'json',
+                success: function (data) {
+                    $(modal).modal();
+                    $(modal).find('.modal-title').text(title);
+                    $(modal).find('.modal-body').html(data.html);
+                },
+                error: function (data) {
+                    alert('There was an error (see console for details)');
+                    console.log('error');
+                    console.log(data);
+                }
+            });
+        }
+
+        function saveDrawnLayer() {
+            event.preventDefault();
+            var fg = L.featureGroup();
+            drawLayer.eachLayer((layer)=>{
+                //if(layer instanceof L.Path || layer instanceof L.Marker){
+                    console.log(layer);
+                    fg.addLayer(layer);
+               // }
+            });
+
+            var send = {
+                name: $(event.target).find("[name=name]").val(),
+                layer: JSON.stringify(fg.toGeoJSON())
+            };
+            console.log(send);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('map.layer.save') }}',
+                dataType: 'json',
+                data: send,
+                success: function (data) {
+                    console.log( data );
+                    $('#dataModal').modal('hide');
+                },
+                error: function (data) {
+                    alert('There was an error (see console for details)');
+                    console.log('error');
+                    console.log(data);
+                }
+            });
+        }
+
+        function loadDrawnLayer(id) {
+            event.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('map.layer.load') }}',
+                dataType: 'json',
+                data: {id: id},
+                success: function (data) {
+                    console.log( data );
+                    if (data.data)
+                        drawLayer = L.geoJSON(JSON.parse(data.data)).addTo(map);
+                    $('#dataModal').modal('hide');
+                },
+                error: function (data) {
+                    alert('There was an error (see console for details)');
+                    console.log('error');
+                    console.log(data);
+                }
+            });
+        }
+
 
         var drawLayer = L.layerGroup([]).addTo(map);
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
@@ -323,6 +430,9 @@
             optionsControls: true,
             customControls: true,
             oneBlock: false,
+//             positions: {
+//                 custom: 'bottomright'
+//             }
         });
 
         map.pm.setGlobalOptions({continueDrawing:false, layerGroup: drawLayer});
@@ -331,17 +441,42 @@
             fillColor: 'white',
             fillOpacity: 0.4,
         });
-        map.pm.Toolbar.createCustomControl({
-            name: 'Delete',
-            title: 'Delete All Drawn Layers',
-            block: 'edit',
-            onClick: function(){drawLayer.clearLayers();},
-            className: 'leaflet-pm-icon-trash'
+        map.pm.Toolbar.createCustomControl(
+            {
+                name: 'Delete',
+                title: 'Delete All Drawn Layers',
+                block: 'edit',
+                onClick: function(){drawLayer.clearLayers();},
+                className: 'leaflet-pm-icon-trash'
+            }
+        );
+        map.pm.Toolbar.createCustomControl(
+            {
+                name: 'Load',
+                title: 'Load drawn layer',
+                block: 'custom',
+                onClick: function() {loadLayerModal('load');},
+                className: 'leaflet-pm-icon-load'
+            }
+        );
+        map.pm.Toolbar.createCustomControl(
+            {
+                name: 'Save',
+                title: 'Save drawn layer',
+                block: 'custom',
+                onClick: function() {loadLayerModal('save');},
+                className: 'leaflet-pm-icon-save'
+            }
+        );
+        var drawnShapes = [];
+        function updateDrawLayerData(e) {
+            console.log(e);
+            drawnShapes.push(p);
+        }
+        map.on('pm:create', function(e) {
+            updateDrawLayerData(e);
         });
-        map.on('pm:drawend', function(e) {
-            var data = drawLayer.toGeoJSON();
-            console.log(data);
-        });
+
 
     </script>
 @endsection
