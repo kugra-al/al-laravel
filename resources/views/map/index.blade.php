@@ -16,6 +16,9 @@
 			max-height: 100%;
 		}
 		.marker-cluster div { width: auto; }
+		.leaflet-pm-toolbar .leaflet-pm-icon-trash {
+            background-image: url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSI4NzUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMjgxLjI5NmwwIC02OC4zNTVxMS45NTMgLTM3LjEwNyAyOS4yOTUgLTYyLjQ5NnQ2NC40NDkgLTI1LjM4OWw5My43NDQgMGwwIC0zMS4yNDhxMCAtMzkuMDYgMjcuMzQyIC02Ni40MDJ0NjYuNDAyIC0yNy4zNDJsMzEyLjQ4IDBxMzkuMDYgMCA2Ni40MDIgMjcuMzQydDI3LjM0MiA2Ni40MDJsMCAzMS4yNDhsOTMuNzQ0IDBxMzcuMTA3IDAgNjQuNDQ5IDI1LjM4OXQyOS4yOTUgNjIuNDk2bDAgNjguMzU1cTAgMjUuMzg5IC0xOC41NTMgNDMuOTQzdC00My45NDMgMTguNTUzbDAgNTMxLjIxNnEwIDUyLjczMSAtMzYuMTMgODguODYydC04OC44NjIgMzYuMTNsLTQ5OS45NjggMHEtNTIuNzMxIDAgLTg4Ljg2MiAtMzYuMTN0LTM2LjEzIC04OC44NjJsMCAtNTMxLjIxNnEtMjUuMzg5IDAgLTQzLjk0MyAtMTguNTUzdC0xOC41NTMgLTQzLjk0M3ptNjIuNDk2IDBsNzQ5Ljk1MiAwbDAgLTYyLjQ5NnEwIC0xMy42NzEgLTguNzg5IC0yMi40NnQtMjIuNDYgLTguNzg5bC02ODcuNDU2IDBxLTEzLjY3MSAwIC0yMi40NiA4Ljc4OXQtOC43ODkgMjIuNDZsMCA2Mi40OTZ6bTYyLjQ5NiA1OTMuNzEycTAgMjUuMzg5IDE4LjU1MyA0My45NDN0NDMuOTQzIDE4LjU1M2w0OTkuOTY4IDBxMjUuMzg5IDAgNDMuOTQzIC0xOC41NTN0MTguNTUzIC00My45NDNsMCAtNTMxLjIxNmwtNjI0Ljk2IDBsMCA1MzEuMjE2em02Mi40OTYgLTMxLjI0OGwwIC00MDYuMjI0cTAgLTEzLjY3MSA4Ljc4OSAtMjIuNDZ0MjIuNDYgLTguNzg5bDYyLjQ5NiAwcTEzLjY3MSAwIDIyLjQ2IDguNzg5dDguNzg5IDIyLjQ2bDAgNDA2LjIyNHEwIDEzLjY3MSAtOC43ODkgMjIuNDZ0LTIyLjQ2IDguNzg5bC02Mi40OTYgMHEtMTMuNjcxIDAgLTIyLjQ2IC04Ljc4OXQtOC43ODkgLTIyLjQ2em0zMS4yNDggMGw2Mi40OTYgMGwwIC00MDYuMjI0bC02Mi40OTYgMGwwIDQwNi4yMjR6bTMxLjI0OCAtNzE4LjcwNGwzNzQuOTc2IDBsMCAtMzEuMjQ4cTAgLTEzLjY3MSAtOC43ODkgLTIyLjQ2dC0yMi40NiAtOC43ODlsLTMxMi40OCAwcS0xMy42NzEgMCAtMjIuNDYgOC43ODl0LTguNzg5IDIyLjQ2bDAgMzEuMjQ4em0xMjQuOTkyIDcxOC43MDRsMCAtNDA2LjIyNHEwIC0xMy42NzEgOC43ODkgLTIyLjQ2dDIyLjQ2IC04Ljc4OWw2Mi40OTYgMHExMy42NzEgMCAyMi40NiA4Ljc4OXQ4Ljc4OSAyMi40NmwwIDQwNi4yMjRxMCAxMy42NzEgLTguNzg5IDIyLjQ2dC0yMi40NiA4Ljc4OWwtNjIuNDk2IDBxLTEzLjY3MSAwIC0yMi40NiAtOC43ODl0LTguNzg5IC0yMi40NnptMzEuMjQ4IDBsNjIuNDk2IDBsMCAtNDA2LjIyNGwtNjIuNDk2IDBsMCA0MDYuMjI0em0xNTYuMjQgMGwwIC00MDYuMjI0cTAgLTEzLjY3MSA4Ljc4OSAtMjIuNDZ0MjIuNDYgLTguNzg5bDYyLjQ5NiAwcTEzLjY3MSAwIDIyLjQ2IDguNzg5dDguNzg5IDIyLjQ2bDAgNDA2LjIyNHEwIDEzLjY3MSAtOC43ODkgMjIuNDZ0LTIyLjQ2IDguNzg5bC02Mi40OTYgMHEtMTMuNjcxIDAgLTIyLjQ2IC04Ljc4OXQtOC43ODkgLTIyLjQ2em0zMS4yNDggMGw2Mi40OTYgMGwwIC00MDYuMjI0bC02Mi40OTYgMGwwIDQwNi4yMjR6Ii8+PC9zdmc+);
+        }
       #coords:before {content: "Coords: "}
 	</style>
 
@@ -38,7 +41,7 @@
     <script src="/js/L.Control.Layers.Tree.js"></script>
     <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
 
-<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
     <link rel="stylesheet" href="/css/L.Control.Layers.Tree.css">
 
     <script>
@@ -47,18 +50,28 @@
             crs: L.CRS.Simple,
             minZoom: -2,
             maxZoom: 7,
-         //   drawControl: true
+        });
+
+        const yx = L.latLng;
+        function xy(x, y) {
+            if (Array.isArray(x)) { // When doing xy([x, y]);
+                return yx(x[1], x[0]);
+            }
+            return yx(y, x); // When doing xy(x, y);
+        }
+
+        const bounds = [xy(0, 0), xy(2500, 2500)];
+        // Random hash just so no curious player does /img/map.png
+        const image = L.imageOverlay('img/map_bb0a99b14432697bd43cd80f0bd2cd77.png', bounds).addTo(map);
+
+        map.setView(xy(545, 1493), 2);
+
+        map.on("mousemove", function (event) {
+            document.getElementById('coords').innerText = Math.round(event.latlng.lng)+":"+Math.round(event.latlng.lat);
         });
 
 
-   // Do whatever else you need to. (save to db; add to map etc)
-//   map.addLayer(layer);
-
-        const yx = L.latLng;
-
-        var facadeGroup = [];
-        var deathGroup = [];
-
+        // Icons
         var facadeIcon = new L.Icon({
             iconUrl: '/img/facade-icon.png',
             iconSize: [10, 10],
@@ -105,22 +118,9 @@
             popupAnchor: [1, -25],
         });
 
-        function xy(x, y) {
-            if (Array.isArray(x)) { // When doing xy([x, y]);
-                return yx(x[1], x[0]);
-            }
-            return yx(y, x); // When doing xy(x, y);
-        }
+        var facadeGroup = [];
+        var deathGroup = [];
 
-        const bounds = [xy(0, 0), xy(2500, 2500)];
-        // Random hash just so no curious player does /img/map.png
-        const image = L.imageOverlay('img/map_bb0a99b14432697bd43cd80f0bd2cd77.png', bounds).addTo(map);
-
-        map.setView(xy(545, 1493), 2);
-
-        map.on("mousemove", function (event) {
-            document.getElementById('coords').innerText = Math.round(event.latlng.lng)+":"+Math.round(event.latlng.lat);
-        });
 //         map.on("contextmenu", function (event) {
 //             var newMarker = new L.marker(event.latlng).addTo(map);
 //         });
@@ -263,36 +263,14 @@
 
         L.polygon([xy(590, 1379), xy(622, 1438), xy(607,1504), xy(577, 1529), xy(554, 1546), xy(537, 1494), xy(553, 1385)],
             {color: 'red', weight: 1}).on('click', function(e) {
-            // There event is event object
-            // there e.type === 'click'
-            // there e.lanlng === L.LatLng on map
-            // there e.target.getLatLngs() - your rectangle coordinates
-            // but e.target !== rect
             console.info(e);
         }).addTo(edraLayer);
 
         L.polygon([xy(609,1383), xy(585,1365), xy(582, 1321), xy(558, 1317), xy(564, 1292),
             xy(616, 1300), xy(653, 1369), xy(653, 1407), xy(622,1412)],{color:'blue', weight: 1}).addTo(moorvaLayer);
 
-    //    L.rectangle([xy(536, 1382), xy(597, 1550)], {color: 'blue', weight: 1}).on('click', function (e) {
-            // There event is event object
-            // there e.type === 'click'
-            // there e.lanlng === L.LatLng on map
-            // there e.target.getLatLngs() - your rectangle coordinates
-            // but e.target !== rect
-         //   console.info(e);
-     //   }).addTo(edraLayer);
 
-//         var drawnItems = new L.FeatureGroup();
-//         map.addLayer(drawnItems);
-//         var drawControl = new L.Control.Draw({
-//             edit: {
-//                 featureGroup: drawnItems
-//             }
-//         });
-//         map.addControl(drawControl);
-
-
+        var drawLayer = L.layerGroup([]).addTo(map);
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers.tree(null,
             {
@@ -329,32 +307,16 @@
                             {'label':'Other Perms', 'layer': otherPermLayer },
                         ]
                     },
-//                     {
-//                         'label':'Custom', selectAllCheckbox: true,
-//                         'children': [
-//                             {'label':'Drawn', 'layer':drawnItems}
-//                         ]
-//                     }
+                    {
+                        'label': 'Custom', selectAllCheckbox: true,
+                        'children': [
+                            {'label':'Draw', 'layer': drawLayer }
+                        ]
+                    },
                 ]
-            },
+            }).addTo(map);
 
-//             {
-//                 'label':'Draw layer',
-//                 'children' : [
-//                     {'label':'Draw Layer', layer:drawnItems}
-//                 ]
-//
-//             }
-//             "Facades " : facadeLayer,
-//             "Deaths ": deathLayer,
-//             'Buildings' : buildingLayer,
-//             'Tents': tentLayer,
-//             'Destroyed Buildings/Tents' : destroyedLayer,
-//             'Unfinished Buildings' : unfinishedLayer,
-//             'Signposts' : signpostLayer,
-//             'Other Perms': otherPermLayer
-        ).addTo(map);
-  // FeatureGroup is to store editable layers
+        // Edit
         map.pm.addControls({
             drawControls: true,
             editControls: true,
@@ -362,12 +324,24 @@
             customControls: true,
             oneBlock: false,
         });
-map.pm.setGlobalOptions({continueDrawing:false});
-        map.on('pm:drawend', function(e) {
-            console.log(e);
-          //  e.layer.options.color = '#000';
-   //         e.layer.addTo(drawnItems);
-    //        drawnItems.add(e);
+
+        map.pm.setGlobalOptions({continueDrawing:false, layerGroup: drawLayer});
+        map.pm.setPathOptions({
+            color: '#124240',
+            fillColor: 'white',
+            fillOpacity: 0.4,
         });
+        map.pm.Toolbar.createCustomControl({
+            name: 'Delete',
+            title: 'Delete All Drawn Layers',
+            block: 'edit',
+            onClick: function(){drawLayer.clearLayers();},
+            className: 'leaflet-pm-icon-trash'
+        });
+        map.on('pm:drawend', function(e) {
+            var data = drawLayer.toGeoJSON();
+            console.log(data);
+        });
+
     </script>
 @endsection
