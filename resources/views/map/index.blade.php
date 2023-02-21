@@ -446,10 +446,12 @@
             editControls: true,
             optionsControls: true,
             customControls: true,
-            oneBlock: false
+            oneBlock: false,
+            drawText: false // disabled until save works
         });
 
-        map.pm.setGlobalOptions({continueDrawing:false, layerGroup: drawLayer});
+
+        map.pm.setGlobalOptions({continueDrawing:false, layerGroup: drawLayer, snappable: false});
         map.pm.setPathOptions({
             color: '#124240',
             fillColor: 'white',

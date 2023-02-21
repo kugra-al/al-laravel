@@ -22,11 +22,8 @@
                             <td>{{ $layer->user->name }}</td>
                             <td>{{ $layer->name }}</td>
                             <td>
-
-                                    <button type="submit" class="btn btn-sm btn-success" onclick="loadLayerModal('show',{url:'{{ route('map.layers.show', $layer->id) }}'})">Load</button>
-
-
-                                    <button onclick="loadLayerModal('delete',{url:'{{ route('map.layers.destroy', $layer->id) }}'})" type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-success" onclick="loadLayerModal('show',{url:'{{ route('map.layers.show', $layer->id) }}'})">Load</button>
+                                @if($layer->user->id == Auth::user()->id)<button onclick="loadLayerModal('delete',{url:'{{ route('map.layers.destroy', $layer->id) }}'})" type="submit" class="btn btn-sm btn-danger">Delete</button>@endif
 
                             </td>
                         </tr>
