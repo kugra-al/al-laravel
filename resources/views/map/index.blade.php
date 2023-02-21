@@ -431,7 +431,7 @@
             optionsControls: true,
             customControls: true,
             oneBlock: false,
-            drawText: false // disabled until save works
+        //    drawText: false // disabled until save works
         });
 
 
@@ -498,8 +498,11 @@
                     geoJson.properties.options.radius = radius.toFixed(0);
                 }
             }
-
-
+            console.log(layer.options);
+            if(layer.options.text){
+                geoJson.properties.options.text = layer.options.text;
+                geoJson.properties.options.textMarker = true;
+            }
 
             if (layer instanceof L.Rectangle) {
                 geoJson.properties.type = "rectangle";
@@ -513,6 +516,9 @@
                 geoJson.properties.type = "polyline";
             } else if (layer instanceof L.Marker) {
                 geoJson.properties.type = "marker";
+            } else {
+                console.log('unknown type');
+                console.log(layer);
             }
 
 
@@ -551,10 +557,10 @@
             },
             pointToLayer: function(feature, latlng){
                 switch (feature.properties.type) {
-                    case "marker": return new L.Marker(latlng);
+                    case "marker": return new L.Marker(latlng, feature.properties.options);
                     case "circle": return new L.Circle(latlng, feature.properties.options);
                     case "circlemarker": return new L.CircleMarker(latlng, feature.properties.options);
-
+                   // case "textMarker": return new L.
                 }
             }
         });
