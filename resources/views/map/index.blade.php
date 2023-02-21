@@ -297,6 +297,7 @@
                     url = data.url;
                     successFunc = function(data) {
                         if (data.data) {
+                            drawLayer.clearLayers();
                             var jsonData = JSON.parse(data.data);
                             importGeoJSON(jsonData, drawLayer);
                             if (data.id)
@@ -462,7 +463,8 @@
                 name: 'Delete',
                 title: 'Delete All Drawn Layers',
                 block: 'edit',
-                onClick: function(){drawLayer.clearLayers();},
+                onClick: () => {drawLayer.clearLayers();},
+                toggle: false,
                 className: 'leaflet-pm-icon-trash'
             }
         );
@@ -471,7 +473,8 @@
                 name: 'Load',
                 title: 'Load drawn layer',
                 block: 'custom',
-                onClick: function() {loadLayerModal('load');},
+                onClick: () => {loadLayerModal('load');},
+                toggle: false,
                 className: 'leaflet-pm-icon-load'
             }
         );
@@ -480,28 +483,12 @@
                 name: 'Save',
                 title: 'Save drawn layer',
                 block: 'custom',
-                onClick: function() {loadLayerModal('save');},
+                onClick: () => {loadLayerModal('save');},
+                toggle: false,
                 className: 'leaflet-pm-icon-save'
             }
         );
-        var drawnShapesJson = [];
-        var tmp;
-        function updateDrawLayerData(e) {
-            console.log(e);
-            var layer = e.layer;
-            tmp = layer;
-            var options = layer.options;
-            console.log(layer);
 
-            drawnShapesJson.push({
-                shape:e.shape,
-                geoJSON:layer.toGeoJSON(),
-                options:options
-            });
-        }
-        map.on('pm:create', function(e) {
-            updateDrawLayerData(e);
-        });
 
 
     function generateGeoJson(layerToGen){
