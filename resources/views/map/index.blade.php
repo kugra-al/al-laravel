@@ -7,6 +7,25 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.1.0/dist/MarkerCluster.Default.css">
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.1.0/dist/leaflet.markercluster.js"></script>
+
+
+    <div class="container" style="max-width:90%">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+
+                        <div id='map'></div>
+
+                        <div id="coords"></div>
+
+            </div>
+        </div>
+    </div>
+    @include('perms.modal')
+    <script src="/js/L.Control.Layers.Tree.js"></script>
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+    <link rel="stylesheet" href="/css/L.Control.Layers.Tree.css">
 	<style>
 
 		.leaflet-container {
@@ -27,30 +46,9 @@
          background-image: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDE1IDE0Ij4KPHBhdGggZD0iTTEzLjkxNCA3LjI3M3EwLTAuMjczLTAuNDE0LTAuMjczaC04LjVxLTAuMzEyIDAtMC42NjggMC4xNjh0LTAuNTU5IDAuNDFsLTIuMjk3IDIuODM2cS0wLjE0MSAwLjE4Ny0wLjE0MSAwLjMxMiAwIDAuMjczIDAuNDE0IDAuMjczaDguNXEwLjMxMiAwIDAuNjcyLTAuMTcydDAuNTU1LTAuNDE0bDIuMjk3LTIuODM2cTAuMTQxLTAuMTcyIDAuMTQxLTAuMzA1ek01IDZoNnYtMS4yNXEwLTAuMzEyLTAuMjE5LTAuNTMxdC0wLjUzMS0wLjIxOWgtNC41cS0wLjMxMiAwLTAuNTMxLTAuMjE5dC0wLjIxOS0wLjUzMXYtMC41cTAtMC4zMTItMC4yMTktMC41MzF0LTAuNTMxLTAuMjE5aC0yLjVxLTAuMzEyIDAtMC41MzEgMC4yMTl0LTAuMjE5IDAuNTMxdjYuNjY0bDItMi40NjFxMC4zNDQtMC40MTQgMC45MDYtMC42ODR0MS4wOTQtMC4yN3pNMTQuOTE0IDcuMjczcTAgMC40ODQtMC4zNTkgMC45MzdsLTIuMzA1IDIuODM2cS0wLjMzNiAwLjQxNC0wLjkwNiAwLjY4NHQtMS4wOTQgMC4yN2gtOC41cS0wLjcxOSAwLTEuMjM0LTAuNTE2dC0wLjUxNi0xLjIzNHYtNy41cTAtMC43MTkgMC41MTYtMS4yMzR0MS4yMzQtMC41MTZoMi41cTAuNzE5IDAgMS4yMzQgMC41MTZ0MC41MTYgMS4yMzR2MC4yNWg0LjI1cTAuNzE5IDAgMS4yMzQgMC41MTZ0MC41MTYgMS4yMzR2MS4yNWgxLjVxMC40MjIgMCAwLjc3MyAwLjE5MXQwLjUyMyAwLjU1MXEwLjExNyAwLjI1IDAuMTE3IDAuNTMxeiI+PC9wYXRoPgo8L3N2Zz4K);
         }
       #coords:before {content: "Coords: "}
+      .pm-textarea { padding-left: 3px; }
+      .pm-textarea:focus { padding-left: 7px; }
 	</style>
-
-    <div class="container" style="max-width:90%">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">{{ __('Map') }}</div>
-
-                    <div class="card-body">
-                        <div id='map'></div>
-
-                        <div id="coords"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @include('perms.modal')
-    <script src="/js/L.Control.Layers.Tree.js"></script>
-    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
-
-    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
-    <link rel="stylesheet" href="/css/L.Control.Layers.Tree.css">
-
     <script>
 
         const map = L.map('map', {
@@ -276,34 +274,84 @@
         L.polygon([xy(609,1383), xy(585,1365), xy(582, 1321), xy(558, 1317), xy(564, 1292),
             xy(616, 1300), xy(653, 1369), xy(653, 1407), xy(622,1412)],{color:'blue', weight: 1}).addTo(moorvaLayer);
 
-        function loadLayerModal(type) {
+        function loadLayerModal(type, data = {}) {
             var modal = $('#dataModal');
+            var method = 'GET';
+            var url = '{{ route('map.layers.index') }}';
+            var successFunc = null;
+            var send = {};
             switch(type) {
                 case 'load' :
                     title = 'load';
-                    url = '/map/modal/load';
+                    url = '{{ route('map.layers.index') }}';
                     break;
                 case 'save' :
                     title = 'save';
-                    url = '/map/modal/save';
+                    url = '{{ route('map.layers.create') }}';
+//
+                    break;
+
+                case 'show' :
+                    url = data.url;
+                    successFunc = function(data) {
+                        if (data.data) {
+                            drawLayer = L.geoJSON(JSON.parse(data.data)).addTo(map);
+                            $('#dataModal').modal('hide');
+                        }
+                    }
+                    break;
+                case 'delete' :
+                    url = data.url;
+                    method = 'DELETE';
+                    successFunc = function(data) {
+                        $(modal).modal('hide');
+                        loadLayerModal('load');
+                    }
+                    break;
+
+                case 'store' :
+                    var fg = L.featureGroup();
+                    drawLayer.eachLayer((layer)=>{
+                        //if(layer instanceof L.Path || layer instanceof L.Marker){
+                            console.log(layer);
+                            fg.addLayer(layer);
+                    // }
+                    });
+
+                    send = {
+                        name: data.name,
+                        layer: JSON.stringify(fg.toGeoJSON())
+                    };
+                    method = 'POST';
+                    successFunc = function(data) {
+                        $(modal).modal('hide');
+                    }
                     break;
                 default :
-                    alert('unknown type');
+                    alert('unknown type: '+type);
                     return;
             }
+
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                 }
             });
             $.ajax({
-                type: 'GET',
+                type: method,
                 url: url,
                 dataType: 'json',
+                data: send,
                 success: function (data) {
-                    $(modal).modal();
-                    $(modal).find('.modal-title').text(title);
-                    $(modal).find('.modal-body').html(data.html);
+                    console.log(data);
+                    if (!successFunc) {
+                        $(modal).modal();
+                        $(modal).find('.modal-title').text(title);
+                        $(modal).find('.modal-body').html(data.html);
+                    } else {
+                        successFunc(data);
+                    }
                 },
                 error: function (data) {
                     alert('There was an error (see console for details)');
@@ -315,67 +363,9 @@
 
         function saveDrawnLayer() {
             event.preventDefault();
-            var fg = L.featureGroup();
-            drawLayer.eachLayer((layer)=>{
-                //if(layer instanceof L.Path || layer instanceof L.Marker){
-                    console.log(layer);
-                    fg.addLayer(layer);
-               // }
-            });
-
-            var send = {
-                name: $(event.target).find("[name=name]").val(),
-                layer: JSON.stringify(fg.toGeoJSON())
-            };
-            console.log(send);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('map.layer.save') }}',
-                dataType: 'json',
-                data: send,
-                success: function (data) {
-                    console.log( data );
-                    $('#dataModal').modal('hide');
-                },
-                error: function (data) {
-                    alert('There was an error (see console for details)');
-                    console.log('error');
-                    console.log(data);
-                }
-            });
+            var name = $(event.target).find('[name=name]').val();
+            loadLayerModal('store',{name:name,url:'{{ route('map.layers.store') }}'});
         }
-
-        function loadDrawnLayer(id) {
-            event.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('map.layer.load') }}',
-                dataType: 'json',
-                data: {id: id},
-                success: function (data) {
-                    console.log( data );
-                    if (data.data)
-                        drawLayer = L.geoJSON(JSON.parse(data.data)).addTo(map);
-                    $('#dataModal').modal('hide');
-                },
-                error: function (data) {
-                    alert('There was an error (see console for details)');
-                    console.log('error');
-                    console.log(data);
-                }
-            });
-        }
-
 
         var drawLayer = L.layerGroup([]).addTo(map);
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
@@ -468,10 +458,17 @@
                 className: 'leaflet-pm-icon-save'
             }
         );
-        var drawnShapes = [];
+        var drawnShapesJson = [];
+        var tmp;
         function updateDrawLayerData(e) {
             console.log(e);
-            drawnShapes.push(p);
+            var layer = e.layer;
+            tmp = layer;
+            console.log(layer);
+            drawnShapesJson.push({
+                instance:layer.constructor.name,
+                data:layer.toGeoJSON()}
+            );
         }
         map.on('pm:create', function(e) {
             updateDrawLayerData(e);
