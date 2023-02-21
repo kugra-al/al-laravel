@@ -31,20 +31,19 @@ class MapController extends Controller
         ];
         return response()->json(["html"=>view('map.layers.index',['layers'=>$layers])->render()]);
     }
-    // nowork
+
     public function edit($id)
     {
-        dd($id);
-        $layers = MapLayer::where('user_id',Auth::user()->id)->get();
-        return response()->json(["html"=>view('map.modals.save',['layers'=>$layers])->render()]);
+        $layer = MapLayer::find((int)$id);
+        return response()->json(["html"=>view('map.layers.edit',['layer'=>$layer])->render()]);
     }
 
     public function create()
     {
         if (request()->get('id'))
             return $this->edit(request()->get('id'));
-
-        return response()->json(["html"=>view('map.layers.create')->render()]);
+        $name = request()->get('name');
+        return response()->json(["html"=>view('map.layers.create',['name'=>$name])->render()]);
     }
 
     // need checks
@@ -60,6 +59,22 @@ class MapController extends Controller
         return response()->json(['name'=>$name,'layer'=>$layer]);
     }
 
+    public function update() {
+        $id = (int)request()->get('id');
+        $layer = MapLayer::find($id);
+        if ($layer) {
+            if ($layer->user_id == Auth::user()->id) {
+                $layer->name = request()->get('name');
+                $layer->data = request()->get('layer');
+                $layer->save();
+                return response()->json(['id'=>$id],200);
+            }
+            return response()->json(['id'=>$id],403);
+        }
+        return response()->json(['id'=>$id,'layer'=>$layer],404);
+    }
+
+
     public function destroy($id)
     {
         $layer = MapLayer::find($id);
@@ -71,6 +86,9 @@ class MapController extends Controller
     }
 
     public function show($id) {
-        return response()->json(MapLayer::find($id),200);
+        $layer = MapLayer::find($id);
+        if ($layer->user_id != Auth::user()->id)
+            unset($layer->id);
+        return response()->json($layer,200);
     }
 }

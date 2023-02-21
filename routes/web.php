@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth','can:access items']], function() {
     Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
     Route::resource('/map/layers', App\Http\Controllers\MapController::class)->names([
         'index' => 'map.layers.index',
-
+        'update' => 'map.layers.update',
         'edit' => 'map.layers.edit',
         'show' => 'map.layers.show',
         'create' => 'map.layers.create',

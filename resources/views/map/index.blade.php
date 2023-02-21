@@ -50,7 +50,7 @@
       .pm-textarea:focus { padding-left: 7px; }
 	</style>
     <script>
-
+        // Map setup
         const map = L.map('map', {
             crs: L.CRS.Simple,
             minZoom: -2,
@@ -74,7 +74,6 @@
         map.on("mousemove", function (event) {
             document.getElementById('coords').innerText = Math.round(event.latlng.lng)+":"+Math.round(event.latlng.lat);
         });
-
 
         // Icons
         var facadeIcon = new L.Icon({
@@ -126,11 +125,8 @@
         var facadeGroup = [];
         var deathGroup = [];
 
-//         map.on("contextmenu", function (event) {
-//             var newMarker = new L.marker(event.latlng).addTo(map);
-//         });
 
-        // y is off by 1 - need new map image
+        // load in overlays - todo load via api
         var overlays = {
             facades:
                 [
@@ -167,6 +163,8 @@
             @endif
         };
 
+        // Setup overlays
+        // facades
         for(i = 0; i < overlays.facades.length; i++) {
             var facade = overlays.facades[i];
             var marker = L.marker(xy(facade.coords[0], facade.coords[1]), {title: facade.title, icon: facadeIcon, data: {destination: facade.destination} });
@@ -186,6 +184,7 @@
             );
             facadeGroup.push(marker);
         }
+        // Deaths
         var deathLayer = L.markerClusterGroup();
         for(i = 0; i < overlays.deaths.length; i++) {
             var death = overlays.deaths[i];
@@ -202,6 +201,7 @@
             deathLayer.addLayer(marker);
         }
 
+        // Perms
         var buildingLayer = L.markerClusterGroup();
         var signpostLayer = L.markerClusterGroup();
         var destroyedLayer = L.markerClusterGroup();
@@ -265,7 +265,7 @@
                 }
             }
         }
-
+        // Static regions
         L.polygon([xy(590, 1379), xy(622, 1438), xy(607,1504), xy(577, 1529), xy(554, 1546), xy(537, 1494), xy(553, 1385)],
             {color: 'red', weight: 1}).on('click', function(e) {
             console.info(e);
@@ -274,6 +274,7 @@
         L.polygon([xy(609,1383), xy(585,1365), xy(582, 1321), xy(558, 1317), xy(564, 1292),
             xy(616, 1300), xy(653, 1369), xy(653, 1407), xy(622,1412)],{color:'blue', weight: 1}).addTo(moorvaLayer);
 
+        // Layer management
         function loadLayerModal(type, data = {}) {
             var modal = $('#dataModal');
             var method = 'GET';
@@ -288,6 +289,7 @@
                 case 'save' :
                     title = 'save';
                     url = '{{ route('map.layers.create') }}';
+                    send = currentDrawLayer;
 //
                     break;
 
@@ -295,7 +297,12 @@
                     url = data.url;
                     successFunc = function(data) {
                         if (data.data) {
-                            drawLayer = L.geoJSON(JSON.parse(data.data)).addTo(map);
+                            var jsonData = JSON.parse(data.data);
+                            importGeoJSON(jsonData, drawLayer);
+                            if (data.id)
+                                currentDrawLayer.id = data.id;
+                            currentDrawLayer.name = data.name;
+
                             $('#dataModal').modal('hide');
                         }
                     }
@@ -310,19 +317,23 @@
                     break;
 
                 case 'store' :
-                    var fg = L.featureGroup();
-                    drawLayer.eachLayer((layer)=>{
-                        //if(layer instanceof L.Path || layer instanceof L.Marker){
-                            console.log(layer);
-                            fg.addLayer(layer);
-                    // }
-                    });
-
                     send = {
                         name: data.name,
-                        layer: JSON.stringify(fg.toGeoJSON())
+                        layer: generateGeoJson(drawLayer)
                     };
                     method = 'POST';
+                    successFunc = function(data) {
+                        $(modal).modal('hide');
+                    }
+                    break;
+                case 'update' :
+                    send = {
+                        name: data.name,
+                        id: data.id,
+                        layer: generateGeoJson(drawLayer)
+                    };
+                    url = data.url;
+                    method = 'PATCH';
                     successFunc = function(data) {
                         $(modal).modal('hide');
                     }
@@ -362,11 +373,27 @@
         }
 
         function saveDrawnLayer() {
+        // doesn't save text, circle, circle marker, rectangle
             event.preventDefault();
             var name = $(event.target).find('[name=name]').val();
             loadLayerModal('store',{name:name,url:'{{ route('map.layers.store') }}'});
         }
 
+        function updateDrawnLayer() {
+            event.preventDefault();
+             var name = $(event.target).find('[name=name]').val();
+             var id = $(event.target).find('[name=id]').val();
+            loadLayerModal('update',
+                {
+                    id: id,
+                    name:name,
+                    url:'{{ route('map.layers.index') }}'+"/update/"
+                }
+            );
+        }
+
+        var currentDrawLayer = {};
+        // Draw layers and add controls
         var drawLayer = L.layerGroup([]).addTo(map);
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers.tree(null,
@@ -413,16 +440,13 @@
                 ]
             }).addTo(map);
 
-        // Edit
+        // Add Edit controls
         map.pm.addControls({
             drawControls: true,
             editControls: true,
             optionsControls: true,
             customControls: true,
-            oneBlock: false,
-//             positions: {
-//                 custom: 'bottomright'
-//             }
+            oneBlock: false
         });
 
         map.pm.setGlobalOptions({continueDrawing:false, layerGroup: drawLayer});
@@ -464,16 +488,134 @@
             console.log(e);
             var layer = e.layer;
             tmp = layer;
+            var options = layer.options;
             console.log(layer);
+
             drawnShapesJson.push({
-                instance:layer.constructor.name,
-                data:layer.toGeoJSON()}
-            );
+                shape:e.shape,
+                geoJSON:layer.toGeoJSON(),
+                options:options
+            });
         }
         map.on('pm:create', function(e) {
             updateDrawLayerData(e);
         });
 
 
+    function generateGeoJson(layerToGen){
+        var fg = L.featureGroup();
+        var layers = findLayers(layerToGen);
+
+        var geo = {
+            type: "FeatureCollection",
+            features: [],
+        };
+        layers.forEach(function(layer){
+            var geoJson = JSON.parse(JSON.stringify(layer.toGeoJSON()));
+            if(!geoJson.properties){
+                geoJson.properties = {};
+            }
+
+            geoJson.properties.options = JSON.parse(JSON.stringify(layer.options));
+
+            if(layer.options.radius){
+                var radius =  parseFloat(layer.options.radius);
+                if(radius % 1 !== 0) {
+                    geoJson.properties.options.radius = radius.toFixed(6);
+                }else{
+                    geoJson.properties.options.radius = radius.toFixed(0);
+                }
+            }
+
+
+
+            if (layer instanceof L.Rectangle) {
+                geoJson.properties.type = "rectangle";
+            } else if (layer instanceof L.Circle) {
+                geoJson.properties.type = "circle";
+            } else if (layer instanceof L.CircleMarker) {
+                geoJson.properties.type = "circlemarker";
+            } else if (layer instanceof L.Polygon) {
+                geoJson.properties.type = "polygon";
+            } else if (layer instanceof L.Polyline) {
+                geoJson.properties.type = "polyline";
+            } else if (layer instanceof L.Marker) {
+                geoJson.properties.type = "marker";
+            }
+
+
+            geo.features.push(geoJson);
+        });
+        console.log(JSON.stringify(geo));
+        return JSON.stringify(geo);
+    }
+
+    function findLayers(layerToGen) {
+        var layers = [];
+        layerToGen.eachLayer(layer => {
+            if (
+                layer instanceof L.Polyline ||
+                layer instanceof L.Marker ||
+                layer instanceof L.Circle ||
+                layer instanceof L.CircleMarker
+            ) {
+                layers.push(layer);
+            }
+        });
+
+        // filter out layers that don't have the leaflet-geoman instance
+        layers = layers.filter(layer => !!layer.pm);
+
+        // filter out everything that's leaflet-geoman specific temporary stuff
+        layers = layers.filter(layer => !layer._pmTempLayer);
+
+        return layers;
+    }
+
+    function importGeoJSON(feature, layerToImport){
+        var geoLayer = L.geoJSON(feature, {
+            style: function (feature) {
+                return feature.properties.options;
+            },
+            pointToLayer: function(feature, latlng){
+                switch (feature.properties.type) {
+                    case "marker": return new L.Marker(latlng);
+                    case "circle": return new L.Circle(latlng, feature.properties.options);
+                    case "circlemarker": return new L.CircleMarker(latlng, feature.properties.options);
+
+                }
+            }
+        });
+
+        geoLayer.getLayers().forEach((layer) => {
+            if (layer._latlng) {
+                var latlng = layer.getLatLng();
+            } else {
+                var latlng = layer.getLatLngs();
+            }
+            switch (layer.feature.properties.type) {
+                case "rectangle":
+                    new L.Rectangle(latlng,  layer.options).addTo(layerToImport);
+                    break;
+                case "circle":
+                        console.log(layer.options)
+                    new L.Circle(latlng, layer.options).addTo(layerToImport);
+                    break;
+                case "polygon":
+                    new L.Polygon(latlng, layer.options).addTo(layerToImport);
+                    break;
+                case "polyline":
+                    new L.Polyline(latlng, layer.options).addTo(layerToImport);
+                    break;
+                case "marker":
+                    new L.Marker(latlng, layer.options).addTo(layerToImport);
+                    break;
+                case "circlemarker":
+                    new L.CircleMarker(latlng, layer.options).addTo(layerToImport);
+                    break;
+
+            }
+        });
+    }
     </script>
 @endsection
