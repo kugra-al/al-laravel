@@ -208,8 +208,6 @@
         var unfinishedLayer = L.markerClusterGroup();
         var otherPermLayer = L.markerClusterGroup();
         var tentLayer = L.markerClusterGroup();
-        var edraLayer = L.markerClusterGroup();
-        var moorvaLayer = L.markerClusterGroup();
         for(i = 0; i < overlays.perms.length; i++) {
             var perm = overlays.perms[i];
             var options = {title: perm.title, icon: buildingIcon};
@@ -265,14 +263,6 @@
                 }
             }
         }
-        // Static regions
-        L.polygon([xy(590, 1379), xy(622, 1438), xy(607,1504), xy(577, 1529), xy(554, 1546), xy(537, 1494), xy(553, 1385)],
-            {color: 'red', weight: 1}).on('click', function(e) {
-            console.info(e);
-        }).addTo(edraLayer);
-
-        L.polygon([xy(609,1383), xy(585,1365), xy(582, 1321), xy(558, 1317), xy(564, 1292),
-            xy(616, 1300), xy(653, 1369), xy(653, 1407), xy(622,1412)],{color:'blue', weight: 1}).addTo(moorvaLayer);
 
         // Layer management
         function loadLayerModal(type, data = {}) {
@@ -406,13 +396,6 @@
                         'label': 'Areas', selectAllCheckbox: true,
                         'children': [
                             {'label':'Facades', 'layer': facadeLayer },
-                            {
-                                'label':'Regions', selectAllCheckbox: true,
-                                'children': [
-                                    {'label':'Kingdom of Edra','layer': edraLayer },
-                                    {'label':'Moorva','layer': moorvaLayer }
-                                ]
-                            }
                         ]
                     },
                     {
