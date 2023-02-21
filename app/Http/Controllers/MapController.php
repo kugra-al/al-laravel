@@ -26,8 +26,8 @@ class MapController extends Controller
     public function ajaxIndex() {
         $layerCollection = MapLayer::with('user')->get();
         $layers = [
-            'my layers'=>$layerCollection->where('user_id',Auth::user()->id),
-            'other layers'=>$layerCollection->where('user_id','!=',Auth::user()->id)
+            'Your layers'=>$layerCollection->where('user_id',Auth::user()->id),
+            'Shared layers'=>$layerCollection->where('user_id','!=',Auth::user()->id)
         ];
         return response()->json(["html"=>view('map.layers.index',['layers'=>$layers])->render()]);
     }

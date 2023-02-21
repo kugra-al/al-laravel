@@ -6,7 +6,7 @@
                     @csrf
                     <input name="id" type="hidden" value="{{ $layer->id }}">
                     <input name="name" class="form-control" type="text" value="{{ $layer->name }}">
-                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="submit" class="btn btn-success">Save Existing Layer</button>
                 </form>
             @endif
         </div>
