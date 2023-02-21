@@ -557,7 +557,10 @@
             },
             pointToLayer: function(feature, latlng){
                 switch (feature.properties.type) {
-                    case "marker": return new L.Marker(latlng, feature.properties.options);
+                    case "marker":
+                        if (feature.properties.options.textMarker)
+                            return new L.Marker(latlng, feature.properties.options);
+                        return new L.Marker(latlng);
                     case "circle": return new L.Circle(latlng, feature.properties.options);
                     case "circlemarker": return new L.CircleMarker(latlng, feature.properties.options);
                    // case "textMarker": return new L.
