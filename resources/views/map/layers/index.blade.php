@@ -5,7 +5,7 @@
                         <div class="col-sm-12">
                     @if($collection->count())
                         <h5>{{ $name }}</h5>
-                        <div style="height:400px; overflow: scroll">
+                        <div style="max-height:400px; overflow: auto">
                             <table class="table task-table">
                                 <thead>
                                     <th>ID</th>
