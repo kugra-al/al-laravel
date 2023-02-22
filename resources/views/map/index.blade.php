@@ -681,15 +681,14 @@
     window.addEventListener('load',function() {
         $('#drawColorControls').fadeIn();
         var pickers = {
-            'fillColorPicker':[globalFillColor,'fillColor'],
-            'lineColorPicker':[globalLineColor,'color']
+            'fillColorPicker':globalFillColor,
+            'lineColorPicker':globalLineColor
         };
         Object.entries(pickers).forEach(entry => {
             const [key, value] = entry;
             console.log(key);
             $("#"+key).spectrum({
-                color: value[0],
-                pickerType: value[1],
+                color: value,
                 showPalette: true,
                 showSelectionPalette: true,
                 localStorageKey: "spectrum.map",
