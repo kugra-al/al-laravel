@@ -12,11 +12,24 @@
     <div class="container" style="max-width:90%">
         <div class="row justify-content-center">
             <div class="col-md-12">
-
-                        <div id='map'></div>
-
-                        <div id="coords"></div>
-
+                <div id='map'></div>
+                <div id="coords"></div>
+                <div class="container" id="drawColorControls" style="display:none">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Draw Fill Colour: </label>
+                            <input id='fillColorPicker' />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Draw Line Colour: </label>
+                            <input id='lineColorPicker' />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Draw Opacity</label>
+                            <input id="opacityPicker" class="" type="range" min="0.1" max="1" step="0.1" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -27,6 +40,8 @@
     <link rel="stylesheet" href="/css/leaflet-geoman.css" />
     <link rel="stylesheet" href="/css/L.Control.Layers.Tree.css"/>
     <link rel="stylesheet" href="/css/leaflet-overrides.css" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
 
     <script>
         // Map setup
@@ -412,13 +427,15 @@
             oneBlock: false,
             //drawText: false // disabled until save works
         });
-
+        var globalFillColor = 'white';
+        var globalLineColor = '#124240';
+        var globalFillOpacity = 0.4;
 
         map.pm.setGlobalOptions({continueDrawing:false, layerGroup: drawLayer, snappable: false});
         map.pm.setPathOptions({
-            color: '#124240',
-            fillColor: 'white',
-            fillOpacity: 0.4,
+            color: globalLineColor,
+            fillColor: globalFillColor,
+            fillOpacity: globalFillOpacity,
         });
         map.pm.Toolbar.createCustomControl(
             {
@@ -450,6 +467,7 @@
                 className: 'leaflet-pm-icon-save'
             }
         );
+
 
 
 
@@ -577,5 +595,35 @@
             }
         });
     }
+    function updateDrawPathControls() {
+        map.pm.setPathOptions({
+            color: globalLineColor,
+            fillColor: globalFillColor,
+            fillOpacity: globalFillOpacity,
+        });
+    }
+    window.addEventListener('load',function() {
+        $('#drawColorControls').fadeIn();
+        $("#fillColorPicker").spectrum({
+            color: globalFillColor,
+            change:function(c){
+                globalFillColor = c.toHexString();
+                updateDrawPathControls();
+            }
+        });
+        $("#lineColorPicker").spectrum({
+            color: globalLineColor,
+            change:function(c){
+                globalLineColor = c.toHexString();
+                updateDrawPathControls();
+            }
+        });
+        $("#opacityPicker").val(globalFillOpacity);
+        $('#opacityPicker').on('change',function(e) {
+            globalFillOpacity = e.target.value;
+            updateDrawPathControls();
+//            console.log(e.target.value);
+        });
+    });
     </script>
 @endsection
