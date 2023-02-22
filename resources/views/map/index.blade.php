@@ -43,8 +43,8 @@
     <link rel="stylesheet" href="/css/leaflet-geoman.css" />
     <link rel="stylesheet" href="/css/L.Control.Layers.Tree.css"/>
     <link rel="stylesheet" href="/css/leaflet-overrides.css" />
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css">
 
     <script>
         // Map setup
@@ -614,6 +614,10 @@
             shape.on('pm:edit',(e)=>{
                 shapeSelected(e);
             });
+            shape.on('click', (e)=>{
+            console.log(e.sourceTarget);
+                shapeSelected(e.target);
+            });
             console.log(shape);
         });
     }
@@ -622,9 +626,28 @@
         e.layer.on('pm:edit',(shape)=>{
             shapeSelected(shape);
         });
+        e.layer.on('click', (e)=>{
+            shapeSelected(e.target);
+        });
     });
     var selectedShape = null;
     function shapeSelected(shape) {
+        if (!shape.shape) {
+            if (shape instanceof L.Rectangle) {
+                shape.shape = 'Rectangle';
+            } else if (shape instanceof L.Circle) {
+                shape.shape = 'Circle';
+            } else if (shape instanceof L.Market) {
+                shape.shape = 'Marker';
+            } else if (shape instanceof L.Polygon) {
+                shape.shape = 'Polygon';
+            } else if (shape instanceof L.Polyline) {
+                shape.shape = 'Polyline';
+            } else if (shape instanceof L.Marker) {
+                shape.shape = 'Marker';
+            }
+        }
+
         if (shape.shape == "Text" || shape.shape == "Marker") {
             $('#selectedShape').text('not-supported');
             selectedShape = null;
@@ -632,9 +655,14 @@
         }
         $('#selectedShape').text(shape.shape);
         selectedShape = shape;
-        $("#fillColorPicker").spectrum("set", selectedShape.layer.options.fillColor);
-        $("#lineColorPicker").spectrum("set", selectedShape.layer.options.color);
-        $("#opacityPicker").val(selectedShape.layer.options.fillOpacity);
+        var options;
+        if (selectedShape.options)
+            options = selectedShape.options;
+        else
+            options = selectedShape.layer.options;
+        $("#fillColorPicker").spectrum("set", options.fillColor);
+        $("#lineColorPicker").spectrum("set", options.color);
+        $("#opacityPicker").val(options.fillOpacity);
         console.log("Shape selected");
         console.log(shape);
     }
@@ -651,10 +679,20 @@
         $('#drawColorControls').fadeIn();
         $("#fillColorPicker").spectrum({
             color: globalFillColor,
+            showPalette: true,
+            showSelectionPalette: true,
+            localStorageKey: "spectrum.map",
+            hideAfterPaletteSelect:true,
+            showInitial: true,
+            showInput: true,
+            showButtons: false,
+            preferredFormat: "hex",
             change:function(c){
                 if (selectedShape) {
-                   // console.log(selectedShape);
-                    selectedShape.layer.setStyle({fillColor: c.toHexString()});
+                    if (selectedShape.layer)
+                        selectedShape.layer.setStyle({fillColor: c.toHexString()});
+                    else
+                        selectedShape.setStyle({fillColor: c.toHexString()});
                 } else {
                     globalFillColor = c.toHexString();
                     updateDrawPathControls();
@@ -663,9 +701,20 @@
         });
         $("#lineColorPicker").spectrum({
             color: globalLineColor,
+            showPalette: true,
+            showSelectionPalette: true,
+            localStorageKey: "spectrum.map",
+            hideAfterPaletteSelect:true,
+            showInitial: true,
+            showInput: true,
+            showButtons: false,
+            preferredFormat: "hex",
             change:function(c){
                 if (selectedShape) {
-                    selectedShape.layer.setStyle({color: c.toHexString()});
+                    if (selectedShape.layer)
+                        selectedShape.layer.setStyle({color: c.toHexString()});
+                    else
+                        selectedShape.setStyle({color: c.toHexString()});
                 } else {
                     globalLineColor = c.toHexString();
                     updateDrawPathControls();
@@ -675,7 +724,10 @@
         $("#opacityPicker").val(globalFillOpacity);
         $('#opacityPicker').on('change',function(e) {
             if (selectedShape) {
-                selectedShape.layer.setStyle({fillOpacity: e.target.value});
+                if (selectedShape.layer)
+                    selectedShape.layer.setStyle({fillOpacity: e.target.value});
+                else
+                    selectedShape.setStyle({fillOpacity: e.target.value});
             } else {
                 globalFillOpacity = e.target.value;
                 updateDrawPathControls();
