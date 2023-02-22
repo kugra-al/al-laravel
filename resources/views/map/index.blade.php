@@ -632,7 +632,6 @@
         $('#drawColorControls').fadeIn();
         $("#fillColorPicker").spectrum({
             color: globalFillColor,
-            showAlpha: true,
             change:function(c){
                 if (selectedShape) {
                    // console.log(selectedShape);
