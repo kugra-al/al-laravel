@@ -632,23 +632,19 @@
     });
     var selectedShape = null;
     function shapeSelected(shape) {
-        if (!shape) {
-            console.log(shape);
-            return;
-        }
         if (!shape.shape) {
             if (shape instanceof L.Rectangle) {
                 shape.shape = 'Rectangle';
             } else if (shape instanceof L.Circle) {
                 shape.shape = 'Circle';
-            } else if (shape instanceof L.Market) {
+            } else if (shape instanceof L.Marker) {
                 shape.shape = 'Marker';
             } else if (shape instanceof L.Polygon) {
                 shape.shape = 'Polygon';
             } else if (shape instanceof L.Polyline) {
                 shape.shape = 'Polyline';
-            } else if (shape instanceof L.Marker) {
-                shape.shape = 'Marker';
+            } else if (shape instanceof L.Text) {
+                shape.shape = 'Text';
             }
         }
 
