@@ -680,49 +680,37 @@
     }
     window.addEventListener('load',function() {
         $('#drawColorControls').fadeIn();
-        $("#fillColorPicker").spectrum({
-            color: globalFillColor,
-            showPalette: true,
-            showSelectionPalette: true,
-            localStorageKey: "spectrum.map",
-            hideAfterPaletteSelect:true,
-            showInitial: true,
-            showInput: true,
-            showButtons: false,
-            preferredFormat: "hex",
-            change:function(c){
-                if (selectedShape) {
-                    if (selectedShape.layer)
-                        selectedShape.layer.setStyle({fillColor: c.toHexString()});
-                    else
-                        selectedShape.setStyle({fillColor: c.toHexString()});
-                } else {
-                    globalFillColor = c.toHexString();
-                    updateDrawPathControls();
+        var pickers = {
+            'fillColorPicker':[globalFillColor,'fillColor'],
+            'lineColorPicker':[globalLineColor,'color']
+        };
+        Object.entries(pickers).forEach(entry => {
+            const [key, value] = entry;
+            console.log(key);
+            $("#"+key).spectrum({
+                color: value[0],
+                pickerType: value[1],
+                showPalette: true,
+                showSelectionPalette: true,
+                localStorageKey: "spectrum.map",
+                hideAfterPaletteSelect:true,
+                showInitial: true,
+                showInput: true,
+                showButtons: false,
+                preferredFormat: "hex",
+                change:function(c){
+                    if (selectedShape) {
+                        var type = this.pickerType;
+                        if (selectedShape.layer)
+                            selectedShape.layer.setStyle({type: c.toHexString()});
+                        else
+                            selectedShape.setStyle({type: c.toHexString()});
+                    } else {
+                        globalFillColor = c.toHexString();
+                        updateDrawPathControls();
+                    }
                 }
-            }
-        });
-        $("#lineColorPicker").spectrum({
-            color: globalLineColor,
-            showPalette: true,
-            showSelectionPalette: true,
-            localStorageKey: "spectrum.map",
-            hideAfterPaletteSelect:true,
-            showInitial: true,
-            showInput: true,
-            showButtons: false,
-            preferredFormat: "hex",
-            change:function(c){
-                if (selectedShape) {
-                    if (selectedShape.layer)
-                        selectedShape.layer.setStyle({color: c.toHexString()});
-                    else
-                        selectedShape.setStyle({color: c.toHexString()});
-                } else {
-                    globalLineColor = c.toHexString();
-                    updateDrawPathControls();
-                }
-            }
+            });
         });
         $("#opacityPicker").val(globalFillOpacity);
         $('#opacityPicker').on('change',function(e) {
@@ -735,7 +723,6 @@
                 globalFillOpacity = e.target.value;
                 updateDrawPathControls();
             }
-//            console.log(e.target.value);
         });
     });
     </script>
