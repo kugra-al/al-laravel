@@ -387,6 +387,7 @@
                     {
                         id: id,
                         name:name,
+                        desc:desc,
                         url:'{{ route('map.layers.index') }}'+"/update/"
                     }
                 );
