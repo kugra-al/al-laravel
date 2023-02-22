@@ -46,7 +46,6 @@ class MapController extends Controller
         return response()->json(["html"=>view('map.layers.create',['name'=>$name])->render()]);
     }
 
-    // need checks
     public function store()
     {
         $name = request()->get('name');

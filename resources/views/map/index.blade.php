@@ -371,13 +371,20 @@
             event.preventDefault();
              var name = $(event.target).find('[name=name]').val();
              var id = $(event.target).find('[name=id]').val();
-            loadLayerModal('update',
-                {
-                    id: id,
-                    name:name,
-                    url:'{{ route('map.layers.index') }}'+"/update/"
-                }
-            );
+             var clicker = $(event.target).find('button[type=submit]:focus');
+             console.log("clicker");
+             console.log($(clicker).val());
+             if ($(clicker).val() == "new") {
+                loadLayerModal('store',{name:name,url:'{{ route('map.layers.store') }}'});
+            } else {
+                loadLayerModal('update',
+                    {
+                        id: id,
+                        name:name,
+                        url:'{{ route('map.layers.index') }}'+"/update/"
+                    }
+                );
+            }
         }
 
         var currentDrawLayer = {};
