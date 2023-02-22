@@ -14,20 +14,23 @@
             <div class="col-md-12">
                 <div id='map'></div>
                 <div id="coords"></div>
-                <div class="container" id="drawColorControls" style="display:none">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Draw Fill Colour: </label>
-                            <input id='fillColorPicker' />
-                        </div>
-                        <div class="col-sm-4">
-                            <label>Draw Line Colour: </label>
-                            <input id='lineColorPicker' />
-                        </div>
-                        <div class="col-sm-4">
-                            <label>Draw Opacity</label>
-                            <input id="opacityPicker" class="" type="range" min="0.1" max="1" step="0.1" />
-                        </div>
+            </div>
+            <div class="container" id="drawColorControls" style="display:none">
+                <div class="row">
+                    <div class="col-sm-4"><strong>Draw Colors</strong> <span>Selected: </span><span id="selectedShape">none</span></div>
+                    <div class="col-sm-2">
+                        <label>Fill Colour: </label>
+                        <input id='fillColorPicker' />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>Line Colour: </label>
+                        <input id='lineColorPicker' />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>Fill Opacity</label>
+                        <input id="opacityPicker" class="" type="range" min="0.1" max="1" step="0.1" />
+                    </div>
+                    <div class="col-sm-2">
                     </div>
                 </div>
             </div>
@@ -571,30 +574,53 @@
             } else {
                 var latlng = layer.getLatLngs();
             }
+            var shape;
             switch (layer.feature.properties.type) {
                 case "rectangle":
-                    new L.Rectangle(latlng,  layer.options).addTo(layerToImport);
+                    shape = new L.Rectangle(latlng,  layer.options).addTo(layerToImport);
                     break;
                 case "circle":
                         console.log(layer.options)
-                    new L.Circle(latlng, layer.options).addTo(layerToImport);
+                    shape = new L.Circle(latlng, layer.options).addTo(layerToImport);
                     break;
                 case "polygon":
-                    new L.Polygon(latlng, layer.options).addTo(layerToImport);
+                    shape = new L.Polygon(latlng, layer.options).addTo(layerToImport);
                     break;
                 case "polyline":
-                    new L.Polyline(latlng, layer.options).addTo(layerToImport);
+                    shape = new L.Polyline(latlng, layer.options).addTo(layerToImport);
                     break;
                 case "marker":
-                    new L.Marker(latlng, layer.options).addTo(layerToImport);
+                    shape = new L.Marker(latlng, layer.options).addTo(layerToImport);
                     break;
                 case "circlemarker":
-                    new L.CircleMarker(latlng, layer.options).addTo(layerToImport);
+                    shape = new L.CircleMarker(latlng, layer.options).addTo(layerToImport);
                     break;
 
             }
+            shape.on('pm:edit',(e)=>{
+                shapeSelected(e);
+            });
+            console.log(shape);
         });
     }
+    map.on('pm:create',(e)=>{
+        shapeSelected(e);
+        e.layer.on('pm:edit',(shape)=>{
+            shapeSelected(shape);
+        });
+    });
+    var selectedShape = null;
+    function shapeSelected(shape) {
+        $('#selectedShape').text(shape.shape);
+        selectedShape = shape;
+        $("#fillColorPicker").spectrum("set", selectedShape.layer.options.fillColor);
+        $("#lineColorPicker").spectrum("set", selectedShape.layer.options.color);
+        $("#opacityPicker").val(selectedShape.layer.options.fillOpacity);
+        console.log("Shape selected");
+        console.log(shape);
+    }
+
+
     function updateDrawPathControls() {
         map.pm.setPathOptions({
             color: globalLineColor,
@@ -606,22 +632,36 @@
         $('#drawColorControls').fadeIn();
         $("#fillColorPicker").spectrum({
             color: globalFillColor,
+            showAlpha: true,
             change:function(c){
-                globalFillColor = c.toHexString();
-                updateDrawPathControls();
+                if (selectedShape) {
+                   // console.log(selectedShape);
+                    selectedShape.layer.setStyle({fillColor: c.toHexString()});
+                } else {
+                    globalFillColor = c.toHexString();
+                    updateDrawPathControls();
+                }
             }
         });
         $("#lineColorPicker").spectrum({
             color: globalLineColor,
             change:function(c){
-                globalLineColor = c.toHexString();
-                updateDrawPathControls();
+                if (selectedShape) {
+                    selectedShape.layer.setStyle({color: c.toHexString()});
+                } else {
+                    globalLineColor = c.toHexString();
+                    updateDrawPathControls();
+                }
             }
         });
         $("#opacityPicker").val(globalFillOpacity);
         $('#opacityPicker').on('change',function(e) {
-            globalFillOpacity = e.target.value;
-            updateDrawPathControls();
+            if (selectedShape) {
+                selectedShape.layer.setStyle({fillOpacity: e.target.value});
+            } else {
+                globalFillOpacity = e.target.value;
+                updateDrawPathControls();
+            }
 //            console.log(e.target.value);
         });
     });
