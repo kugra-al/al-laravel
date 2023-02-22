@@ -651,6 +651,9 @@
         if (shape.shape == "Text" || shape.shape == "Marker") {
             $('#selectedShape').text('not-supported');
             selectedShape = null;
+            $("#fillColorPicker").spectrum("set", globalLineColor);
+            $("#lineColorPicker").spectrum("set", globalFillColor);
+            $("#opacityPicker").val(globalFillOpacity);
             return;
         }
         $('#selectedShape').text(shape.shape);
