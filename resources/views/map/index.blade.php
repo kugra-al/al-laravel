@@ -632,6 +632,10 @@
     });
     var selectedShape = null;
     function shapeSelected(shape) {
+        if (!shape) {
+            console.log(shape);
+            return;
+        }
         if (!shape.shape) {
             if (shape instanceof L.Rectangle) {
                 shape.shape = 'Rectangle';
