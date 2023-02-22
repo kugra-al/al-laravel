@@ -20,11 +20,11 @@
                     <div class="col-sm-4"><strong>Draw Colors</strong> <span>Selected: </span><span id="selectedShape">none</span><br/>(Text/Marker colours not supported)</div>
                     <div class="col-sm-2">
                         <label>Fill Colour: </label>
-                        <input id='fillColorPicker' />
+                        <input data-picker-type='fillColor' id='fillColorPicker' />
                     </div>
                     <div class="col-sm-2">
                         <label>Line Colour: </label>
-                        <input id='lineColorPicker' />
+                        <input data-picker-type='color' id='lineColorPicker' />
                     </div>
                     <div class="col-sm-2">
                         <label>Fill Opacity</label>
@@ -700,11 +700,11 @@
                 preferredFormat: "hex",
                 change:function(c){
                     if (selectedShape) {
-                        var type = this.pickerType;
+                        var type = $(this).data('picker-type');
                         if (selectedShape.layer)
-                            selectedShape.layer.setStyle({type: c.toHexString()});
+                            selectedShape.layer.setStyle({[type]: c.toHexString()});
                         else
-                            selectedShape.setStyle({type: c.toHexString()});
+                            selectedShape.setStyle({[type]: c.toHexString()});
                     } else {
                         globalFillColor = c.toHexString();
                         updateDrawPathControls();
