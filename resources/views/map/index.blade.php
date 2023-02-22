@@ -290,7 +290,7 @@
                             if (data.id)
                                 currentDrawLayer.id = data.id;
                             currentDrawLayer.name = data.name;
-
+                          //  currentDrawLayer.layer = drawLayer;
                             $('#dataModal').modal('hide');
                         }
                     }
@@ -307,6 +307,7 @@
                 case 'store' :
                     send = {
                         name: data.name,
+                        desc: data.desc,
                         layer: generateGeoJson(drawLayer)
                     };
                     method = 'POST';
@@ -317,6 +318,7 @@
                 case 'update' :
                     send = {
                         name: data.name,
+                        desc: data.desc,
                         id: data.id,
                         layer: generateGeoJson(drawLayer)
                     };
@@ -337,12 +339,16 @@
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                 }
             });
+            console.log('Sending data');
+            console.log(method+" "+url);
+            console.log(send);
             $.ajax({
                 type: method,
                 url: url,
                 dataType: 'json',
                 data: send,
                 success: function (data) {
+                    console.log('Data returned');
                     console.log(data);
                     if (!successFunc) {
                         $(modal).modal();
@@ -364,18 +370,18 @@
         // doesn't save text, circle, circle marker, rectangle
             event.preventDefault();
             var name = $(event.target).find('[name=name]').val();
-            loadLayerModal('store',{name:name,url:'{{ route('map.layers.store') }}'});
+            var desc = $(event.target).find('[name=desc]').val();
+            loadLayerModal('store',{name:name,desc:desc,url:'{{ route('map.layers.store') }}'});
         }
 
         function updateDrawnLayer() {
             event.preventDefault();
              var name = $(event.target).find('[name=name]').val();
              var id = $(event.target).find('[name=id]').val();
+             var desc = $(event.target).find('[name=desc]').val();
              var clicker = $(event.target).find('button[type=submit]:focus');
-             console.log("clicker");
-             console.log($(clicker).val());
              if ($(clicker).val() == "new") {
-                loadLayerModal('store',{name:name,url:'{{ route('map.layers.store') }}'});
+                loadLayerModal('store',{name:name,desc:desc,url:'{{ route('map.layers.store') }}'});
             } else {
                 loadLayerModal('update',
                     {
@@ -452,7 +458,7 @@
                 name: 'Delete',
                 title: 'Delete All Drawn Layers',
                 block: 'edit',
-                onClick: () => {drawLayer.clearLayers();},
+                onClick: () => {drawLayer.clearLayers();currentDrawLayer = {};},
                 toggle: false,
                 className: 'leaflet-pm-icon-trash'
             }

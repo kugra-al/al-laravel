@@ -50,10 +50,12 @@ class MapController extends Controller
     {
         $name = request()->get('name');
         $layer = request()->get('layer');
+        $desc = request()->get('desc');
         $existing = new MapLayer;
         $existing->user_id = Auth::user()->id;
         $existing->name = $name;
         $existing->data = $layer;
+        $existing->desc = $desc;
         $existing->save();
         return response()->json(['name'=>$name,'layer'=>$layer]);
     }
@@ -65,6 +67,7 @@ class MapController extends Controller
             if ($layer->user_id == Auth::user()->id) {
                 $layer->name = request()->get('name');
                 $layer->data = request()->get('layer');
+                $layer->desc = request()->get('desc');
                 $layer->save();
                 return response()->json(['id'=>$id],200);
             }

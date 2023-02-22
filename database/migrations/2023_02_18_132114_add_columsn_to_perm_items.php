@@ -32,8 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('perm_items', function (Blueprint $table) {
-            Schema::dropColumns("perm_items",['primary_id','primary_adj','short','filename','version','touched_by','psets','last_touched']);
-        });
+        Schema::dropColumns("perm_items",['primary_id','primary_adj','short','filename','version','touched_by','psets','last_touched']);
     }
 };
