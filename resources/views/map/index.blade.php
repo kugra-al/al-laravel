@@ -17,7 +17,7 @@
             </div>
             <div class="container" id="drawColorControls" style="display:none">
                 <div class="row">
-                    <div class="col-sm-4"><strong>Draw Colors</strong> <span>Selected: </span><span id="selectedShape">none</span></div>
+                    <div class="col-sm-4"><strong>Draw Colors</strong> <span>Selected: </span><span id="selectedShape">none</span><br/>(Text/Marker colours not supported)</div>
                     <div class="col-sm-2">
                         <label>Fill Colour: </label>
                         <input id='fillColorPicker' />
@@ -611,6 +611,11 @@
     });
     var selectedShape = null;
     function shapeSelected(shape) {
+        if (shape.shape == "Text" || shape.shape == "Marker") {
+            $('#selectedShape').text('not-supported');
+            selectedShape = null;
+            return;
+        }
         $('#selectedShape').text(shape.shape);
         selectedShape = shape;
         $("#fillColorPicker").spectrum("set", selectedShape.layer.options.fillColor);
