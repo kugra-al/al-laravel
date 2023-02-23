@@ -30,7 +30,7 @@ class FetchPermCommits implements ShouldQueue
     public function __construct($type = 'perm_objs')
     {
         $this->type = $type;
-        $this->handle();
+        //$this->handle();
     }
 
     /**
@@ -92,7 +92,7 @@ class FetchPermCommits implements ShouldQueue
             for($x = 0; $x < sizeof($files); $x++) {
                 $file = $files[$x];
                 // Only get A or D (add or delete) and most recent
-                if ($file[0] == 'A' || $file[0] == 'D' || !isset($commits[$file[1]])) {
+                if ($file[0] != "M" || !isset($commits[$file[1]])) {
                     switch($file[0]) {
                         case 'A' :  $type='created';
                                     break;
@@ -114,7 +114,7 @@ class FetchPermCommits implements ShouldQueue
         $commitData = [];
         switch($this->type) {
             case 'perm_objs' :
-                // This needs to check map dir
+
                 $perms = Perm::pluck('id','filename')->toArray();
                 foreach($commits as $file=>$fileCommits) {
                     $splitFile = explode("/",$file);
@@ -136,18 +136,42 @@ class FetchPermCommits implements ShouldQueue
                 }
                 break;
             case 'domains':
-                $perms = Perm::pluck('id','filename','map_dir')->toArray();
+                $permFilenames = Perm::pluck('id','filename')->toArray();
+                $cleanFilenames = Perm::pluck('id','clean_filename')->toArray();
+
+                $checked = [];
                 foreach($commits as $file=>$fileCommits) {
                     // path like player_built/data/_domains_wild_virtual_server_613_1336_0:48026/_domains_wild_virtual_server_613_1336_0:48026.map
                     $splitFile = explode("/",$file);
-                    if ($splitFile[sizeof($splitFile)-1] != "city_server.c") // match on map file and city_server otherwise
+                  //  dd($file);
+
+                  // This check might be preventing this - https://github.com/kugra-al/al-laravel/issues/44
+                    $checker = $splitFile;
+                    unset($checker[sizeof($checker)-1]);
+                    $checker = implode("/",$checker);
+
+                    if (in_array($checker,$checked) !== false) // match on map file and city_server otherwise
                         continue;
+
+                    $checked[] = $checker;
+
                     $splitFile = $splitFile[sizeof($splitFile)-2];
 
-                    if (isset($perms[$splitFile])) {
+
+                    $found = null;
+                    if (isset($permFilenames[$splitFile]))
+                        $found = $permFilenames[$splitFile];
+                    else {
+
+                        if(isset($cleanFilenames[$splitFile]))
+                            $found = $cleanFilenames[$splitFile];
+                    }
+
+//                    dd($found);
+                    if ($found) {
                         foreach($fileCommits as $c) {
                             $commitData[] = [
-                                'perm_id'=>$perms[$splitFile],
+                                'perm_id'=>$found,
                                 'commit'=>$c['commit'],
                                 'commit_date'=>\Carbon\Carbon::parse($c['date'])->toDateTimeString(),
                                 'type'=>$c['type'],

@@ -72,7 +72,9 @@ class WritePermsToDb implements ShouldQueue
                 'short'=>null,
                 'pathname'=>null,
                 'decay_value'=>null,
-                'last_decay_time'=>null
+                'last_decay_time'=>null,
+
+                'clean_filename'=>null,
             ];
 
             // Do any data reading stuff here on main save
@@ -164,6 +166,8 @@ class WritePermsToDb implements ShouldQueue
             if (sizeof($playerBuilt)) {
 
                 $perm["save_type"] = $playerBuilt["save_type"];
+                if (isset($playerBuilt["map_dir"]) && isset($playerBuilt['perm_id']))
+                    $perm["clean_filename"] = $playerBuilt["map_dir"].":".$playerBuilt['perm_id'];
                 // Check for player_built saves
                 //if ($playerBuilt['save_type'] == 'stasis') {
                 if (isset($playerBuilt['perm_id']))
@@ -264,7 +268,7 @@ class WritePermsToDb implements ShouldQueue
         if (sizeof($perms)) {
             Perm::upsert(
                 $perms,
-                ['filename'],['data','lastseen','x','y','z','object','location','map_dir','destroyed','live','perm_type','save_type','is_inventory_container','inventory_location','touched_by','last_touched','psets','pathname','primary_id','primary_adj','decay_value','last_decay_time','short']
+                ['filename'],['data','lastseen','x','y','z','object','location','map_dir','destroyed','live','perm_type','save_type','is_inventory_container','inventory_location','touched_by','last_touched','psets','pathname','primary_id','primary_adj','decay_value','last_decay_time','short','clean_filename']
             );
             \Log::info("Wrote perms");
         } else {
