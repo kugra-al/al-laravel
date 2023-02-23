@@ -17,6 +17,7 @@ use App\Jobs\WritePermsToDb;
 use App\Jobs\WritePermItemsToDb;
 use App\Models\GithubAL;
 use App\Jobs\ResetTable;
+use App\Jobs\FetchPermCommits;
 
 class JobController extends Controller
 {
@@ -67,6 +68,11 @@ class JobController extends Controller
                 'sources'=>['repos'=>['Accursedlands-perms','Accursedlands-Domains','Accursedlands-DATA'],'branch'=>'production_mud_fluffos'],
                 'group'=>'perms',
             ],
+            'fetch-perm-commits'=>[
+                'desc'=>'fetch perm commits','time'=>'~20s','type'=>'fetch',
+                'sources'=>['repos'=>['Accursedlands-perms','Accursedlands-Domains','Accursedlands-DATA'],'branch'=>'production_mud_fluffos'],
+                'group'=>'perms',
+            ],
 
             // Multiuse
             'fetch-repo'=>[
@@ -78,7 +84,7 @@ class JobController extends Controller
             ],
             'reset-table'=>[
                 'desc'=>'Resets an AL data table. For items, use job reset-items-table','time'=>'~10s','type'=>'reset',
-                'tables'=>['perms','perm_items','facades','deaths'],
+                'tables'=>['perms','perm_items','facades','deaths','perm_logs'],
                 'group'=>'mysql'
             ],
 
@@ -117,6 +123,9 @@ class JobController extends Controller
                 break;
             case 'write-perm-items-to-db':
                 WritePermItemsToDb::dispatch();
+                break;
+            case 'fetch-perm-commits':
+                FetchPermCommits::dispatch();
                 break;
 
             case 'fetch-repo':

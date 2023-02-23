@@ -36,7 +36,7 @@
                     </thead>
                     <tbody>
                         @foreach($perm->toArray() as $key=>$value)
-                            @if($key == 'data' || $key == 'items')
+                            @if($key == 'data' || $key == 'items' || $key == 'logs')
                                 @continue
                             @endif
                             <tr>
@@ -49,6 +49,31 @@
             </div>
         </div>
 
+        <div class="row"><h5>Audit Log</div>
+        <div class="row">
+            <div class="col-sm-12">
+        @if($perm->logs && $perm->logs->count())
+            <table class="table task-table">
+                <thead>
+                    <th>Date</th>
+                    <th>Commit</th>
+                    <th>Type</th>
+                </thead>
+                <tbody>
+            @foreach($perm->logs as $log)
+                    <tr>
+                        <td>{{ $log->commit_date }}</td>
+                        <td>{{ $log->commit }}</td>
+                        <td>{{ $log->type }}</td>
+                    </tr>
+            @endforeach
+                </tbody>
+            </table>
+        @else
+            No logs
+        @endif
+            </div>
+        </div>
         <div class="row"><h5>Items</h5></div>
         @if($perm->items && $perm->items->count())
             <div class="row">
@@ -91,7 +116,7 @@
                             </thead>
                             <tbody>
                                 @foreach($item->toArray() as $key=>$value)
-                                    @if($key == 'data' || $key == 'items')
+                                    @if($key == 'data' || $key == 'items' || $key == 'logs')
                                         @continue
                                     @endif
                                     <tr>

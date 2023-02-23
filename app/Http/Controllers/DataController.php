@@ -8,6 +8,7 @@ use App\Models\Facade;
 use App\Models\PermItem;
 use DataTables;
 use App\Models\GithubAL;
+use App\Models\PermLog;
 use Yajra\DataTables\Html\Builder;
 
 class DataController extends Controller
@@ -24,6 +25,9 @@ class DataController extends Controller
                 break;
             case 'perm_items':
                 $model = PermItem::select('id','object','perm_id','pathname','short','touched_by')->get();
+                break;
+            case 'perm_logs':
+                $model = PermLog::get();
                 break;
             default :
                 return back()->with('warning',"Unknown data type: {$type}");

@@ -26,8 +26,11 @@ class GithubAL extends Model
         return false;
     }
 
-    public static function getLocalRepoPath($repo) {
-        return storage_path()."/private/git/".$repo."/";
+    public static function getLocalRepoPath($repo, $appendSlash = true) {
+        $path = storage_path()."/private/git/".$repo;
+        if ($appendSlash)
+            $path .= "/";
+        return $path;
     }
 
     public static function getLocalGitApiPath() {
@@ -173,7 +176,7 @@ class GithubAL extends Model
     public static function getALTables()
     {
         return
-            ['perms','perm_items','facades','deaths','items'];
+            ['perms','perm_items','facades','deaths','items','perm_logs'];
     }
 
 }
