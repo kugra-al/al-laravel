@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('commit');
             $table->datetime('commit_date');
             $table->string('type');
+            $table->string('repo');
+            $table->string('file');
             $table->timestamps();
         });
     }

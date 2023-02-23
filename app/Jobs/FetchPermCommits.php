@@ -15,6 +15,7 @@ use GitHub;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use File;
+use Cache;
 
 class FetchPermCommits implements ShouldQueue
 {
@@ -40,29 +41,34 @@ class FetchPermCommits implements ShouldQueue
     public function handle()
     {
         $jobType = 'perm_objs';
+        $this->type = $jobType;
         $jobTypes = [
             'perm_objs' => [
                 'repo' => 'Accursedlands-perms',
-                'dirs' => 'perm_objs'
+                'dir' => 'perm_objs'
             ],
             'domains' => [
-                'repo' => 'Accursedlands-domains',
-                'dirs' => 'player_built'
+                'repo' => 'Accursedlands-Domains',
+                'dir' => 'player_built'
             ],
             'data' => [
                 'repo' => 'Accursedlands-DATA',
-                'dirs' => '??'
+                'dir' => '??'
             ]
         ];
-        $perms = Perm::select('id','filename')->get();
-        $logs = [];
 
+        // Setup
         $commits = [];
-        $gitdir = GithubAL::getLocalRepoPath("Accursedlands-perms");
-        $tmpFile = storage_path()."/private/perm_commits.log";
-        if (!File::exists($tmpFile)) {
+        $repo = $jobTypes[$jobType]['repo'];
+        $dir = $jobTypes[$jobType]['dir'];
+        $gitdir = GithubAL::getLocalRepoPath($repo);
+        $cacheFile = "commits_{$repo}_{$dir}";
+        //Cache::forget($cacheFile);
+        $output = Cache::get($cacheFile);
+        // If !cached output, fetch all commits via cli
+        if (!$output) {
             $process = new Process(['git','log','--follow','--name-status',
-                '--format=::START_HEADER::%ncommit:%H%nname:%f%ndate:%ci::END_HEADER::','perm_objs/']);
+                '--format=::START_HEADER::%ncommit:%H%nname:%f%ndate:%ci::END_HEADER::',$dir]);
             $process->setWorkingDirectory($gitdir);
             $process->run();
 
@@ -71,9 +77,9 @@ class FetchPermCommits implements ShouldQueue
             }
 
             $output = $process->getOutput();
-            File::put($tmpFile,$output);
+            Cache::forever($cacheFile,$output);
         }
-        $output = File::get($tmpFile);
+        // Parse through commits
         $commitData = explode('::START_HEADER::',$output);
         $output = [];
         foreach($commitData as $commit) {
@@ -103,20 +109,61 @@ class FetchPermCommits implements ShouldQueue
                 }
             }
         }
+      //  dd($commits);
+        // Sort commits into data for insert
         $commitData = [];
-        $perms = Perm::pluck('id','filename')->toArray();
-        foreach($commits as $file=>$fileCommits) {
-            if (isset($perms[$file])) {
-                foreach($fileCommits as $c) {
-                    $commitData[] = [
-                        'perm_id'=>$perms[$file],
-                        'commit'=>$c['commit'],
-                        'commit_date'=>\Carbon\Carbon::parse($c['date'])->toDateTimeString(),
-                        'type'=>$c['type']
-                    ];
+        switch($this->type) {
+            case 'perm_objs' :
+                // This needs to check map dir
+                $perms = Perm::pluck('id','filename')->toArray();
+                foreach($commits as $file=>$fileCommits) {
+                    $splitFile = explode("/",$file);
+                    $splitFile = $splitFile[sizeof($splitFile)-1];
+
+                   // dd($splitFile);
+                    if (isset($perms[$splitFile])) {
+                        foreach($fileCommits as $c) {
+                            $commitData[] = [
+                                'perm_id'=>$perms[$splitFile],
+                                'commit'=>$c['commit'],
+                                'commit_date'=>\Carbon\Carbon::parse($c['date'])->toDateTimeString(),
+                                'type'=>$c['type'],
+                                'repo'=>$repo,
+                                'file'=>$file
+                            ];
+                        }
+                    }
                 }
-            }
+                break;
+            case 'domains':
+                $perms = Perm::pluck('id','filename','map_dir')->toArray();
+                foreach($commits as $file=>$fileCommits) {
+                    // path like player_built/data/_domains_wild_virtual_server_613_1336_0:48026/_domains_wild_virtual_server_613_1336_0:48026.map
+                    $splitFile = explode("/",$file);
+                    if ($splitFile[sizeof($splitFile)-1] != "city_server.c") // match on map file and city_server otherwise
+                        continue;
+                    $splitFile = $splitFile[sizeof($splitFile)-2];
+
+                    if (isset($perms[$splitFile])) {
+                        foreach($fileCommits as $c) {
+                            $commitData[] = [
+                                'perm_id'=>$perms[$splitFile],
+                                'commit'=>$c['commit'],
+                                'commit_date'=>\Carbon\Carbon::parse($c['date'])->toDateTimeString(),
+                                'type'=>$c['type'],
+                                'repo'=>$repo,
+                                'file'=>$file
+                            ];
+                        }
+                        //dd($perms[$splitFile]);
+                    }
+                    //dd($splitFile);
+                }
+               // dd($perms);
+                break;
         }
+      //  dd('stop before insert');
+        // Insert data
         if (sizeof($commitData))
             PermLog::insert($commitData);
     }
@@ -133,9 +180,19 @@ class FetchPermCommits implements ShouldQueue
             if (strlen($line)) {
                 $line = explode("\t",$line);
                 if (sizeof($line) == 2) {
-                    $line[1] = str_replace("perm_objs/","",$line[1]);
-                    if (strpos($line[1],"/") === false)
-                        $tmp[] = $line;
+                    switch($this->type) {
+                        case 'perm_objs':
+                            if (strpos(str_replace("perm_objs/","",$line[1]),"/") === false)
+                                $tmp[] = $line;
+                            break;
+                        case 'domains':
+                            if (strpos($line[1],"player_built/base/") === false && strpos($line[1],'/bak') === false)
+                                $tmp[] = $line;
+                            break;
+                        default :
+                            $tmp[] = $line;
+                            break;
+                    }
                 }
             }
         }

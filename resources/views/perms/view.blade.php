@@ -56,14 +56,18 @@
             <table class="table task-table">
                 <thead>
                     <th>Date</th>
+                    <th>Repo</th>
                     <th>Commit</th>
+                    <th>File</th>
                     <th>Type</th>
                 </thead>
                 <tbody>
             @foreach($perm->logs as $log)
                     <tr>
                         <td>{{ $log->commit_date }}</td>
+                        <td>{{ $log->repo }}</td>
                         <td>{{ $log->commit }}</td>
+                        <td>{{ \Str::substr($log->file,0,20)."..." }}</td>
                         <td>{{ $log->type }}</td>
                     </tr>
             @endforeach
