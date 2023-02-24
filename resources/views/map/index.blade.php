@@ -65,10 +65,11 @@
         const bounds = [xy(0, 0), xy(2500, 2500)];
         // Random hash just so no curious player does /img/map.png
         const image = L.imageOverlay('img/map_bb0a99b14432697bd43cd80f0bd2cd77.png', bounds).addTo(map);
+        var drawLayer = L.layerGroup([]).addTo(map);
 
         @if($coords)
             map.setView(xy({{ $coords['x'] }},{{ $coords['y'] }}),{{ $coords['z'] }});
-            new L.marker(xy({{ $coords['x'] }},{{ $coords['y'] }})).addTo(map);
+            new L.marker(xy({{ $coords['x'] }},{{ $coords['y'] }})).addTo(drawLayer);
         @else
             map.setView(xy(545, 1493), 2);
         @endif
@@ -400,7 +401,6 @@
 
         var currentDrawLayer = {};
         // Draw layers and add controls
-        var drawLayer = L.layerGroup([]).addTo(map);
         var facadeLayer = L.featureGroup(facadeGroup, 'Facades').addTo(map);
         var layerControl = L.control.layers.tree(null,
             {
