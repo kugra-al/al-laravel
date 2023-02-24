@@ -13,7 +13,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div id='map'></div>
-                <div id="coords"></div>
+                <div id="coords">Coords (<a @if($coords)href="/map?x={{ $coords['x'] }}&y={{ $coords['y'] }}&z={{ $coords['z'] }}" @else href="/map?x=545&y=1493" @endif target="_blank">link</a>): <span class="x">@if($coords){{ $coords['x'] }}@else{{ "545" }}@endif</span>:<span class="y">@if($coords){{ $coords['y'] }}@else{{ "1493" }}@endif</span></div>
             </div>
             <div class="container" id="drawColorControls" style="display:none">
                 <div class="row">
@@ -74,7 +74,12 @@
             map.setView(xy(545, 1493), 2);
         @endif
         map.on("mousemove", function (event) {
-            document.getElementById('coords').innerText = Math.round(event.latlng.lng)+":"+Math.round(event.latlng.lat);
+            var lng = Math.round(event.latlng.lng);
+            var lat = Math.round(event.latlng.lat);
+            var coords = $('#coords');
+            $(coords).find('.x').text(lng);
+            $(coords).find('.y').text(lat);
+            $(coords).find('a').attr('href',"/map?x="+lng+"&y="+lat);
         });
 
         // Icons
