@@ -68,6 +68,7 @@
 
         @if($coords)
             map.setView(xy({{ $coords['x'] }},{{ $coords['y'] }}),{{ $coords['z'] }});
+            new L.marker(xy({{ $coords['x'] }},{{ $coords['y'] }})).addTo(map);
         @else
             map.setView(xy(545, 1493), 2);
         @endif
