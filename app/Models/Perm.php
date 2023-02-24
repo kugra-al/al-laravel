@@ -19,6 +19,6 @@ class Perm extends Model
 
     public function logs()
     {
-        return $this->hasMany(PermLog::class);
+        return $this->hasMany(PermLog::class)->orderBy('commit_date','desc');
     }
 }

@@ -30,7 +30,7 @@ class FetchPermCommits implements ShouldQueue
     public function __construct($type = 'perm_objs')
     {
         $this->type = $type;
-        //$this->handle();
+       // $this->handle();
     }
 
     /**
@@ -40,7 +40,7 @@ class FetchPermCommits implements ShouldQueue
      */
     public function handle()
     {
-        $jobType = 'perm_objs';
+        $jobType = 'domains';
         $this->type = $jobType;
         $jobTypes = [
             'perm_objs' => [
@@ -81,7 +81,7 @@ class FetchPermCommits implements ShouldQueue
         }
         // Parse through commits
         $commitData = explode('::START_HEADER::',$output);
-        $output = [];
+    //    $output = [];
         foreach($commitData as $commit) {
             if (!strlen($commit))
                 continue;
@@ -89,10 +89,12 @@ class FetchPermCommits implements ShouldQueue
 
             $headers = $this->parseCommitHeader($parts[0]);
             $files = $this->parseCommitFiles($parts[1]);
+
             for($x = 0; $x < sizeof($files); $x++) {
                 $file = $files[$x];
-                // Only get A or D (add or delete) and most recent
-                if ($file[0] != "M" || !isset($commits[$file[1]])) {
+
+                // Only got most recent M (modify)
+                if ($file[0] != "M" || ($file[0] == "M" && !isset($commits[$file[1]]))) {
                     switch($file[0]) {
                         case 'A' :  $type='created';
                                     break;
@@ -100,7 +102,13 @@ class FetchPermCommits implements ShouldQueue
                                     break;
                         case 'M' :  $type='modified';
                                     break;
-                        default  :  $type=$file[0];
+                        case 'R100' :
+                            $type='deleted';
+                            //$file[1] = $file[1]." to ".$file[2];
+                            //dump($file);
+                            break;
+                        default  :
+                                    $type=$file[0];
                                     break;
                     }
                     if (!isset($commits[$file[1]]))
@@ -138,25 +146,12 @@ class FetchPermCommits implements ShouldQueue
             case 'domains':
                 $permFilenames = Perm::pluck('id','filename')->toArray();
                 $cleanFilenames = Perm::pluck('id','clean_filename')->toArray();
-
+                $mapDirNames = Perm::pluck('id','map_dir')->toArray();
                 $checked = [];
                 foreach($commits as $file=>$fileCommits) {
                     // path like player_built/data/_domains_wild_virtual_server_613_1336_0:48026/_domains_wild_virtual_server_613_1336_0:48026.map
                     $splitFile = explode("/",$file);
-                  //  dd($file);
-
-                  // This check might be preventing this - https://github.com/kugra-al/al-laravel/issues/44
-                    $checker = $splitFile;
-                    unset($checker[sizeof($checker)-1]);
-                    $checker = implode("/",$checker);
-
-                    if (in_array($checker,$checked) !== false) // match on map file and city_server otherwise
-                        continue;
-
-                    $checked[] = $checker;
-
                     $splitFile = $splitFile[sizeof($splitFile)-2];
-
 
                     $found = null;
                     if (isset($permFilenames[$splitFile]))
@@ -165,11 +160,21 @@ class FetchPermCommits implements ShouldQueue
 
                         if(isset($cleanFilenames[$splitFile]))
                             $found = $cleanFilenames[$splitFile];
+                        else {
+                            $path = "Accursedlands-Domains/".implode("/",array_slice(explode("/",$file),0,-1));
+                            if (isset($mapDirNames[$path]))
+                                $found = $mapDirNames[$path];
+                        }
                     }
 
 //                    dd($found);
                     if ($found) {
                         foreach($fileCommits as $c) {
+                            $checker = $c['commit'].implode("/",array_slice(explode("/",$file),0,-1));
+                            if (in_array($checker,$checked) !== false) // match on map file and city_server otherwise
+                                continue;
+                            $checked[] = $checker;
+
                             $commitData[] = [
                                 'perm_id'=>$found,
                                 'commit'=>$c['commit'],
@@ -186,6 +191,12 @@ class FetchPermCommits implements ShouldQueue
                // dd($perms);
                 break;
         }
+//         foreach($commitData as $d) {
+//
+//             if (strpos($d["file"],"545_1500") !== false)
+//                 dump($d);
+//         }
+//         dd($commitData);
       //  dd('stop before insert');
         // Insert data
         if (sizeof($commitData))
@@ -203,7 +214,7 @@ class FetchPermCommits implements ShouldQueue
         foreach(explode("\n",$commit) as $line) {
             if (strlen($line)) {
                 $line = explode("\t",$line);
-                if (sizeof($line) == 2) {
+                if (sizeof($line) > 1) {
                     switch($this->type) {
                         case 'perm_objs':
                             if (strpos(str_replace("perm_objs/","",$line[1]),"/") === false)

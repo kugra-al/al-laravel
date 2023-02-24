@@ -67,7 +67,7 @@
                         <td>{{ $log->commit_date }}</td>
                         <td>{{ $log->repo }}</td>
                         <td>{{ $log->commit }}</td>
-                        <td>{{ \Str::substr($log->file,0,35)."..." }}</td>
+                        <td title="{{ $log->file }}">{{ \Str::substr($log->file,0,35)."..." }}</td>
                         <td>{{ $log->type }}</td>
                     </tr>
             @endforeach
