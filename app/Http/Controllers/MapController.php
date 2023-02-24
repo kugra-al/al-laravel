@@ -19,8 +19,15 @@ class MapController extends Controller
             return $this->ajaxIndex();
 
         $perms = Perm::select('filename','location','object','x','y','z','lastseen','touched_by','sign_title','last_touched','psets','id','short','destroyed','perm_type')->whereNotNull('x')->get();
+        $coords = null;
 
-        return view('map.index',['facades'=>Facade::all(),'deaths'=>Death::whereNotNull('x')->get(), 'perms'=>$perms]);
+        if(request()->get('x') && request()->get('y')) {
+            $coords = ['x'=>request()->get('x'),'y'=>request()->get('y'),'z'=>2];
+            if (request()->get('z'))
+                $coords['z'] = request()->get('z');
+        }
+
+        return view('map.index',['facades'=>Facade::all(),'deaths'=>Death::whereNotNull('x')->get(), 'perms'=>$perms, 'coords'=>$coords]);
     }
 
     public function ajaxIndex() {

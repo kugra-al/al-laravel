@@ -66,8 +66,11 @@
         // Random hash just so no curious player does /img/map.png
         const image = L.imageOverlay('img/map_bb0a99b14432697bd43cd80f0bd2cd77.png', bounds).addTo(map);
 
-        map.setView(xy(545, 1493), 2);
-
+        @if($coords)
+            map.setView(xy({{ $coords['x'] }},{{ $coords['y'] }}),{{ $coords['z'] }});
+        @else
+            map.setView(xy(545, 1493), 2);
+        @endif
         map.on("mousemove", function (event) {
             document.getElementById('coords').innerText = Math.round(event.latlng.lng)+":"+Math.round(event.latlng.lat);
         });
