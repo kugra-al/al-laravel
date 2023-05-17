@@ -734,4 +734,7 @@
         });
     });
     </script>
+    <style>
+        .leaflet-container { image-rendering: pixelated; }
+    </style>
 @endsection
